@@ -1,7 +1,5 @@
 library hetimacore.parser;
 
-import 'dart:typed_data' as data;
-import 'dart:math' as math;
 import 'dart:convert' as convert;
 import 'dart:async';
 import 'dart:core';
@@ -13,11 +11,9 @@ class EasyParser {
   List<int> stack = new List();
   HetimaReader _buffer = null;
   HetimaReader get buffer => _buffer;
-  bool _logon = false;
 
   EasyParser(HetimaReader builder,{bool logon:false}) {
     _buffer = builder;
-    _logon = logon;
   }
 
   EasyParser toClone() {
@@ -210,7 +206,7 @@ class EasyParser {
     });
     return completer.future;
   }
-  
+
   Future<int> nextBytePattern(EasyParserMatcher matcher) {
     Completer completer = new Completer();
     matcher.init();
