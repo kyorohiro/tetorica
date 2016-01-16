@@ -1,7 +1,7 @@
 library hetimanet;
 
-export 'src/net/hetisocket.dart';
-export 'src/http/hetihttp.dart';
-export 'src/util/hetiutil.dart';
-export 'src/upnp/hetiupnp.dart';
-export 'src/net/hetisocket_simu.dart';
+export 'net/net/hetisocket.dart';
+export 'net/http/hetihttp.dart';
+export 'net/util/hetiutil.dart';
+export 'net/upnp/hetiupnp.dart';
+export 'net/net/hetisocket_simu.dart';
