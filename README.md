@@ -1,1 +1,3 @@
-# stu_net
+Tetorica
+
+P2P framework
