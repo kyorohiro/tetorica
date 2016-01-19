@@ -1,15 +1,12 @@
 library hetimacore.percent;
-import 'dart:typed_data' as data;
-import 'dart:math' as math;
 import 'dart:convert' as convert;
-import 'dart:async' as async;
 import 'dart:core';
 import '../parser/arraybuilder.dart';
 
 class PercentEncode
 {
   ArrayBuilder builder = new ArrayBuilder();
-  
+
   static final Map<String,int> DECODE_TABLE = {
     "0":0,"1":1,"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,
     "8":8,"9":9,"a":10,"A":10,"b":11,"B":11,"c":12,"C":12,
@@ -18,7 +15,7 @@ class PercentEncode
 
   static final Map<int,String> ENCODE_TABLE = {
     0:"0" ,1:"1", 2:"2", 3:"3", 4:"4",
-    5:"5", 6:"6", 7:"7", 8:"8", 9:"9", 
+    5:"5", 6:"6", 7:"7", 8:"8", 9:"9",
     10:"A", 11:"B",12:"C", 13:"D",
     14:"E", 15:"F"
    };
@@ -61,7 +58,7 @@ class PercentEncode
         int e = ((0x0f&target[i]));
         builder.appendString("%"+ENCODE_TABLE[f] + ENCODE_TABLE[e]);
       }
-    }    
+    }
     return builder.toText();
   }
 

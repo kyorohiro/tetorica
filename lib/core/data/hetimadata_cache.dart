@@ -149,7 +149,7 @@ class HetimaDataCache extends HetimaData {
       int n = 0;
       for (int i = offset; i < (offset + length); i = n) {
         int index = i;
-        int next = n = i + (cashSize - (i + cashSize) % cashSize);
+        //int next = n = i + (cashSize - (i + cashSize) % cashSize);
         indexList.add(index);
         nextList.add(n);
       }
@@ -192,8 +192,8 @@ class HetimaDataCache extends HetimaData {
         for (ReadResult r in rl) {
           length += r.length;
         }
-        
-        
+
+
         //
         // buffer
         List<int> _buffer = null;
@@ -209,7 +209,7 @@ class HetimaDataCache extends HetimaData {
           _buffer.setAll(s, r.buffer);
           s = e;
         }
-        
+
         // end
         return new ReadResult(_buffer, length);
       });
@@ -250,7 +250,7 @@ class HetimaDataCache extends HetimaData {
     return new async.Future(() {
       return _cashData.read(ret.index, cashSize).then((ReadResult r) {
         return ret.dataBuffer.write(r.buffer, 0).then((WriteResult r) {
-          _cashInfoList.add(ret);          
+          _cashInfoList.add(ret);
         });
       });
     });

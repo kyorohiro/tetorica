@@ -1,6 +1,6 @@
 library dart_hetimaparser_test_lexer;
 
-import 'package:tetorica/hetimaregex.dart' as regex;
+import 'package:tetorica/regex.dart' as regex;
 import 'package:unittest/unittest.dart';
 
 import 'dart:convert' as conv;

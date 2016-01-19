@@ -31,17 +31,17 @@ class UpnpPPPDevice {
     if (st.contains("WANIPConnection")) {
       _serviceName = "WANIPConnection";
     }
-    String b = "";
+//    String b = "";
     List<String> v = st.replaceAll(" |\t|\r|\n", "").split(":");
     _version = v.last;
     //print("${_version}");
   }
 
   /**
-   * response.resultCode 
+   * response.resultCode
    *  200 OK
-   *  402 Invalid Args See UPnP Device Architecture section on Control. 
-   *  713 SpecifiedArrayIndexInvalid The specified array index is out of bounds 
+   *  402 Invalid Args See UPnP Device Architecture section on Control.
+   *  713 SpecifiedArrayIndexInvalid The specified array index is out of bounds
    */
   async.Future<UpnpGetGenericPortMappingResponse> requestGetGenericPortMapping(int newPortMappingIndex, [int mode = MODE_POST, UpnpDeviceServiceInfo serviceInfo = null]) async {
     if (getPPPService().length == 0) {
@@ -163,7 +163,7 @@ class UpnpPPPDevice {
     List<int> body = await response.body.getByteFuture(0, length);
     return new UpnpPPPDeviceRequestResponse(response.message.line.statusCode, convert.UTF8.decode(body));
   }
-  
+
   log(String message) {
     if (_verbose == true) {
       print("--${message}");

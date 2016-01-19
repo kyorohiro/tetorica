@@ -1,5 +1,4 @@
 import 'package:unittest/unittest.dart' as unit;
-import 'dart:async' as async;
 import 'package:tetorica/core.dart';
 import 'dart:convert' as convert;
 

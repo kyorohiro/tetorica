@@ -12,9 +12,9 @@ class RegexVM {
     _commands.add(command);
   }
 
-  void _addTask(RegexTask task) {
-      _tasks.add(task);
-  }
+//  void _addTask(RegexTask task) {
+//      _tasks.add(task);
+//  }
 
   void _insertTask(int index, RegexTask task) {
     _tasks.insert(index, task);

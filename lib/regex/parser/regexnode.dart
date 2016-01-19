@@ -10,7 +10,7 @@ class RegexCommandLeaf extends RegexLeaf {
     _command = c;
   }
   List<RegexCommand> convertRegexCommands() {
-    return [_command];    
+    return [_command];
   }
 }
 
@@ -22,18 +22,18 @@ class RegexNode extends RegexLeaf{
     List<RegexCommand> ret = [];
     for(Object o in elements) {
       if(o is RegexNode) {
-        ret.addAll((o as RegexNode).convertRegexCommands());
+        ret.addAll(o.convertRegexCommands());
       } else if(o is RegexCommand){
-        ret.add(o as RegexCommand);
+        ret.add(o);
       }
     }
     return ret;
   }
-  
+
   void addRegexNode(RegexNode node) {
     elements.add(node);
   }
-  
+
   void addRegexCommand(RegexCommand c) {
     elements.add(new RegexCommandLeaf(c));
   }
@@ -81,7 +81,7 @@ class GroupPattern extends RegexNode {
   }
 
   //
-  // 
+  //
   void groupingCurrentElement() {
     this.elementsList.add([]);
   }

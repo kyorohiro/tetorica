@@ -1,4 +1,4 @@
-import 'package:unittest/unittest.dart' as unit;
+//import 'package:unittest/unittest.dart' as unit;
 import 'package:tetorica/core.dart' as hetima;
 import 'package:tetorica/hetimanet.dart' as hetima;
 import 'dart:async' as async;
@@ -7,7 +7,7 @@ void main() {
   hetima.HetiTest test = new hetima.HetiTest("tt");
   {
     hetima.HetiTestTicket ticket = test.test("httpversion", 3000);
-    String v = "";
+    //String v = "";
     new async.Future.sync(() {
       hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
       hetima.EasyParser parser = new hetima.EasyParser(builder);
@@ -23,7 +23,6 @@ void main() {
 
   {
     hetima.HetiTestTicket ticket = test.test("reasonphase", 3000);
-    String v = "";
     new async.Future.sync(() {
       hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
       hetima.EasyParser parser = new hetima.EasyParser(builder);
@@ -39,7 +38,6 @@ void main() {
   }
 
   {
-    String v = "";
     hetima.HetiTestTicket ticket = test.test("reasonphase_2", 3000);
     new async.Future.sync(() {
       hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
@@ -56,7 +54,6 @@ void main() {
   }
 
   {
-    String v = "";
     hetima.HetiTestTicket ticket = test.test("decodeCrlf_1", 3000);
     new async.Future.sync(() {
       hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
@@ -75,7 +72,6 @@ void main() {
   }
 
   {
-    String v = "";
     hetima.HetiTestTicket ticket = test.test("decodeCrlf_2", 3000);
     new async.Future.sync(() {
       hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
@@ -93,7 +89,6 @@ void main() {
     });
   }
   {
-    String v = "";
     hetima.HetiTestTicket ticket = test.test("statusline", 3000);
     new async.Future.sync(() {
       hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
@@ -114,7 +109,6 @@ void main() {
   }
 
   {
-    String v = "";
     hetima.HetiTestTicket ticket = test.test("decodeHeaderField_1f", 3000);
     new async.Future.sync(() {
       hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
@@ -134,7 +128,6 @@ void main() {
   }
 
   {
-    String v = "";
     hetima.HetiTestTicket ticket = test.test("decodeHeaderField_2f", 3000);
     new async.Future.sync(() {
       hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
@@ -152,7 +145,6 @@ void main() {
     });
   }
   {
-    String v = "";
     hetima.HetiTestTicket ticket = test.test("decodeHeaderFields_1f", 3000);
     new async.Future.sync(() {
       hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
@@ -175,7 +167,6 @@ void main() {
   }
 
   {
-    String v = "";
     hetima.HetiTestTicket ticket = test.test("decodeHttpMessage_1f", 3000);
     new async.Future.sync(() {
       hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
@@ -199,7 +190,6 @@ void main() {
     });
   }
   {
-    String v = "";
     hetima.HetiTestTicket ticket = test.test("decodeHttpMessage_2f", 3000);
     new async.Future.sync(() {
       hetima.ArrayBuilder builder = new hetima.ArrayBuilder();

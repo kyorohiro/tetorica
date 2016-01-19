@@ -1,6 +1,5 @@
 library hetimanet.http.server;
 
-import 'dart:convert' as convert;
 import 'dart:async' as async;
 import 'package:tetorica/core.dart';
 import '../net/hetisocket.dart';
@@ -9,7 +8,7 @@ import 'hetihttpresponse.dart';
 class HetiHttpServer {
 
   async.StreamController _controllerOnNewRequest = new async.StreamController.broadcast();
-  HetimaSocketBuilder _builder;
+//  HetimaSocketBuilder _builder;
   String host;
   int port;
   HetimaServerSocket _serverSocket = null;

@@ -4,7 +4,6 @@ import 'dart:convert' as convert;
 import 'dart:async' as async;
 import 'package:tetorica/core.dart';
 import '../util/hetiutil.dart';
-import 'chunkedbuilderadapter.dart';
 
 //rfc2616 rfc7230
 class HetiHttpResponse {
@@ -185,7 +184,7 @@ class HetiHttpResponse {
   //
   static async.Future<String> decodeCrlf(EasyParser parser) {
     async.Completer completer = new async.Completer();
-    bool lf = true;
+    //bool lf = true;
     bool crlf = true;
     parser.push();
     parser.nextString("\r\n").catchError((e) {
@@ -292,7 +291,7 @@ class HetiHttpResponse {
 
   //rfc2616
   static async.Future<HetiHttpRequestRange> decodeRequestRangeValue(EasyParser parser) {
-    HetiHttpResponseStatusLine result = new HetiHttpResponseStatusLine();
+    //HetiHttpResponseStatusLine result = new HetiHttpResponseStatusLine();
     HetiHttpRequestRange ret = new HetiHttpRequestRange();
     async.Completer<HetiHttpRequestRange> completer = new async.Completer();
     parser.nextString("bytes=").then((String v) {

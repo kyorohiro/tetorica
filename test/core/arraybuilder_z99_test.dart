@@ -1,9 +1,8 @@
 import 'package:unittest/unittest.dart' as unit;
 import 'package:tetorica/core.dart' as hetima;
-import 'dart:async';
 
 void main() {
-  hetima.HetiTest test = new hetima.HetiTest("tt");
+//  hetima.HetiTest test = new hetima.HetiTest("tt");
 
   unit.test("ArrayBuilderBuffer: ", () {
     hetima.ArrayBuilderBuffer buffer = new hetima.ArrayBuilderBuffer(5);

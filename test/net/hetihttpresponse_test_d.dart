@@ -1,4 +1,4 @@
-import 'package:unittest/unittest.dart' as unit;
+//import 'package:unittest/unittest.dart' as unit;
 import 'package:tetorica/core.dart' as hetima;
 import 'package:tetorica/hetimanet.dart' as hetima;
 import 'dart:async' as async;
@@ -7,7 +7,6 @@ void main() {
   hetima.HetiTest test = new hetima.HetiTest("tt");
   {
     hetima.HetiTestTicket ticket = test.test("001", 3000);
-    String v = "";
 
     new async.Future.sync(() {
       hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
@@ -25,8 +24,6 @@ void main() {
 
   {
     hetima.HetiTestTicket ticket = test.test("002", 3000);
-    String v = "";
-
     new async.Future.sync(() {
       hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
       hetima.EasyParser parser = new hetima.EasyParser(builder);

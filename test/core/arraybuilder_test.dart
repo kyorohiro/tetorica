@@ -3,7 +3,7 @@ import 'package:tetorica/core.dart' as hetima;
 import 'dart:async';
 
 void main() {
-  hetima.HetiTest test = new hetima.HetiTest("tt");
+//  hetima.HetiTest test = new hetima.HetiTest("tt");
 
   unit.test("arraybuilder: init", () {
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
