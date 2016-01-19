@@ -2,6 +2,7 @@
 import 'package:tetorica/core.dart' as hetima;
 import 'package:tetorica/hetimanet.dart' as hetima;
 
+/*
 void main() {
 
   hetima.HetiTest test = new hetima.HetiTest("t");
@@ -76,3 +77,4 @@ void main() {
 //  TrackerServer#onListen/announce?info_hash=_%C6%B8%A2dc3%F5c%9DN%95%2B%9B%B8%AD%EE%12%1A%BD&port=6969&peer_id=--test%87%E46%2AU%AB%0C%E2%B53%C2Ky%84&event=started&uploaded=0&downloaded=0&left=0
 
 }
+*/

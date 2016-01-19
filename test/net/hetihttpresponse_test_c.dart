@@ -3,6 +3,7 @@ import 'package:tetorica/core.dart' as hetima;
 import 'package:tetorica/hetimanet.dart' as hetima;
 import 'dart:async' as async;
 
+/*
 void main() {
   hetima.HetiTest test = new hetima.HetiTest("tt");
   {
@@ -44,3 +45,4 @@ void main() {
   }
 
 }
+*/
