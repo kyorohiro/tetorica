@@ -5,7 +5,7 @@ import 'dart:core';
 import 'dart:typed_data' as data;
 import 'dart:io';
 
-import '../../hetimacore.dart';
+import '../../core.dart';
 
 class HetimaDataDartIO extends HetimaData {
   RandomAccessFile _randomFile = null;
@@ -15,7 +15,7 @@ class HetimaDataDartIO extends HetimaData {
     if(erace == true) {
       _randomFile = _f.openSync(mode: FileMode.WRITE);
     } else {
-      _randomFile = _f.openSync(mode: FileMode.APPEND);      
+      _randomFile = _f.openSync(mode: FileMode.APPEND);
     }
   }
 

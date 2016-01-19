@@ -4,7 +4,7 @@ import 'dart:typed_data' as data;
 import 'dart:async';
 import 'dart:core';
 import 'dart:html' as html;
-import '../../hetimacore.dart';
+import '../../core.dart';
 
 class HetimaDataFSBuilder extends HetimaDataBuilder {
   Future<HetimaData> createHetimaData(String path) async {

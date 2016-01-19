@@ -4,7 +4,7 @@
 library dart_hetimanet.test;
 
 import 'package:unittest/unittest.dart';
-import 'package:tetorica/hetimacore.dart';
+import 'package:tetorica/core.dart';
 import 'package:tetorica/hetimanet.dart';
 //import 'package:hetimanet/hetimanet_chrome.dart';
 

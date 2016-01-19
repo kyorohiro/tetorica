@@ -2,7 +2,7 @@ library hetimacore.byteorder;
 import 'dart:core';
 
 
-abstract class ByteOrder {
+class ByteOrder {
   static final int BYTEORDER_BIG_ENDIAN = 1;
   static final int BYTEORDER_LITTLE_ENDIAN = 0;
 
@@ -69,6 +69,7 @@ abstract class ByteOrder {
     }
     return ret;
   }
+
   static int parseInt(List<int> value, int start, int byteorder) {
     int ret = 0;
     if (byteorder == BYTEORDER_BIG_ENDIAN) {

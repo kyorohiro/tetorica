@@ -3,7 +3,7 @@ library hetimacore.file;
 import 'dart:typed_data' as data;
 import 'dart:async' as async;
 import 'dart:core';
-import '../../hetimacore.dart';
+import '../../core.dart';
 
 abstract class HetimaDataBuilder {
   async.Future<HetimaData> createHetimaData(String path);

@@ -2,7 +2,7 @@ library hetimanet.http.server.plus;
 
 import 'dart:convert' as convert;
 import 'dart:async' as async;
-import 'package:tetorica/hetimacore.dart';
+import 'package:tetorica/core.dart';
 import '../net/hetisocket.dart';
 import '../util/hetiutil.dart';
 import 'hetihttp.dart';

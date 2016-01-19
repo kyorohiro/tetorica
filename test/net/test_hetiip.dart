@@ -1,5 +1,5 @@
 import 'package:unittest/unittest.dart' as unit;
-import 'package:tetorica/hetimacore.dart';
+import 'package:tetorica/core.dart';
 import 'package:tetorica/hetimanet.dart';
 
 void main() {

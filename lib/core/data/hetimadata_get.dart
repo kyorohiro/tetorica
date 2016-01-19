@@ -2,7 +2,7 @@ library hetimacore_cl.get;
 import 'dart:async' as async;
 import 'dart:core';
 import 'dart:html' as html;
-import '../../hetimacore.dart';
+import '../../core.dart';
 
 class HetimaDataGet extends HetimaData {
 
@@ -37,7 +37,7 @@ class HetimaDataGet extends HetimaData {
     async.Completer<int> ret = new async.Completer();
     if (_mBlob == null) {
       getBlob().then((html.Blob b) {
-          ret.complete(b.size);          
+          ret.complete(b.size);
       });
     } else {
       ret.complete(_mBlob.size);
@@ -72,7 +72,7 @@ class HetimaDataGet extends HetimaData {
     return ret.future;
   }
 
-  void beToReadOnly() {    
+  void beToReadOnly() {
   }
 
 }

@@ -2,7 +2,7 @@ library hetimacore.file.serialize;
 
 import 'dart:async';
 import 'dart:core';
-import '../../hetimacore.dart';
+import '../../core.dart';
 
 class HetimaDataSerialize extends HetimaData {
   bool get writable => false;

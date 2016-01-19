@@ -1,7 +1,7 @@
 library hetimanet.http.response.chunk;
 
 import 'dart:async' as async;
-import 'package:tetorica/hetimacore.dart';
+import 'package:tetorica/core.dart';
 import 'hetihttpresponse.dart';
 
 

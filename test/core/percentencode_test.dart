@@ -1,6 +1,6 @@
 import 'package:unittest/unittest.dart' as unit;
 import 'dart:async' as async;
-import 'package:tetorica/hetimacore.dart';
+import 'package:tetorica/core.dart';
 import 'dart:convert' as convert;
 
 void main() {

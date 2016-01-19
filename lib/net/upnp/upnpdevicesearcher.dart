@@ -2,7 +2,7 @@ library hetimanet.upnp.searcher;
 
 import 'dart:convert' as convert;
 import 'dart:async';
-import 'package:tetorica/hetimacore.dart';
+import 'package:tetorica/core.dart';
 import '../net/hetisocket.dart';
 import '../http/hetihttp.dart';
 

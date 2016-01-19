@@ -2,7 +2,7 @@ library hetimacore_cl.blob;
 import 'dart:async' as async;
 import 'dart:core';
 import 'dart:html' as html;
-import '../../hetimacore.dart';
+import '../../core.dart';
 
 
 
@@ -61,4 +61,3 @@ class HetimaDataBlob extends HetimaData {
   void beToReadOnly() {
   }
 }
-

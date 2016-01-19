@@ -1,5 +1,5 @@
 import 'package:unittest/unittest.dart' as unit;
-import 'package:tetorica/hetimacore.dart' as hetima;
+import 'package:tetorica/core.dart' as hetima;
 import 'package:tetorica/hetimanet.dart' as hetima;
 import 'dart:typed_data' as type;
 import 'dart:convert' as convert;
