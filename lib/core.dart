@@ -13,8 +13,6 @@ export 'core/parser/arraybuilder.dart';
 export 'core/parser/arraybuilderbuffer.dart';
 export 'core/util/percentencode.dart';
 export 'core/data/hetimadata_mem.dart';
-export 'core/data/hetimadata_cache.dart';
-export 'core/data/hetimadata_serialize.dart';
 export 'core/util/bencode.dart';
 export 'core/util/bencode_async.dart';
 part 'core/util/uuid.dart';
