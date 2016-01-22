@@ -2,28 +2,7 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 library dart_hetimanet.test;
-
-//import 'package:unittest/unittest.dart';
-//import 'package:tetorica/core.dart';
-//import 'package:tetorica/hetimanet.dart';
-//import 'package:hetimanet/hetimanet_chrome.dart';
-
+import './hetihttpresponse_test_b.dart' as httpresponse_b;
 main() {
-  /*
-  group('A group of tests', () {
-    setUp(() {
-    });
-
-    test('First Test', () {
-      HetiSocketBuilder builder = new HetiSocketBuilderChrome();
-      HetiSocket socket = builder.createClient();
-      socket.onReceive().listen((HetiReceiveInfo i) {
-
-      });
-      socket.send([]).then((HetiSendInfo i) {
-
-      });
-    });
-  });
-   */
+  httpresponse_b.main();
 }
