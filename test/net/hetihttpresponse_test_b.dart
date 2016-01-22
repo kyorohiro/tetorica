@@ -1,26 +1,21 @@
 //import 'package:unittest/unittest.dart' as unit;
 import 'package:tetorica/core.dart' as hetima;
 import 'package:tetorica/hetimanet.dart' as hetima;
-import 'dart:async' as async;
-/*
+import 'package:unittest/unittest.dart' as unit;
+
+import 'dart:async';
+
 void main() {
-  hetima.HetiTest test = new hetima.HetiTest("tt");
-  {
-    hetima.HetiTestTicket ticket = test.test("httpversion", 3000);
-    //String v = "";
-    new async.Future.sync(() {
+  unit.group("response_b", () {
+    unit.test("http/1.1", () async {
       hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
       hetima.EasyParser parser = new hetima.EasyParser(builder);
-      async.Future<String> ret = hetima.HetiHttpResponse.decodeHttpVersion(parser);
+      Future<String> ret = hetima.HetiHttpResponse.decodeHttpVersion(parser);
       builder.appendString("HTTP/1.1");
-      return ret;
-    }).then((String v) {
-      ticket.assertTrue("v", "HTTP/1.1"== v);
-      ticket.fin();
+      unit.expect("HTTP/1.1", await ret);
     });
-  }
-
-
+  });
+/*
   {
     hetima.HetiTestTicket ticket = test.test("reasonphase", 3000);
     new async.Future.sync(() {
@@ -213,5 +208,5 @@ void main() {
       ticket.fin();
     });
   }
+  */
 }
-*/
