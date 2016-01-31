@@ -7,10 +7,17 @@ import './hetihttpresponse_test_c.dart' as httpresponse_c;
 import './hetihttpresponse_test_d.dart' as httpresponse_d;
 import './hetiudpsocketsimu_test.dart' as hetiudpsocketsimu_test;
 import './httpurldecoder_test.dart' as httpurldecoder_test;
+import './test_hetiip.dart' as test_hetiip;
+
+//
+import 'test_HttpUrl.dart' as test_HttpUrl;
 main() {
   httpresponse_b.main();
   httpresponse_c.main();
   httpresponse_d.main();
   hetiudpsocketsimu_test.main();
   httpurldecoder_test.main();
+  //
+  test_hetiip.main();
+  test_HttpUrl.main();
 }
