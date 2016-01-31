@@ -1,41 +1,28 @@
 //import 'package:unittest/unittest.dart' as unit;
 import 'package:tetorica/core.dart' as hetima;
 import 'package:tetorica/hetimanet.dart' as hetima;
-import 'dart:async' as async;
-/*
-void main() {
-  hetima.HetiTest test = new hetima.HetiTest("tt");
-  {
-    hetima.HetiTestTicket ticket = test.test("001", 3000);
+import 'dart:async';
+import 'package:unittest/unittest.dart' as unit;
 
-    new async.Future.sync(() {
+void main() {
+  unit.test("001",() async{
       hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
       hetima.EasyParser parser = new hetima.EasyParser(builder);
-      async.Future<hetima.HetiHttpRequestRange> f = hetima.HetiHttpResponse.decodeRequestRangeValue(parser);
+      Future<hetima.HetiHttpRequestRange> f = hetima.HetiHttpResponse.decodeRequestRangeValue(parser);
       builder.appendString("bytes=0-100");
       builder.fin();
-      return f;
-    }).then((hetima.HetiHttpRequestRange  v) {
-      ticket.assertTrue("a0", 0==v.start);
-      ticket.assertTrue("a1", 100==v.end);
-      ticket.fin();
-    });
-  }
+      unit.expect(0, (await f).start);
+      unit.expect(100, (await f).end);
+  });
 
-  {
-    hetima.HetiTestTicket ticket = test.test("002", 3000);
-    new async.Future.sync(() {
+  unit.test("002",() async {
       hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
       hetima.EasyParser parser = new hetima.EasyParser(builder);
-      async.Future<hetima.HetiHttpRequestRange> f = hetima.HetiHttpResponse.decodeRequestRangeValue(parser);
+      Future<hetima.HetiHttpRequestRange> f = hetima.HetiHttpResponse.decodeRequestRangeValue(parser);
       builder.appendString("bytes=0-");
       builder.fin();
-      return f;
-    }).then((hetima.HetiHttpRequestRange  v) {
-      ticket.assertTrue("a0", 0==v.start);
-      ticket.assertTrue("a1", -1==v.end);
-      ticket.fin();
-    });
-  }
+
+      unit.expect(0, (await f).start);
+      unit.expect(-1, (await f).end);
+  });
 }
-*/
