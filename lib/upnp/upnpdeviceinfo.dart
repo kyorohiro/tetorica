@@ -1,14 +1,5 @@
-library hetimanet.upnp.deviceinfo;
+part of hetimanet_upnp;
 
-import 'dart:convert' as convert;
-import 'dart:async';
-import '../net/hetisocket.dart';
-import '../http/hetihttp.dart';
-import '../util/hetiutil.dart';
-import 'package:xml/xml.dart' as xml;
-export 'upnpdeviceinfo.dart';
-export 'upnpdevicesearcher.dart';
-export 'upnppppdevice.dart';
 
 class UpnpDeviceInfo {
   static final String KEY_ST = "ST";

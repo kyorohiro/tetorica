@@ -1,12 +1,4 @@
-library hetimanet.upnp.pppdevice;
-
-import 'dart:convert' as convert;
-import 'dart:async' as async;
-import '../http/hetihttp.dart';
-import '../util/hetiutil.dart';
-import 'package:xml/xml.dart' as xml;
-import 'upnpdeviceinfo.dart';
-import 'upnppppdevice_result.dart';
+part of hetimanet_upnp;
 
 class UpnpPPPDevice {
   static const String KEY_SOAPACTION = "SOAPAction";

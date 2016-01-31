@@ -1,6 +1,4 @@
-library hetimanet.upnp.pppdevice.result;
-
-import 'package:xml/xml.dart' as xml;
+part of hetimanet_upnp;
 
 class UpnpPPPDeviceRequestResponse {
   UpnpPPPDeviceRequestResponse(int _resultCode, String _body) {

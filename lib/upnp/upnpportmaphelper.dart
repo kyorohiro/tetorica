@@ -1,11 +1,4 @@
-library hetimanet.upnp.helper;
-
-import 'dart:async';
-import '../net/hetisocket.dart';
-import 'upnpdeviceinfo.dart';
-import 'upnpdevicesearcher.dart';
-import 'upnppppdevice.dart';
-import 'upnppppdevice_result.dart';
+part of hetimanet_upnp;
 
 /**
  * app parts
