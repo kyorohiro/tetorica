@@ -1,5 +1,5 @@
 import 'package:unittest/unittest.dart' as unit;
-import 'package:tetorica/hetimanet.dart';
+import 'package:tetorica/net.dart';
 
 void main() {
   unit.group("v4", () {

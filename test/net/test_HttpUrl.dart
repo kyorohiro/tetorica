@@ -1,6 +1,6 @@
 import 'package:unittest/unittest.dart' as unit;
 import 'package:tetorica/core.dart' as hetima;
-import 'package:tetorica/hetimanet.dart' as hetima;
+import 'package:tetorica/net.dart' as hetima;
 
 void main() {
   unit.test("http://127.0.0.1", () {
