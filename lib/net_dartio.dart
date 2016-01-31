@@ -1,4 +1,9 @@
 library hetimanet_dartio;
 
-export 'net/net/hetisocket.dart';
-export 'net/net/hetisocket_dartio.dart';
+import 'net.dart';
+import 'dart:async';
+import 'dart:io';
+import 'dart:math';
+import 'net/util/hetiip.dart';
+
+part 'net/net/dartio/hetisocketmanager.dart';

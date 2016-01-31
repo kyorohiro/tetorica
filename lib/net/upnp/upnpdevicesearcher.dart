@@ -32,7 +32,7 @@ class UpnpDeviceSearcher {
       """ST: urn:schemas-upnp-org:service:WANIPConnection:2\r\n""" +
       """\r\n""";
 
-  static Future<UpnpDeviceSearcher> createInstance(HetimaSocketBuilder builder, {String ip: "0.0.0.0", bool verbose: false}) async {
+  static Future<UpnpDeviceSearcher> createInstance(TetSocketBuilder builder, {String ip: "0.0.0.0", bool verbose: false}) async {
     UpnpDeviceSearcher returnValue = new UpnpDeviceSearcher._fromSocketBuilder(builder, verbose: verbose);
     try {
       await returnValue._initialize(ip);
@@ -42,7 +42,7 @@ class UpnpDeviceSearcher {
     }
   }
 
-  HetimaSocketBuilder _socketBuilder = null;
+  TetSocketBuilder _socketBuilder = null;
   HetimaUdpSocket _socket = null;
   HetimaUdpSocket get rawsocket => _socket;
   StreamController<UpnpDeviceInfo> _streamer = new StreamController.broadcast();
@@ -52,7 +52,7 @@ class UpnpDeviceSearcher {
   bool get nowSearching => _nowSearching;
   bool _verbose = false;
 
-  UpnpDeviceSearcher._fromSocketBuilder(HetimaSocketBuilder builder, {bool verbose: false}) {
+  UpnpDeviceSearcher._fromSocketBuilder(TetSocketBuilder builder, {bool verbose: false}) {
     _socketBuilder = builder;
     _verbose = verbose;
   }

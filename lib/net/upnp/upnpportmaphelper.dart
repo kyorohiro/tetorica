@@ -20,7 +20,7 @@ class UpnpPortMapHelper {
   String _externalAddress = "";
 
   int get externalPort => _requestedPort;
-  HetimaSocketBuilder builder = null;
+  TetSocketBuilder builder = null;
   String get externalIp => _externalAddress;
   String get appIdDesc => "hetim(${appid})";
 
@@ -28,7 +28,7 @@ class UpnpPortMapHelper {
   bool _verbose = false;
   bool get verbose => _verbose;
 
-  UpnpPortMapHelper(HetimaSocketBuilder builder, String appid, {bool verbose: false, String ip: "0.0.0.0", int port: 18080, int retry: 0}) {
+  UpnpPortMapHelper(TetSocketBuilder builder, String appid, {bool verbose: false, String ip: "0.0.0.0", int port: 18080, int retry: 0}) {
     this.appid = appid;
     this.builder = builder;
     this._verbose = verbose;
@@ -132,7 +132,7 @@ class UpnpPortMapHelper {
       StartGetLocalIPResult r = await this.startGetLocalIp();
       List<Future> f = [];
       if (localIp == null) {
-        for (HetimaNetworkInterface i in r.networkInterface) {
+        for (TetNetworkInterface i in r.networkInterface) {
           if (i.prefixLength == 24 && i.address != "127.0.0.1") {
             f.add(searchRoutderFromAddress(i.address, reuseRouter: reuseRouter).catchError((e) {}));
           }
@@ -279,16 +279,16 @@ class UpnpPortMapHelper {
   }
 
   Future<StartGetLocalIPResult> startGetLocalIp() async {
-    List<HetimaNetworkInterface> l = await (this.builder).getNetworkInterfaces();
+    List<TetNetworkInterface> l = await (this.builder).getNetworkInterfaces();
     // search 24
-    for (HetimaNetworkInterface i in l) {
+    for (TetNetworkInterface i in l) {
       if (i.prefixLength == 24 && !i.address.startsWith("127")) {
         _controllerUpdateLocalIp.add(i.address);
         return new StartGetLocalIPResult(i.address, l);
       }
     }
     //
-    for (HetimaNetworkInterface i in l) {
+    for (TetNetworkInterface i in l) {
       if (i.prefixLength == 64) {
         _controllerUpdateLocalIp.add(i.address);
         return new StartGetLocalIPResult(i.address, l);
@@ -334,11 +334,11 @@ class StartGetExternalIp {
 }
 
 class StartGetLocalIPResult {
-  StartGetLocalIPResult(String address, List<HetimaNetworkInterface> l) {
+  StartGetLocalIPResult(String address, List<TetNetworkInterface> l) {
     localIP = address;
     networkInterface.addAll(l);
   }
   String localIP = "";
   bool get founded => localIP != null;
-  List<HetimaNetworkInterface> networkInterface = [];
+  List<TetNetworkInterface> networkInterface = [];
 }

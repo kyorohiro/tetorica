@@ -2,17 +2,17 @@ library hetimanet.base;
 import 'dart:async' as async;
 import 'package:tetorica/core.dart' as heti;
 
-abstract class HetimaSocketBuilder {
+abstract class TetSocketBuilder {
   static const int BUFFER_NOTIFY = 0;
   static const int BUFFER_ONLY = 1;
-  HetimaSocket createClient({int mode:BUFFER_NOTIFY});
+  TetSocket createClient({int mode:BUFFER_NOTIFY});
   HetimaUdpSocket createUdpClient();
-  async.Future<HetimaServerSocket> startServer(String address, int port, {int mode:BUFFER_NOTIFY}) ;
-  async.Future<List<HetimaNetworkInterface>> getNetworkInterfaces();
+  async.Future<TetServerSocket> startServer(String address, int port, {int mode:BUFFER_NOTIFY}) ;
+  async.Future<List<TetNetworkInterface>> getNetworkInterfaces();
 }
 
-abstract class HetimaServerSocket {
-  async.Stream<HetimaSocket> onAccept();
+abstract class TetServerSocket {
+  async.Stream<TetSocket> onAccept();
   void close();
 }
 
@@ -24,11 +24,11 @@ class HetimaServerSocketError {
   int reason = 0;
 }
 
-abstract class HetimaSocket {
+abstract class TetSocket {
   int lastUpdateTime = 0;
   heti.ArrayBuilder _buffer = new heti.ArrayBuilder();
   heti.ArrayBuilder get buffer => _buffer;
-  async.Future<HetimaSocket> connect(String peerAddress, int peerPort) ;
+  async.Future<TetSocket> connect(String peerAddress, int peerPort) ;
   async.Future<HetimaSendInfo> send(List<int> data);
   async.Future<HetimaSocketInfo> getSocketInfo();
   async.Stream<HetimaReceiveInfo> onReceive;
@@ -64,7 +64,7 @@ class HetimaBindResult {
 
 }
 
-class HetimaNetworkInterface
+class TetNetworkInterface
 {
   String address;
   int prefixLength;

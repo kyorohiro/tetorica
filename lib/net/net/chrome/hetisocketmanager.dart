@@ -1,11 +1,11 @@
 part of hetimanet.chrome;
 
-class HetimaSocketBuilderChrome extends HetimaSocketBuilder {
-  HetimaSocket createClient({int mode:HetimaSocketBuilder.BUFFER_NOTIFY}) {
+class HetimaSocketBuilderChrome extends TetSocketBuilder {
+  TetSocket createClient({int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
     return new HetimaSocketChrome.empty(mode:mode);
   }
 
-  Future<HetimaServerSocket> startServer(String address, int port, {int mode:HetimaSocketBuilder.BUFFER_NOTIFY}) {
+  Future<TetServerSocket> startServer(String address, int port, {int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
     return HetimaServerSocketChrome.startServer(address, port, mode:mode);
   }
 
@@ -13,11 +13,11 @@ class HetimaSocketBuilderChrome extends HetimaSocketBuilder {
     return new HetimaUdpSocketChrome.empty();
   }
 
-  Future<List<HetimaNetworkInterface>> getNetworkInterfaces() async {
-    List<HetimaNetworkInterface> interfaceList = new List();
+  Future<List<TetNetworkInterface>> getNetworkInterfaces() async {
+    List<TetNetworkInterface> interfaceList = new List();
     List<chrome.NetworkInterface> nl = await chrome.system.network.getNetworkInterfaces();
     for (chrome.NetworkInterface i in nl) {
-      HetimaNetworkInterface inter = new HetimaNetworkInterface();
+      TetNetworkInterface inter = new TetNetworkInterface();
       inter.address = i.address;
       inter.prefixLength = i.prefixLength;
       inter.name = i.name;
@@ -28,8 +28,8 @@ class HetimaSocketBuilderChrome extends HetimaSocketBuilder {
 }
 
 class HetimaChromeSocketManager {
-  Map<int, HetimaServerSocket> _serverList = new Map();
-  Map<int, HetimaSocket> _clientList = new Map();
+  Map<int, TetServerSocket> _serverList = new Map();
+  Map<int, TetSocket> _clientList = new Map();
   Map<int, HetimaUdpSocket> _udpList = new Map();
   static final HetimaChromeSocketManager _instance = new HetimaChromeSocketManager._internal();
   factory HetimaChromeSocketManager() {

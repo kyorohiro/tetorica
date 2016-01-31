@@ -3,17 +3,17 @@ library hetimanet.simu;
 import 'dart:async';
 import 'hetisocket.dart';
 
-class HetiSocketBuilderSimu extends HetimaSocketBuilder {
-  HetimaSocket createClient({int mode:HetimaSocketBuilder.BUFFER_NOTIFY}) {
+class HetiSocketBuilderSimu extends TetSocketBuilder {
+  TetSocket createClient({int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
     return null;
   }
   HetimaUdpSocket createUdpClient() {
     return new HetiUdpSocketSimu();
   }
-  Future<HetimaServerSocket> startServer(String address, int port, {int mode:HetimaSocketBuilder.BUFFER_NOTIFY}) {
+  Future<TetServerSocket> startServer(String address, int port, {int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
     return null;
   }
-  Future<List<HetimaNetworkInterface>> getNetworkInterfaces() {
+  Future<List<TetNetworkInterface>> getNetworkInterfaces() {
     return null;
   }
 }

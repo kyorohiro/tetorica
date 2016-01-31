@@ -22,7 +22,7 @@ class UpnpDeviceInfo {
 
   Map<String, String> _headerMap = {};
   List<UpnpDeviceServiceInfo> _serviceList = [];
-  HetimaSocketBuilder socketBuilder;
+  TetSocketBuilder socketBuilder;
   String helperOptAddress = "";
 
   List<UpnpDeviceServiceInfo> get serviceList => _serviceList;
@@ -34,7 +34,7 @@ class UpnpDeviceInfo {
 
   bool _verbose = false;
   bool get verbose => _verbose;
-  UpnpDeviceInfo(List<HetiHttpResponseHeaderField> headerField, HetimaSocketBuilder builder, {bool verbose:false}) {
+  UpnpDeviceInfo(List<HetiHttpResponseHeaderField> headerField, TetSocketBuilder builder, {bool verbose:false}) {
     _verbose = verbose;
     socketBuilder = builder;
     for (HetiHttpResponseHeaderField header in headerField) {
@@ -58,7 +58,7 @@ class UpnpDeviceInfo {
     return buffer.toString();
   }
 
-  HetimaSocketBuilder getSocketBuilder() {
+  TetSocketBuilder getSocketBuilder() {
     return socketBuilder;
   }
 
@@ -152,7 +152,7 @@ class UpnpDeviceInfo {
       log("xml parse error: ${_serviceXml}");
     }
   }
-  
+
   log(String message) {
     if (_verbose == true) {
       print("--${message}");

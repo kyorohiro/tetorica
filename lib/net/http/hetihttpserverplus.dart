@@ -22,14 +22,14 @@ class HetiHttpServerHelper {
   int get localPort => _localPort;
 
   HetiHttpServer _server = null;
-  HetimaSocketBuilder _socketBuilder = null;
+  TetSocketBuilder _socketBuilder = null;
 
   async.StreamController<String> _controllerUpdateLocalServer = new async.StreamController.broadcast();
   async.Stream<String> get onUpdateLocalServer => _controllerUpdateLocalServer.stream;
   async.StreamController<HetiHttpServerPlusResponseItem> _onResponse = new async.StreamController();
   async.Stream<HetiHttpServerPlusResponseItem> get onResponse => _onResponse.stream;
 
-  HetiHttpServerHelper(HetimaSocketBuilder socketBuilder) {
+  HetiHttpServerHelper(TetSocketBuilder socketBuilder) {
     _socketBuilder = socketBuilder;
   }
 
@@ -89,7 +89,7 @@ class HetiHttpServerHelper {
   }
 
 
-  void _startResponseRangeFile(HetimaSocket socket, HetimaData file, Map<String,String> header, int start, int end) {
+  void _startResponseRangeFile(TetSocket socket, HetimaData file, Map<String,String> header, int start, int end) {
     ArrayBuilder response = new ArrayBuilder();
     file.getLength().then((int length) {
       if (end == -1 || end > length - 1) {
@@ -113,7 +113,7 @@ class HetiHttpServerHelper {
     });
   }
 
-  void _startResponseFile(HetimaSocket socket, int statuCode, Map<String,String> header, HetimaData file) {
+  void _startResponseFile(TetSocket socket, int statuCode, Map<String,String> header, HetimaData file) {
     ArrayBuilder response = new ArrayBuilder();
     if(statuCode == null) {
       statuCode = 200;
@@ -134,7 +134,7 @@ class HetiHttpServerHelper {
     });
   }
 
-  void _startResponseBuffer(HetimaSocket socket, HetimaData file, int index, int length) {
+  void _startResponseBuffer(TetSocket socket, HetimaData file, int index, int length) {
     int start = index;
     responseTask() {
       int end = start + 256 * 1024;
@@ -189,7 +189,7 @@ class HetiHttpServerPlusResponseItem {
     this.req = req;
   }
 
-  HetimaSocket get socket => req.socket;
+  TetSocket get socket => req.socket;
   String get targetLine => req.info.line.requestTarget;
   String get path {
     int index = targetLine.indexOf("?");

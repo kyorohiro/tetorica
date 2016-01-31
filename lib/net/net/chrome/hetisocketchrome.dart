@@ -1,19 +1,19 @@
 part of hetimanet.chrome;
 
-class HetimaSocketChrome extends HetimaSocket {
+class HetimaSocketChrome extends TetSocket {
   bool _isClose = false;
-  int _mode = HetimaSocketBuilder.BUFFER_NOTIFY;
-  int get mode => _mode; 
+  int _mode = TetSocketBuilder.BUFFER_NOTIFY;
+  int get mode => _mode;
   int clientSocketId;
 
   StreamController<HetimaReceiveInfo> _controllerReceive = new StreamController.broadcast();
   StreamController<HetimaCloseInfo> _controllerClose = new StreamController.broadcast();
 
-  HetimaSocketChrome.empty({int mode:HetimaSocketBuilder.BUFFER_NOTIFY}) {
+  HetimaSocketChrome.empty({int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
     _mode = mode;
   }
 
-  HetimaSocketChrome(int _clientSocketId,{int mode:HetimaSocketBuilder.BUFFER_NOTIFY}) {
+  HetimaSocketChrome(int _clientSocketId,{int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
     HetimaChromeSocketManager.getInstance().addClient(_clientSocketId, this);
     chrome.sockets.tcp.setPaused(_clientSocketId, false);
     clientSocketId = _clientSocketId;
@@ -27,7 +27,7 @@ class HetimaSocketChrome extends HetimaSocket {
     List<int> tmp = info.data.getBytes();
     buffer.appendIntList(tmp, 0, tmp.length);
     List<int> b= [];
-    if(_mode == HetimaSocketBuilder.BUFFER_NOTIFY) {
+    if(_mode == TetSocketBuilder.BUFFER_NOTIFY) {
       b = info.data.getBytes();
     }
     _controllerReceive.add(new HetimaReceiveInfo(b));
@@ -54,7 +54,7 @@ class HetimaSocketChrome extends HetimaSocket {
     return ret;
   }
 
-  Future<HetimaSocket> connect(String peerAddress, int peerPort) async {
+  Future<TetSocket> connect(String peerAddress, int peerPort) async {
     chrome.SocketProperties properties = new chrome.SocketProperties();
     chrome.CreateInfo info = await chrome.sockets.tcp.create(properties);
     await chrome.sockets.tcp.connect(info.socketId, peerAddress, peerPort);

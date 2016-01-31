@@ -25,14 +25,14 @@ class HetiHttpClientResponse {
 class HetiHttpClientConnectResult {}
 
 class HetiHttpClient {
-  HetimaSocketBuilder _socketBuilder;
-  HetimaSocket socket = null;
+  TetSocketBuilder _socketBuilder;
+  TetSocket socket = null;
   String host;
   int port;
 
   bool _verbose = false;
 
-  HetiHttpClient(HetimaSocketBuilder socketBuilder, {HetimaDataBuilder dataBuilder: null, bool verbose: false}) {
+  HetiHttpClient(TetSocketBuilder socketBuilder, {HetimaDataBuilder dataBuilder: null, bool verbose: false}) {
     _socketBuilder = socketBuilder;
     _verbose = verbose;
   }
@@ -45,7 +45,7 @@ class HetiHttpClient {
       throw {};
     }
     log("<hetihttpclient f=connect> ${socket}");
-    HetimaSocket s = await socket.connect(host, port);
+    TetSocket s = await socket.connect(host, port);
     if (s == null) {
       throw {};
     }
