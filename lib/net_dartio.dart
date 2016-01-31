@@ -7,3 +7,6 @@ import 'dart:math';
 import 'net/util/hetiip.dart';
 
 part 'net/net/dartio/hetisocketmanager.dart';
+part 'net/net/dartio/udp.dart';
+part 'net/net/dartio/socket.dart';
+part 'net/net/dartio/server.dart';
