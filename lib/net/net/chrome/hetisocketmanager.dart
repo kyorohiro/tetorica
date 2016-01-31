@@ -9,6 +9,10 @@ class HetimaSocketBuilderChrome extends TetSocketBuilder {
     return HetimaServerSocketChrome.startServer(address, port, mode:mode);
   }
 
+  TetSocket createSecureClient({int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
+    return null;
+  }
+
   HetimaUdpSocket createUdpClient() {
     return new HetimaUdpSocketChrome.empty();
   }

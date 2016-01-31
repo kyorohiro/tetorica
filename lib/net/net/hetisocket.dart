@@ -6,6 +6,7 @@ abstract class TetSocketBuilder {
   static const int BUFFER_NOTIFY = 0;
   static const int BUFFER_ONLY = 1;
   TetSocket createClient({int mode:BUFFER_NOTIFY});
+  TetSocket createSecureClient({int mode:BUFFER_NOTIFY});
   HetimaUdpSocket createUdpClient();
   async.Future<TetServerSocket> startServer(String address, int port, {int mode:BUFFER_NOTIFY}) ;
   async.Future<List<TetNetworkInterface>> getNetworkInterfaces();

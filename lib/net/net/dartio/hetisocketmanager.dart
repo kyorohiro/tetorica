@@ -8,8 +8,12 @@ class TetSocketBuilderDartIO extends TetSocketBuilder {
     _verbose = verbose;
   }
 
-  TetSocket createClient({int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
+  TetSocket createClient({int mode:TetSocketBuilder.BUFFER_NOTIFY, isSecure: false}) {
     return new HetimaSocketDartIo(verbose: _verbose,mode:mode);
+  }
+
+  TetSocket createSecureClient({int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
+    return new HetimaSocketDartIo(verbose: _verbose,mode:mode, isSecure: true);
   }
 
   Future<TetServerSocket> startServer(String address, int port, {int mode:TetSocketBuilder.BUFFER_NOTIFY}) async {
@@ -79,10 +83,13 @@ class HetimaSocketDartIo extends TetSocket {
   bool get verbose => _verbose;
   Socket _socket = null;
   int _mode = 0;
+  bool _isSecure = false;
+  bool get isSecure => _isSecure;
 
-  HetimaSocketDartIo({verbose: false, int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
+  HetimaSocketDartIo({verbose: false, int mode:TetSocketBuilder.BUFFER_NOTIFY, bool isSecure:false}) {
     _verbose = verbose;
     _mode = mode;
+    _isSecure = isSecure;
   }
 
   HetimaSocketDartIo.fromSocket(Socket socket, {verbose: false, int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
@@ -116,7 +123,12 @@ class HetimaSocketDartIo extends TetSocket {
     }
     try {
       _nowConnecting = true;
-      _socket = await Socket.connect(peerAddress, peerPort);
+      if(isSecure == true) {
+        _socket = await SecureSocket.connect(peerAddress, peerPort);
+      } else {
+        _socket = await Socket.connect(peerAddress, peerPort);
+      }
+
       _socket.listen((List<int> data) {
         log('<<<lis>>> '); //${data.length} ${UTF8.decode(data)}');
         this.buffer.appendIntList(data, 0, data.length);

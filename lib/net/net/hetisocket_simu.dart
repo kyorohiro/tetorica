@@ -10,6 +10,9 @@ class HetiSocketBuilderSimu extends TetSocketBuilder {
   HetimaUdpSocket createUdpClient() {
     return new HetiUdpSocketSimu();
   }
+  TetSocket createSecureClient({int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
+    return null;
+  }
   Future<TetServerSocket> startServer(String address, int port, {int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
     return null;
   }
