@@ -17,3 +17,4 @@ part 'core/data/hetimadata_mem.dart';
 part 'core/util/bencode.dart';
 part 'core/util/bencode_async.dart';
 part 'core/util/uuid.dart';
+part 'core/util/pieceinfo.dart';

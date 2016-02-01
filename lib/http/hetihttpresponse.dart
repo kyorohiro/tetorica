@@ -44,6 +44,7 @@ class HetiHttpResponse {
     return result;
   }
 
+
   static Future<String> decodeFieldName(EasyParser parser) async {
     List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.TCHAR));
     return convert.UTF8.decode(v);
