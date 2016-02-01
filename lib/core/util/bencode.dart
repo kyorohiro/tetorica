@@ -191,7 +191,7 @@ class Bdecoder {
 }
 
 class Bencoder {
-  hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
+  ArrayBuilder builder = new ArrayBuilder();
 
   data.Uint8List enode(Object obj) {
     builder.clear();

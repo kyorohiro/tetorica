@@ -4,7 +4,7 @@ part of hetimacore;
 class BencodeAsync {
   static BdecoderAsync _decoder = new BdecoderAsync();
 
-  static Future<Object> decode(hetima.EasyParser parser) {
+  static Future<Object> decode(EasyParser parser) {
     return _decoder.decode(parser);
   }
 }
@@ -14,11 +14,11 @@ class BdecoderAsync {
   static String DIGIT_AS_STRING = "0123456789";
   static List<int> DIGIT = convert.UTF8.encode(DIGIT_AS_STRING);
 
-  Future<Object> decode(hetima.EasyParser parser) {
+  Future<Object> decode(EasyParser parser) {
     return decodeBenObject(parser);
   }
 
-  Future<Object> decodeBenObject(hetima.EasyParser parser) async {
+  Future<Object> decodeBenObject(EasyParser parser) async {
     List<int> v = await parser.getPeek(1);
     if (0x69 == v[0]) {
       // i
@@ -37,14 +37,14 @@ class BdecoderAsync {
     throw tmpError.update("benobject");
   }
 
-  Future<Map> decodeDiction(hetima.EasyParser parser) async {
+  Future<Map> decodeDiction(EasyParser parser) async {
     await parser.nextString("d");
     Map ret = await decodeDictionElements(parser);
     await parser.nextString("e");
     return ret;
   }
 
-  Future<Map> decodeDictionElements(hetima.EasyParser parser) async {
+  Future<Map> decodeDictionElements(EasyParser parser) async {
     Map ret = new Map();
     while (true) {
       String key = await decodeString(parser);
@@ -57,14 +57,14 @@ class BdecoderAsync {
     }
   }
 
-  Future<List<Object>> decodeList(hetima.EasyParser parser) async {
+  Future<List<Object>> decodeList(EasyParser parser) async {
     await parser.nextString("l");
     List<Object> ret = await decodeListElement(parser);
     await parser.nextString("e");
     return ret;
   }
 
-  Future<List<Object>> decodeListElement(hetima.EasyParser parser) async {
+  Future<List<Object>> decodeListElement(EasyParser parser) async {
     List<Object> ret = new List();
     while (true) {
       Object v1 = await decodeBenObject(parser);
@@ -79,21 +79,21 @@ class BdecoderAsync {
     }
   }
 
-  Future<int> decodeNumber(hetima.EasyParser parser) async {
+  Future<int> decodeNumber(EasyParser parser) async {
     await parser.nextString("i");
-    List<int> numList = await parser.nextBytePatternByUnmatch(new hetima.EasyParserIncludeMatcher(DIGIT));
+    List<int> numList = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(DIGIT));
     int num = intList2int(numList);
     await parser.nextString("e");
     return num;
   }
 
-  Future<String> decodeString(hetima.EasyParser parser) async {
+  Future<String> decodeString(EasyParser parser) async {
     List<int> v = await decodeBytes(parser);
     return convert.UTF8.decode(v, allowMalformed: true);
   }
 
-  Future<List<int>> decodeBytes(hetima.EasyParser parser) async {
-    List<int> lengthList = await parser.nextBytePatternByUnmatch(new hetima.EasyParserIncludeMatcher(DIGIT));
+  Future<List<int>> decodeBytes(EasyParser parser) async {
+    List<int> lengthList = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(DIGIT));
     if (lengthList.length == 0) {
       throw tmpError.update("byte:length=0");
     }

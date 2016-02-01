@@ -272,6 +272,9 @@ abstract class EasyParserMatcher {
   }
 }
 
+//
+// http response
+//
 class EasyParserIncludeMatcher extends EasyParserMatcher {
   List<int> include = null;
   EasyParserIncludeMatcher(List<int> i) {
@@ -298,6 +301,7 @@ class EasyParserStringMatcher extends EasyParserMatcher {
     return include.contains(target);
   }
 }
+
 class EasyParseError extends Error {
   EasyParseError();
 }
