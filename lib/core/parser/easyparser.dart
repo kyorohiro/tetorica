@@ -71,6 +71,22 @@ class EasyParser {
     return v;
   }
 
+//
+// todo write test
+  Future<bool> checkString(String value) async {
+    List<int> encoded = convert.UTF8.encode(value);
+    int i = await _buffer.getIndexFuture(index, encoded.length);
+    if (i + encoded.length > _buffer.currentSize) {
+      return false;
+    }
+    for(int j=0;j<encoded.length;j++) {
+      if(_buffer[j+i] != encoded[j]){
+        return false;
+      }
+    }
+    return true;
+  }
+
   Future<String> nextString(String value) async {
     List<int> encoded = convert.UTF8.encode(value);
     int i = await _buffer.getIndexFuture(index, encoded.length);
