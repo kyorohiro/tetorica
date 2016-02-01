@@ -7,7 +7,7 @@ void main() {
 
   unit.test("arraybuilder: init", () {
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
-    unit.expect(0, builder.size());
+    unit.expect(0, builder.currentSize);
     unit.expect(0, builder.toList().length);
     unit.expect("", builder.toText());
   });
@@ -124,12 +124,12 @@ void main() {
 
   unit.test("ArrayBuilderBuffer: [2]", () async {
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
-    unit.expect(0, builder.size());
+    unit.expect(0, builder.currentSize);
 
     bool isOK1 = false;
     bool isOK2 = false;
     builder.getByteFuture(5, 1).then((List<int > v) {
-      unit.expect(builder.size(), 6);
+      unit.expect(builder.currentSize, 6);
       isOK1 = true;
     });
     await new Future(() {

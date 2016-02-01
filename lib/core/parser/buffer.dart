@@ -1,7 +1,7 @@
 part of hetimacore;
 
 abstract class TetBuffer {
-  List<int> get rawbuffer8;
+  int get cacheSize;
   int get clearedBuffer;
   int get length;
   int operator [](int index);
@@ -21,8 +21,10 @@ class TetBufferPlus implements TetBuffer {
   List<int> _buffer8 = null;
 
   //
-  @override
   List<int> get rawbuffer8 => _buffer8;
+
+  @override
+  int get cacheSize => _buffer8.length;
 
   @override
   int get clearedBuffer => _clearedBuffer;

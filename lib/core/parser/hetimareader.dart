@@ -3,27 +3,20 @@ part of hetimacore;
 abstract class HetimaReader {
 
   Future<int> getIndexFuture(int index, int length) ;
-  Future<List<int>> getByteFuture(int index, int length) ;
-
+  Future<List<int>> getByteFuture(int index, int length, {List<int> out:null});
   Future<int> getLength();
+  int get currentSize;
+  int operator [](int index);
 
+  Completer<bool> _completerFin = new Completer();
+  Completer<bool> get rawcompleterFin => _completerFin;
+  Future<bool> get onFin => _completerFin.future;
   void fin() {
     immutable = true;
   }
 
-  Completer<bool> _completerFin = new Completer();
-
-  Completer<bool> get rawcompleterFin => _completerFin;
-  //
-  // maybe dart bug when use with dart:io:
-  // must to use rawcompleterFin.future...
-  //
-  Future<bool> get onFin => _completerFin.future;
-
   bool _immutable = false;
-
   bool get immutable => _immutable;
-
   void set immutable(bool v) {
     bool prev = _immutable;
     _immutable = v;
@@ -55,6 +48,10 @@ class HetimaReaderAdapter extends HetimaReader {
       completer.completeError(e);
     });
     return completer.future;
+  }
+
+  int get currentSize {
+    return _base.currentSize;
   }
 
   Completer<bool> get rawcompleterFin => _base.rawcompleterFin;

@@ -65,15 +65,20 @@ class ArrayBuilder extends HetimaReader {
     return info.completer.future;
   }
 
-  Future<List<int>> getByteFuture(int index, int length) async {
-    await getIndexFuture(index, length);
-    int len = size() - index;
-    len = (len > length ? length : len);
-    List<int> ret = new data.Uint8List(len >= 0 ? len : 0);
-    for (int i = 0; i < len; i++) {
-      ret[i] = _buffer8[index + i];
+  Future<List<int>> getByteFuture(int index, int length, {List<int> out:null}) async {
+    if(out != null && out.length < length) {
+      throw new Exception();
     }
-    return ret;
+    await getIndexFuture(index, length);
+    int len = currentSize - index;
+    len = (len > length ? length : len);
+    if(out == null) {
+      out = new data.Uint8List(len >= 0 ? len : 0);
+    }
+    for (int i = 0; i < len; i++) {
+      out[i] = _buffer8[index + i];
+    }
+    return out;
   }
 
   int operator [](int index) => 0xFF & _buffer8[index];
@@ -88,7 +93,7 @@ class ArrayBuilder extends HetimaReader {
     _buffer8.clearBuffer(len, reuse: reuse);
   }
 
-  int size() => _length;
+  int get currentSize => _length;
 
   Future<int> getLength() async => _length;
 

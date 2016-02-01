@@ -10,6 +10,7 @@ class ChunkedBuilderAdapter extends HetimaReader {
   bool _started = false;
   ArrayBuilder _buffer = new ArrayBuilder();
   HetimaReader _base = null;
+
   ChunkedBuilderAdapter(HetimaReader builder) {
     _base = builder;
     start();
@@ -51,16 +52,22 @@ class ChunkedBuilderAdapter extends HetimaReader {
     return complter.future;
   }
 
+  int get currentSize {
+    return _buffer.currentSize;
+  }
   async.Future<int> getLength() {
     return _buffer.getLength();
   }
 
   async.Completer<bool> get rawcompleterFin => _buffer.rawcompleterFin;
 
-  async.Future<List<int>> getByteFuture(int index, int length) {
-    return _buffer.getByteFuture(index, length);
+  async.Future<List<int>> getByteFuture(int index, int length, {List<int> out:null}) {
+    return _buffer.getByteFuture(index, length, out:out);
   }
   async.Future<int> getIndexFuture(int index, int length) {
     return _buffer.getIndexFuture(index, length);
+  }
+  int operator [](int index) {
+    return _base[index];
   }
 }

@@ -5,8 +5,10 @@ class EasyParser {
   List<int> stack = new List();
   HetimaReader _buffer = null;
   HetimaReader get buffer => _buffer;
+  bool logon = false;
+  Exception myException = new Exception();
 
-  EasyParser(HetimaReader builder,{bool logon:false}) {
+  EasyParser(HetimaReader builder, {this.logon: false}) {
     _buffer = builder;
   }
 
@@ -40,18 +42,20 @@ class EasyParser {
   void resetIndex(int _index) {
     index = _index;
   }
+
   //
   // [TODO]
   int getInedx() {
     return index;
   }
+
   Future<List<int>> getPeek(int length) {
     return _buffer.getByteFuture(index, length);
   }
 
   Future<List<int>> nextBuffer(int length) async {
     List<int> v = await _buffer.getByteFuture(index, length);
-      index += v.length;
+    index += v.length;
     return v;
   }
 
@@ -60,7 +64,7 @@ class EasyParser {
     List<int> encoded = convert.UTF8.encode(value);
 
     _buffer.getByteFuture(index, encoded.length).then((List<int> v) {
-      if(v.length < encoded.length) {
+      if (v.length < encoded.length) {
         completer.completeError(new EasyParseError());
         return;
       }
@@ -81,24 +85,15 @@ class EasyParser {
   Future<String> readSignWithLength(int length) {
     Completer<String> completer = new Completer();
     _buffer.getByteFuture(index, length).then((List<int> va) {
-        index += length;
-        completer.complete(convert.UTF8.decode(va));
+      index += length;
+      completer.complete(convert.UTF8.decode(va));
     }).catchError((e) {
       completer.completeError(e);
     });
     return completer.future;
   }
 
-  Future<int> readShort(int byteorder) {
-    Completer<int> completer = new Completer();
-    _buffer.getByteFuture(index, 2).then((List<int> va) {
-        index += 2;
-        completer.complete(ByteOrder.parseShort(va, 0, byteorder));
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
-  }
+
 
   Future<List<int>> readShortArray(int byteorder, int num) {
     Completer<List<int>> completer = new Completer();
@@ -107,49 +102,52 @@ class EasyParser {
       return completer.future;
     }
     _buffer.getByteFuture(index, 2 * num).then((List<int> va) {
-        index += 2 * num;
-        List<int> l = new List();
-        for (int i = 0; i < num; i++) {
-          l.add(ByteOrder.parseShort(va, i * 2, byteorder));
-        }
-        completer.complete(l);
+      index += 2 * num;
+      List<int> l = new List();
+      for (int i = 0; i < num; i++) {
+        l.add(ByteOrder.parseShort(va, i * 2, byteorder));
+      }
+      completer.complete(l);
     }).catchError((e) {
       completer.completeError(e);
     });
     return completer.future;
   }
 
-  Future<int> readInt(int byteorder) {
-    Completer<int> completer = new Completer();
-    _buffer.getByteFuture(index, 4).then((List<int> va) {
-        index += 4;
-        completer.complete(ByteOrder.parseInt(va, 0, byteorder));
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
+  Future<int> readLong(int byteorder) async {
+    int i = await _buffer.getIndexFuture(index, 8);
+    if (i + 8 > _buffer.currentSize) {
+      throw (logon == false ? myException : new Exception());
+    }
+    index +=8;
+    return ByteOrder.parseLong(_buffer, 0, byteorder);
   }
 
-  Future<int> readLong(int byteorder) {
-    Completer<int> completer = new Completer();
-    _buffer.getByteFuture(index, 8).then((List<int> va) {
-        index += 8;
-        completer.complete(ByteOrder.parseLong(va, 0, byteorder));
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
+  Future<int> readInt(int byteorder) async {
+    int i = await _buffer.getIndexFuture(index, 4);
+    if (i + 4 > _buffer.currentSize) {
+      throw (logon == false ? myException : new Exception());
+    }
+    index +=4;
+    return ByteOrder.parseInt(_buffer, 0, byteorder);
   }
 
-  Future<int> readByte() {
-    Completer<int> completer = new Completer();
-    _buffer.getByteFuture(index, 1).then((List<int> va) {
-      index += 1;
-      completer.complete(va[0]);
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
+  Future<int> readShort(int byteorder) async {
+    int i = await _buffer.getIndexFuture(index, 2);
+    if (i + 2 > _buffer.currentSize) {
+      throw (logon == false ? myException : new Exception());
+    }
+    index +=2;
+    return ByteOrder.parseShort(_buffer, 0, byteorder);
+  }
+
+  Future<int> readByte() async {
+    int i = await _buffer.getIndexFuture(index, 1);
+    if (i + 1 > _buffer.currentSize) {
+      throw (logon == false ? myException : new Exception());
+    }
+    index += 1;
+    return _buffer[i];
   }
 
   Future<int> nextBytePattern(EasyParserMatcher matcher) {
@@ -217,6 +215,7 @@ abstract class EasyParserMatcher {
   void init() {
     ;
   }
+
   bool match(int target);
   bool matchAll() {
     return true;

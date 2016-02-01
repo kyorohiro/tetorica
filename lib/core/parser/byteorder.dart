@@ -57,7 +57,7 @@ class ByteOrder {
     return ret;
   }
 
-  static int parseShort(List<int> value, int start, int byteorder) {
+  static int parseShort(var value, int start, int byteorder) {
     int ret = 0;
     if (byteorder == BYTEORDER_BIG_ENDIAN) {
       ret = ret | ((value[0 + start] & 0xff) << 8);
@@ -69,7 +69,7 @@ class ByteOrder {
     return ret;
   }
 
-  static int parseInt(List<int> value, int start, int byteorder) {
+  static int parseInt(var value, int start, int byteorder) {
     int ret = 0;
     if (byteorder == BYTEORDER_BIG_ENDIAN) {
       ret = ret | ((value[0 + start] & 0xff) << 24);
@@ -84,7 +84,7 @@ class ByteOrder {
     }
     return ret;
   }
-  static int parseLong(List<int> value, int start, int byteorder) {
+  static int parseLong(var value, int start, int byteorder) {
     int ret = 0;
     if (byteorder == BYTEORDER_BIG_ENDIAN) {
       ret = ret | ((value[0 + start] & 0xff) << 56);

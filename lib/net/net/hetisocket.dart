@@ -44,7 +44,7 @@ abstract class TetSocket {
   }
 
   Future clearBuffer() async {
-    _buffer.clearInnerBuffer(_buffer.size(),reuse:false);
+    _buffer.clearInnerBuffer(_buffer.currentSize,reuse:false);
     _buffer.clear();
   }
 }
