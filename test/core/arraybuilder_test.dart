@@ -159,6 +159,7 @@ void main() {
       builder.appendIntList([7,8,9]);
     });
 
+    await new Future((){});
     return new Future(() {
     unit.expect(isOK1, true);
     unit.expect(isOK2, true);
@@ -169,56 +170,6 @@ void main() {
      hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
      builder.getByteFuture(2, 3).then((List<int > v) {
        unit.expect(v.length, 2);
-       unit.expect(3, v[0]);
-       unit.expect(4, v[1]);
-     });
-     await new Future(() {
-       builder.appendByte(1);
-     });
-     await new Future(() {
-       builder.appendByte(2);
-     });
-     await new Future(() {
-       builder.appendByte(3);
-     });
-     await new Future(() {
-       builder.appendByte(4);
-     });
-     builder.fin();
-   });
-
-  unit.test("ArrayBuilderBuffer: [2]", () async {
-     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
-     List<int> buffer = new List<int>(1024);
-     List<int> output = [];
-     builder.getByteFuture(2, 3, buffer:buffer, output:output).then((List<int > v) {
-       unit.expect(v.length, 1024);
-       unit.expect(output[0], 2);
-       unit.expect(3, v[0]);
-       unit.expect(4, v[1]);
-     });
-     await new Future(() {
-       builder.appendByte(1);
-     });
-     await new Future(() {
-       builder.appendByte(2);
-     });
-     await new Future(() {
-       builder.appendByte(3);
-     });
-     await new Future(() {
-       builder.appendByte(4);
-     });
-     builder.fin();
-   });
-
-  unit.test("ArrayBuilderBuffer: [2]", () async {
-     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
-     List<int> buffer = new List<int>(1024);
-     List<int> output = [1];
-     builder.getByteFuture(2, 3, buffer:buffer, output:output).then((List<int > v) {
-       unit.expect(v.length, 1024);
-       unit.expect(output[0], 2);
        unit.expect(3, v[0]);
        unit.expect(4, v[1]);
      });

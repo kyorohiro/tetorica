@@ -26,27 +26,8 @@ class ArrayBuilder extends HetimaReader {
   }
 
   bool _updateGetInfo(GetByteFutureInfo info) {
-    if (this.immutable == true || info.completerResult != null && info.index + info.completerResultLength - 1 < _length) {
-      int length = 0;
-      for (int i = 0; i < info.completerResultLength && info.index + i < size(); i++) {
-        info.completerResult[i] = _buffer8[info.index + i];
-        length += 1;
-      }
-
-      if (info.output == null && info.completerResult.length > length) {
-        List<int> k = info.completerResult.sublist(0, length);
-        info.completerResult = k;
-      }
-      info.completer.complete(info.completerResult);
-      info.completerResult = null;
-      info.completerResultLength = 0;
-      if(info.output != null) {
-        if(info.output.length < 1) {
-          info.output.add(length);
-        } else {
-          info.output[0] = length;
-        }
-      }
+    if (this.immutable == true  || info.index + info.completerResultLength - 1 < _length) {
+      info.completer.complete(info.index);
       return true;
     } else {
       return false;
@@ -65,17 +46,8 @@ class ArrayBuilder extends HetimaReader {
     }
   }
 
-  Future<List<int>> getByteFuture(int index, int length, {List<int> buffer: null, List<int> output:null}) {
+  Future<int> getIndexFuture(int index, int length) {
     GetByteFutureInfo info = new GetByteFutureInfo();
-    if (buffer == null) {
-      info.completerResult = new data.Uint8List(length);
-    } else {
-      info.completerResult = buffer;
-    }
-    info.output = output;
-    if (info.completerResult.length < length) {
-      throw {};
-    }
 
     info.completerResultLength = length;
     info.index = index;
@@ -86,6 +58,17 @@ class ArrayBuilder extends HetimaReader {
     }
 
     return info.completer.future;
+  }
+
+  Future<List<int>> getByteFuture(int index, int length) async {
+    await getIndexFuture(index, length);
+    int len = size() - index;
+    len = (len>length?length:len);
+    List<int> ret = new data.Uint8List(len>=0?len:0);
+    for(int i=0;i<len;i++) {
+      ret[i] = _buffer8[index+i];
+    }
+    return ret;
   }
 
   int operator [](int index) => 0xFF & _buffer8[index];
@@ -161,9 +144,7 @@ class ArrayBuilder extends HetimaReader {
 }
 
 class GetByteFutureInfo {
-  List<int> completerResult = new List();
   int completerResultLength = 0;
   int index = 0;
-  List<int> output = null;
-  Completer<List<int>> completer = null;
+  Completer<int> completer = null;
 }

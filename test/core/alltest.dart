@@ -8,8 +8,11 @@ import './bencode_test.dart' as bencode_test;
 import './bencode_test2.dart' as bencode_test2;
 void main() {
   t_arraybuilder.main();
+
   t_arrraybuilder_z99.main();
+
   t_easyparser.main();
+
   t_coredartio.main();
   t_persent.main();
 
