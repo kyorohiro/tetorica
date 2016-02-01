@@ -1,4 +1,4 @@
-part of hetimanet.chrome;
+part of hetimanet_chrome;
 
 class HetimaSocketBuilderChrome extends TetSocketBuilder {
   TetSocket createClient({int mode:TetSocketBuilder.BUFFER_NOTIFY}) {

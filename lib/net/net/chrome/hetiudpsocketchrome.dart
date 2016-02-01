@@ -1,4 +1,4 @@
-part of hetimanet.chrome;
+part of hetimanet_chrome;
 
 class HetimaUdpSocketChrome extends HetimaUdpSocket {
   chrome.CreateInfo _info = null;

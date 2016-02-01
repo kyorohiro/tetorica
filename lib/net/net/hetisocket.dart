@@ -7,12 +7,12 @@ abstract class TetSocketBuilder {
   TetSocket createClient({int mode:BUFFER_NOTIFY});
   TetSocket createSecureClient({int mode:BUFFER_NOTIFY});
   HetimaUdpSocket createUdpClient();
-  async.Future<TetServerSocket> startServer(String address, int port, {int mode:BUFFER_NOTIFY}) ;
-  async.Future<List<TetNetworkInterface>> getNetworkInterfaces();
+  Future<TetServerSocket> startServer(String address, int port, {int mode:BUFFER_NOTIFY}) ;
+  Future<List<TetNetworkInterface>> getNetworkInterfaces();
 }
 
 abstract class TetServerSocket {
-  async.Stream<TetSocket> onAccept();
+  Stream<TetSocket> onAccept();
   void close();
 }
 
@@ -28,11 +28,11 @@ abstract class TetSocket {
   int lastUpdateTime = 0;
   heti.ArrayBuilder _buffer = new heti.ArrayBuilder();
   heti.ArrayBuilder get buffer => _buffer;
-  async.Future<TetSocket> connect(String peerAddress, int peerPort) ;
-  async.Future<HetimaSendInfo> send(List<int> data);
-  async.Future<HetimaSocketInfo> getSocketInfo();
-  async.Stream<HetimaReceiveInfo> onReceive;
-  async.Stream<HetimaCloseInfo> onClose;
+  Future<TetSocket> connect(String peerAddress, int peerPort) ;
+  Future<HetimaSendInfo> send(List<int> data);
+  Future<HetimaSocketInfo> getSocketInfo();
+  Stream<HetimaReceiveInfo> onReceive;
+  Stream<HetimaCloseInfo> onClose;
   bool isClosed = false;
   void close() {
     _buffer.immutable = true;
@@ -43,7 +43,7 @@ abstract class TetSocket {
     lastUpdateTime = (new DateTime.now()).millisecondsSinceEpoch;
   }
 
-  async.Future clearBuffer() async {
+  Future clearBuffer() async {
     _buffer.clearInnerBuffer(_buffer.size(),reuse:false);
     _buffer.clear();
   }
@@ -54,10 +54,10 @@ abstract class HetimaUdpSocket {
   /// The result code returned from the underlying network call. A
   /// negative value indicates an error.
   ///
-  async.Future<HetimaBindResult> bind(String address, int port, {bool multicast:false});
-  async.Future<HetimaUdpSendInfo> send(List<int> buffer, String address, int port);
-  async.Stream<HetimaReceiveUdpInfo> onReceive;
-  async.Future<dynamic> close();
+  Future<HetimaBindResult> bind(String address, int port, {bool multicast:false});
+  Future<HetimaUdpSendInfo> send(List<int> buffer, String address, int port);
+  Stream<HetimaReceiveUdpInfo> onReceive;
+  Future<dynamic> close();
 }
 
 class HetimaBindResult {

@@ -1,6 +1,6 @@
 library hetimacore;
 import 'dart:math' as math;
-import 'dart:async' as async;
+import 'dart:async';
 import 'dart:core';
 import 'dart:convert';
 import 'dart:typed_data';

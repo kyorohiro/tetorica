@@ -64,7 +64,6 @@ void main() {
     });
     new Future.delayed(new Duration(milliseconds: 1300), () {
       builder.appendString("90\r\n0\r\n");
-//      builder.fin();
     });
     String s = conv.UTF8.decode(await r);
     unit.expect("abc1234567890", s);

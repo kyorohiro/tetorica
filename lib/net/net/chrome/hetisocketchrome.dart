@@ -1,4 +1,4 @@
-part of hetimanet.chrome;
+part of hetimanet_chrome;
 
 class HetimaSocketChrome extends TetSocket {
   bool _isClose = false;

@@ -1,4 +1,4 @@
-part of hetimanet.chrome;
+part of hetimanet_chrome;
 
 class HetimaServerSocketChrome extends TetServerSocket {
   StreamController<TetSocket> _controller = new StreamController();
