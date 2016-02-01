@@ -7,13 +7,16 @@ class EasyParser {
   HetimaReader get buffer => _buffer;
   bool logon = false;
   Exception myException = new Exception();
+  TetBufferPlus _cache;
+  convert.Utf8Decoder _utfDecoder = new convert.Utf8Decoder();
 
-  EasyParser(HetimaReader builder, {this.logon: false}) {
+  EasyParser(HetimaReader builder, {this.logon: false, int cacheSize: 256}) {
     _buffer = builder;
+    _cache = new TetBufferPlus(cacheSize);
   }
 
   EasyParser toClone() {
-    EasyParser parser = new EasyParser(new HetimaReaderAdapter(_buffer, 0));
+    EasyParser parser = new EasyParser(new HetimaReaderAdapter(_buffer, 0), cacheSize: _cache.cacheSize);
     parser.index = index;
     parser.stack = new List.from(stack);
     return parser;
@@ -59,38 +62,34 @@ class EasyParser {
     return v;
   }
 
-  Future<String> nextString(String value) {
-    Completer completer = new Completer();
+  Future<String> nextString(String value) async {
     List<int> encoded = convert.UTF8.encode(value);
-
-    _buffer.getByteFuture(index, encoded.length).then((List<int> v) {
-      if (v.length < encoded.length) {
-        completer.completeError(new EasyParseError());
-        return;
+    int i = await _buffer.getIndexFuture(index, encoded.length);
+    if (i + encoded.length > _buffer.currentSize) {
+      throw (logon == false ? myException : new Exception());
+    }
+    for(int j=0;j<encoded.length;j++) {
+      if(_buffer[j+i] != encoded[j]){
+        throw (logon == false ? myException : new Exception());
       }
-      int i = 0;
-      for (int e in encoded) {
-        if (e != v[i]) {
-          completer.completeError(new EasyParseError());
-          return;
-        }
-        i++;
-        index++;
-      }
-      completer.complete(value);
-    });
-    return completer.future;
+    }
+    index +=encoded.length;
+    return value;
   }
 
-  Future<String> readSignWithLength(int length) {
-    Completer<String> completer = new Completer();
-    _buffer.getByteFuture(index, length).then((List<int> va) {
-      index += length;
-      completer.complete(convert.UTF8.decode(va));
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
+  Future<String> readSignWithLength(int length) async {
+    List<int> va = null;
+    int i = index;
+    if (_cache.rawbuffer8.length > length) {
+      va = await _buffer.getByteFuture(index, length, out: _cache.rawbuffer8);
+    } else {
+      va = await _buffer.getByteFuture(index, length);
+    }
+    if (i + length > _buffer.currentSize) {
+      throw (logon == false ? myException : new Exception());
+    }
+    index += length;
+    return _utfDecoder.convert(va, 0, length);
   }
 
   Future<int> readLong(int byteorder) async {
@@ -98,7 +97,7 @@ class EasyParser {
     if (i + 8 > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
-    index +=8;
+    index += 8;
     return ByteOrder.parseLong(_buffer, 0, byteorder);
   }
 
@@ -107,7 +106,7 @@ class EasyParser {
     if (i + 4 > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
-    index +=4;
+    index += 4;
     return ByteOrder.parseInt(_buffer, 0, byteorder);
   }
 
@@ -116,7 +115,7 @@ class EasyParser {
     if (i + 2 > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
-    index +=2;
+    index += 2;
     return ByteOrder.parseShort(_buffer, 0, byteorder);
   }
 
