@@ -93,27 +93,6 @@ class EasyParser {
     return completer.future;
   }
 
-
-
-  Future<List<int>> readShortArray(int byteorder, int num) {
-    Completer<List<int>> completer = new Completer();
-    if (num == 0) {
-      completer.complete([]);
-      return completer.future;
-    }
-    _buffer.getByteFuture(index, 2 * num).then((List<int> va) {
-      index += 2 * num;
-      List<int> l = new List();
-      for (int i = 0; i < num; i++) {
-        l.add(ByteOrder.parseShort(va, i * 2, byteorder));
-      }
-      completer.complete(l);
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
-  }
-
   Future<int> readLong(int byteorder) async {
     int i = await _buffer.getIndexFuture(index, 8);
     if (i + 8 > _buffer.currentSize) {
