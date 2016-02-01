@@ -3,8 +3,9 @@ part of hetimacore;
 class ArrayBuilder extends HetimaReader {
   int _max = 1024;
   TetBuffer _buffer8;
-  TetBuffer get rawbuffer8 => _buffer8;
   int _length = 0;
+
+  TetBuffer get rawbuffer8 => _buffer8;
   List<GetByteFutureInfo> mGetByteFutreList = new List();
 
   int get clearedBuffer => _buffer8.clearedBuffer;
@@ -96,7 +97,7 @@ class ArrayBuilder extends HetimaReader {
   }
 
   void clearInnerBuffer(int len, {reuse: true}) {
-    _buffer8.clearInnerBuffer(len, reuse: reuse);
+    _buffer8.clearBuffer(len, reuse: reuse);
   }
 
   int size() {
@@ -112,7 +113,7 @@ class ArrayBuilder extends HetimaReader {
       return;
     } else {
       int nextMax = _length + plusLength + (_max-_buffer8.clearedBuffer);
-      _buffer8.expand(nextMax);
+      _buffer8.expandBuffer(nextMax);
       _max = nextMax;
     }
   }

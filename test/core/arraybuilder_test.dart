@@ -64,7 +64,7 @@ void main() {
     buffer[3] = 4;
     buffer[4] = 5;
 
-    buffer.clearInnerBuffer(3);
+    buffer.clearBuffer(3);
 
     unit.expect(0, buffer[0]);
     unit.expect(0, buffer[1]);
@@ -73,8 +73,8 @@ void main() {
     unit.expect(5, buffer[4]);
     unit.expect(5, buffer.length);
 
-    buffer.expand(10);
-    buffer.clearInnerBuffer(4);
+    buffer.expandBuffer(10);
+    buffer.clearBuffer(4);
     unit.expect(0, buffer[0]);
     unit.expect(0, buffer[1]);
     unit.expect(0, buffer[2]);
@@ -114,7 +114,7 @@ void main() {
     } catch (e) {
       unit.expect(true, true);
     }
-    buffer.expand(5);
+    buffer.expandBuffer(5);
     buffer[3] = 4;
     buffer[4] = 5;
     unit.expect(2, buffer[1]);

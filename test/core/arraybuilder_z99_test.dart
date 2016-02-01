@@ -14,7 +14,7 @@ void main() {
     buffer[3] = 4;
     buffer[4] = 5;
 
-    buffer.clearInnerBuffer(3,reuse: false);
+    buffer.clearBuffer(3,reuse: false);
 
     unit.expect(0, buffer[0]);
     unit.expect(0, buffer[1]);
@@ -24,8 +24,8 @@ void main() {
     unit.expect(5, buffer.length);
     unit.expect(2, buffer.rawbuffer8.length);
 
-    buffer.expand(10);
-    buffer.clearInnerBuffer(4,reuse: false);
+    buffer.expandBuffer(10);
+    buffer.clearBuffer(4,reuse: false);
     unit.expect(0, buffer[0]);
     unit.expect(0, buffer[1]);
     unit.expect(0, buffer[2]);
@@ -52,7 +52,7 @@ void main() {
     unit.expect([9], buffer.sublist(8, 9));
     unit.expect([], buffer.sublist(8, 8));
 
-    buffer.clearInnerBuffer(10,reuse: false);
+    buffer.clearBuffer(10,reuse: false);
     unit.expect(0, buffer.rawbuffer8.length);
   });
 
@@ -66,7 +66,7 @@ void main() {
     buffer[3] = 4;
     buffer[4] = 5;
 
-    buffer.clearInnerBuffer(3,reuse: true);
+    buffer.clearBuffer(3,reuse: true);
 
     unit.expect(0, buffer[0]);
     unit.expect(0, buffer[1]);
@@ -76,8 +76,8 @@ void main() {
     unit.expect(5, buffer.length);
     unit.expect(5, buffer.rawbuffer8.length);
 
-    buffer.expand(10);
-    buffer.clearInnerBuffer(4,reuse: true);
+    buffer.expandBuffer(10);
+    buffer.clearBuffer(4,reuse: true);
     unit.expect(0, buffer[0]);
     unit.expect(0, buffer[1]);
     unit.expect(0, buffer[2]);
@@ -104,7 +104,7 @@ void main() {
     unit.expect([9], buffer.sublist(8, 9));
     unit.expect([], buffer.sublist(8, 8));
 
-    buffer.clearInnerBuffer(10,reuse: true);
+    buffer.clearBuffer(10,reuse: true);
     unit.expect(7, buffer.rawbuffer8.length);
   });
 }
