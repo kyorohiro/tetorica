@@ -42,12 +42,12 @@ class TetBufferPlus implements TetBuffer {
 
   @override
   int operator [](int index) {
-    return ((index - _clearedBuffer >= 0)?_buffer8[index - _clearedBuffer]:0);
+    return ((index - _clearedBuffer >= 0) ? _buffer8[index - _clearedBuffer] : 0);
   }
 
   @override
   void operator []=(int index, int value) {
-    if (index  >= _clearedBuffer) {
+    if (index >= _clearedBuffer) {
       _buffer8[index - _clearedBuffer] = value;
     }
   }
@@ -75,9 +75,9 @@ class TetBufferPlus implements TetBuffer {
       _length = _buffer8.length;
     } else {
       for (int i = 0; i + erace < _length; i++) {
-        _buffer8[i] = _buffer8[i+erace];
+        _buffer8[i] = _buffer8[i + erace];
       }
-      _length = _length-erace;
+      _length = _length - erace;
     }
     _clearedBuffer = len;
   }
@@ -97,5 +97,4 @@ class TetBufferPlus implements TetBuffer {
     _buffer8 = next;
     _length = _buffer8.length;
   }
-
 }
