@@ -26,7 +26,7 @@ class ArrayBuilder extends HetimaReader {
   }
 
   bool _updateGetInfo(GetByteFutureInfo info) {
-    if (this.immutable == true  || info.index + info.completerResultLength - 1 < _length) {
+    if (this.immutable == true || info.index + info.completerResultLength - 1 < _length) {
       info.completer.complete(info.index);
       return true;
     } else {
@@ -35,14 +35,19 @@ class ArrayBuilder extends HetimaReader {
   }
 
   void _updateGetInfos() {
-    List<GetByteFutureInfo> removeList = new List();
+    var removeList = null;
     for (GetByteFutureInfo f in mGetByteFutreList) {
       if (true == _updateGetInfo(f)) {
+        if (removeList == null) {
+          removeList = [];
+        }
         removeList.add(f);
       }
     }
-    for (GetByteFutureInfo f in removeList) {
-      mGetByteFutreList.remove(f);
+    if (removeList != null) {
+      for (GetByteFutureInfo f in removeList) {
+        mGetByteFutreList.remove(f);
+      }
     }
   }
 
@@ -63,10 +68,10 @@ class ArrayBuilder extends HetimaReader {
   Future<List<int>> getByteFuture(int index, int length) async {
     await getIndexFuture(index, length);
     int len = size() - index;
-    len = (len>length?length:len);
-    List<int> ret = new data.Uint8List(len>=0?len:0);
-    for(int i=0;i<len;i++) {
-      ret[i] = _buffer8[index+i];
+    len = (len > length ? length : len);
+    List<int> ret = new data.Uint8List(len >= 0 ? len : 0);
+    for (int i = 0; i < len; i++) {
+      ret[i] = _buffer8[index + i];
     }
     return ret;
   }
@@ -83,28 +88,24 @@ class ArrayBuilder extends HetimaReader {
     _buffer8.clearBuffer(len, reuse: reuse);
   }
 
-  int size() {
-    return _length;
-  }
+  int size() => _length;
 
-  Future<int> getLength() async {
-    return _length;
+  Future<int> getLength() async => _length;
+
+  void fin() {
+    immutable = true;
+    _updateGetInfos();
+    mGetByteFutreList.clear();
   }
 
   void update(int plusLength) {
     if (_length + plusLength < _max) {
       return;
     } else {
-      int nextMax = _length + plusLength + (_max-_buffer8.clearedBuffer);
+      int nextMax = _length + plusLength + (_max - _buffer8.clearedBuffer);
       _buffer8.expandBuffer(nextMax);
       _max = nextMax;
     }
-  }
-
-  void fin() {
-    immutable = true;
-    _updateGetInfos();
-    mGetByteFutreList.clear();
   }
 
   void appendByte(int v) {
