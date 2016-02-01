@@ -3,12 +3,13 @@ library hetimanet.http.server.plus;
 import 'dart:convert' as convert;
 import 'dart:async' as async;
 import 'package:tetorica/core.dart';
-import '../net/hetisocket.dart';
-import '../util/hetiutil.dart';
+import '../net.dart';
 import 'hetihttp.dart';
 import 'hetihttpresponse.dart';
 import 'hetihttpserver.dart';
 import 'dart:typed_data' as typed_data;
+import '../net/tmp/rfctable.dart';
+
 
 class HetiHttpStartServerResult {
 

@@ -3,10 +3,10 @@ library hetimanet.http.client;
 import 'dart:convert' as convert;
 import 'dart:async' as async;
 import 'package:tetorica/core.dart';
-import '../net/hetisocket.dart';
-import '../util/hetiutil.dart';
+import '../net.dart';
 import 'hetihttpresponse.dart';
 import 'chunkedbuilderadapter.dart';
+import '../net/tmp/rfctable.dart';
 
 class HetiHttpClientResponse {
   HetiHttpMessageWithoutBody message;

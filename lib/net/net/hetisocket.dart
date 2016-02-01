@@ -1,6 +1,5 @@
-library hetimanet.base;
-import 'dart:async' as async;
-import 'package:tetorica/core.dart' as heti;
+part of hetimanet;
+
 
 abstract class TetSocketBuilder {
   static const int BUFFER_NOTIFY = 0;

@@ -35,7 +35,7 @@ class UpnpPPPDevice {
    *  402 Invalid Args See UPnP Device Architecture section on Control.
    *  713 SpecifiedArrayIndexInvalid The specified array index is out of bounds
    */
-  async.Future<UpnpGetGenericPortMappingResponse> requestGetGenericPortMapping(int newPortMappingIndex, [int mode = MODE_POST, UpnpDeviceServiceInfo serviceInfo = null]) async {
+  Future<UpnpGetGenericPortMappingResponse> requestGetGenericPortMapping(int newPortMappingIndex, [int mode = MODE_POST, UpnpDeviceServiceInfo serviceInfo = null]) async {
     if (getPPPService().length == 0) {
       throw {};
     }
@@ -54,7 +54,7 @@ class UpnpPPPDevice {
   /**
    * return resultCode. if success then. return 200. ;
    */
-  async.Future<UpnpAddPortMappingResponse> requestAddPortMapping(
+  Future<UpnpAddPortMappingResponse> requestAddPortMapping(
       int newExternalPort, String newProtocol, int newInternalPort, String newInternalClient, int newEnabled, String newPortMappingDescription, int newLeaseDuration,
       [int mode = MODE_POST, UpnpDeviceServiceInfo serviceInfo = null]) async {
     if (getPPPService().length == 0) {
@@ -75,7 +75,7 @@ class UpnpPPPDevice {
   /**
    * return resultCode. if success then. return 200. ;
    */
-  async.Future<UpnpDeletePortMappingResponse> requestDeletePortMapping(int newExternalPort, String newProtocol, [int mode = MODE_POST, UpnpDeviceServiceInfo serviceInfo = null]) async {
+  Future<UpnpDeletePortMappingResponse> requestDeletePortMapping(int newExternalPort, String newProtocol, [int mode = MODE_POST, UpnpDeviceServiceInfo serviceInfo = null]) async {
     if (getPPPService().length == 0) {
       throw {};
     }
@@ -90,7 +90,7 @@ class UpnpPPPDevice {
     return new UpnpDeletePortMappingResponse(response.resultCode);
   }
 
-  async.Future<UpnpGetExternalIPAddressResponse> requestGetExternalIPAddress([int mode = MODE_POST, UpnpDeviceServiceInfo serviceInfo = null]) async {
+  Future<UpnpGetExternalIPAddressResponse> requestGetExternalIPAddress([int mode = MODE_POST, UpnpDeviceServiceInfo serviceInfo = null]) async {
     if (getPPPService().length == 0) {
       throw {};
     }
@@ -121,7 +121,7 @@ class UpnpPPPDevice {
     return deviceInfo;
   }
 
-  async.Future<UpnpPPPDeviceRequestResponse> request(UpnpDeviceServiceInfo info, String soapAction, String bbody, int mode) async {
+  Future<UpnpPPPDeviceRequestResponse> request(UpnpDeviceServiceInfo info, String soapAction, String bbody, int mode) async {
     String location = _base.getValue(UpnpDeviceInfo.KEY_LOCATION, "");
     if ("" == location) {
       throw {};

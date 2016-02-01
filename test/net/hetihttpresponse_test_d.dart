@@ -3,6 +3,7 @@ import 'package:tetorica/core.dart' as hetima;
 import 'package:tetorica/net.dart' as hetima;
 import 'dart:async';
 import 'package:unittest/unittest.dart' as unit;
+import 'package:tetorica/http.dart' as hetima;
 
 void main() {
   unit.test("001",() async{

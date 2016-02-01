@@ -1,7 +1,5 @@
-library hetimanet.simu;
+part of hetimanet;
 
-import 'dart:async';
-import 'hetisocket.dart';
 
 class HetiSocketBuilderSimu extends TetSocketBuilder {
   TetSocket createClient({int mode:TetSocketBuilder.BUFFER_NOTIFY}) {

@@ -1,5 +1,5 @@
-part of hetimanet.util;
-
+library hetimanet.tmp;
+import 'dart:convert' as convert;
 
 
 class RfcTable {
@@ -7,7 +7,7 @@ class RfcTable {
   static const String HEADER_FIELD_CONTENT_TYPE = "Content-Type";
   static const String HEADER_FIELD_RANGE = "Range";
   //0x21-0x7E
-  static String VCHAR_STRING = 
+  static String VCHAR_STRING =
       """!#\$%&'()*+,-./"""
       +"""0123456789:;<=>?"""
       +"""@ABCDEFGHIJKLMNO"""
@@ -15,23 +15,23 @@ class RfcTable {
       +"""`abcdefghijklmno###"""
       +"""pqrstuvwxyz{|}~""";
 
-  static String TCHAR_STRING = 
+  static String TCHAR_STRING =
       """!#\$%&'*+-.^_`|~"""
       + ALPHA_AS_STRING
       + DIGIT_AS_STRING;
 
   static String OWS_STRING = SP_STRING +"\t";
   static String SP_STRING = " ";
-  static String ALPHA_AS_STRING = 
+  static String ALPHA_AS_STRING =
        "abcdefghijklmnopqrstuvwxyz"
       +"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  static String DIGIT_AS_STRING = 
+  static String DIGIT_AS_STRING =
       "0123456789";
-  static String HEXDIG_AS_STRING = 
+  static String HEXDIG_AS_STRING =
       DIGIT_AS_STRING+"ABCDEFabcdef";
-  static String RFC3986_UNRESERVED_AS_STRING = 
+  static String RFC3986_UNRESERVED_AS_STRING =
       ALPHA_AS_STRING+DIGIT_AS_STRING+"-._~";
-  static String RFC3986_RESERVED_AS_STRING = 
+  static String RFC3986_RESERVED_AS_STRING =
       GEM_DELIMS_AS_STRING+SUB_DELIMS_AS_STRING+"%";
 
   static String GEM_DELIMS_AS_STRING = """:/?#[]@""";
@@ -51,7 +51,7 @@ class RfcTable {
   static List<int> TCHAR = convert.UTF8.encode(TCHAR_STRING);
   static List<int> OWS = convert.UTF8.encode(OWS_STRING);
   static List<int> SP = convert.UTF8.encode(SP_STRING);
-   
+
   //  obs-text = %x80-FF
   static List<int> OBS_TEXT = [
                                0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89,

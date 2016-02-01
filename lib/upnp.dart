@@ -1,9 +1,11 @@
 library hetimanet_upnp;
 
 import 'dart:convert' as convert;
-import 'net.dart';
 import 'package:xml/xml.dart' as xml;
 import 'dart:async';
+import 'core.dart';
+import 'net.dart';
+import 'http.dart';
 
 part './upnp/upnpdeviceinfo.dart';
 part './upnp/upnpdevicesearcher.dart';

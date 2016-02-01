@@ -4,6 +4,7 @@ import 'package:tetorica/net.dart' as hetima;
 import 'dart:async';
 import 'dart:convert' as conv;
 import 'package:unittest/unittest.dart' as unit;
+import 'package:tetorica/http.dart' as hetima;
 
 void main() {
   unit.test("ChunkedBuilderAdapter_a", () async {

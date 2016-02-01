@@ -1,4 +1,4 @@
-library hetimanet.util.ip;
+part of hetimanet;
 
 class HetiIP {
   static List<int> toRawIP(String ip, {List<int> output}) {
@@ -82,7 +82,7 @@ class HetiIP {
     }
     return "${aa}${bb}";
   }
-  
+
   static bool isIpV4(List<int> ip) {
     if (ip.length == 4) {
       return true;

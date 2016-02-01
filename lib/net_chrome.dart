@@ -1,4 +1,3 @@
 library hetimanet_chrome;
-
-export 'net/net/hetisocket.dart';
+import 'net.dart';
 export 'net/net/hetisocket_chrome.dart';

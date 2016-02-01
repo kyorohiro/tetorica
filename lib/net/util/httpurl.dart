@@ -1,4 +1,4 @@
-part of hetimanet.util;
+part of hetimanet;
 
 class HttpUrl {
   String scheme = "http";
@@ -57,7 +57,7 @@ class HttpUrlDecoder {
         ret.scheme = scheme();
         ret.host = host();
         ret.port = port();
-      } catch (e) {        
+      } catch (e) {
         if (baseAddr == null) {
           throw e;
         }

@@ -1,6 +1,13 @@
 library hetimanet;
 
-export 'net/net/hetisocket.dart';
-export 'net/http/hetihttp.dart';
-export 'net/util/hetiutil.dart';
-export 'net/net/hetisocket_simu.dart';
+import 'dart:async';
+import 'package:tetorica/core.dart' as heti;
+import 'dart:convert' as convert;
+
+//part 'net/http/hetihttp.dart';
+import 'net/tmp/rfctable.dart';
+
+part 'net/net/hetisocket.dart';
+part 'net/net/hetisocket_simu.dart';
+part 'net/util/hetiip.dart';
+part 'net/util/httpurl.dart';
