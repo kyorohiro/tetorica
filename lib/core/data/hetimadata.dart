@@ -1,30 +1,26 @@
-library hetimacore.file;
-
-import 'dart:typed_data' as data;
-import 'dart:async' as async;
-import 'dart:core';
-import '../../core.dart';
+part of hetimacore;
 
 abstract class HetimaDataBuilder {
-  async.Future<HetimaData> createHetimaData(String path);
+  Future<HetimaData> createHetimaData(String path);
 }
 
-abstract class HetimaData extends HetimaFileReader {
+abstract class HetimaData implements HetimaFileReader, HetimaFileWriter {
   bool get writable => false;
   bool get readable => false;
-  async.Future<int> getLength();
-  async.Future<WriteResult> write(Object buffer, int start,[int length=null]);
-  async.Future<ReadResult> read(int offset, int length, {List<int> tmp: null});
+  Future<int> getLength();
+  Future<WriteResult> write(Object buffer, int start,[int length=null]);
+  Future<ReadResult> read(int offset, int length, {List<int> tmp: null});
   void beToReadOnly();
 }
 
 abstract class HetimaFileWriter {
-  async.Future<WriteResult> write(Object o, int start,[int length=null]);
+  Future<int> getLength();
+  Future<WriteResult> write(Object o, int start,[int length=null]);
 }
 
 abstract class HetimaFileReader {
-  async.Future<int> getLength();
-  async.Future<ReadResult> read(int offset, int length);
+  Future<int> getLength();
+  Future<ReadResult> read(int offset, int length);
 }
 
 class WriteResult {}
@@ -48,13 +44,13 @@ class HetimaReaderToData extends HetimaData {
     mBuilder = builder;
   }
   @override
-  async.Future<int> getLength() {
+  Future<int> getLength() {
     return mBuilder.getLength();
   }
 
   @override
-  async.Future<ReadResult> read(int offset, int length, {List<int> tmp: null}) {
-    async.Completer<ReadResult> cc = new async.Completer();
+  Future<ReadResult> read(int offset, int length, {List<int> tmp: null}) {
+    Completer<ReadResult> cc = new Completer();
     mBuilder.getByteFuture(offset, length).then((List<int> b) {
       ReadResult result = new ReadResult(new data.Uint8List.fromList(b));
       cc.complete(result);
@@ -65,7 +61,7 @@ class HetimaReaderToData extends HetimaData {
   }
 
   @override
-  async.Future<WriteResult> write(Object buffer, int start,[int length=null]) {
+  Future<WriteResult> write(Object buffer, int start,[int length=null]) {
     // todo
     return null;
   }
@@ -83,8 +79,8 @@ class HetimaDataToReader extends HetimaReader {
   }
 
   @override
-  async.Future<List<int>> getByteFuture(int index, int length, {List<int> buffer: null,List<int> output:null}) {
-    async.Completer<List<int>> c = new async.Completer();
+  Future<List<int>> getByteFuture(int index, int length, {List<int> buffer: null,List<int> output:null}) {
+    Completer<List<int>> c = new Completer();
     mFile.read(index, length).then((ReadResult r) {
       List<int> b = r.buffer.toList();
       if(output != null) {
@@ -102,7 +98,7 @@ class HetimaDataToReader extends HetimaReader {
   }
 
   @override
-  async.Future<int> getLength() {
+  Future<int> getLength() {
     return mFile.getLength();
   }
 }

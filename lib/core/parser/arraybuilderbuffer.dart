@@ -1,7 +1,4 @@
-library hetimacore.arraybuffer;
-
-import 'dart:typed_data' as data;
-import 'dart:core';
+part of hetimacore;
 
 class ArrayBuilderBuffer {
   int _clearedBuffer = 0;

@@ -1,25 +1,23 @@
-library hetimacore.reader;
-import 'dart:async' as async;
-import 'dart:core';
+part of hetimacore;
 
 abstract class HetimaReader {
 
-  async.Future<List<int>> getByteFuture(int index, int length, {List<int> buffer:null, List<int> output:null}) ;
+  Future<List<int>> getByteFuture(int index, int length, {List<int> buffer:null, List<int> output:null}) ;
 
-  async.Future<int> getLength();
+  Future<int> getLength();
 
   void fin() {
     immutable = true;
   }
 
-  async.Completer<bool> _completerFin = new async.Completer(); 
+  Completer<bool> _completerFin = new Completer();
 
-  async.Completer<bool> get rawcompleterFin => _completerFin;
+  Completer<bool> get rawcompleterFin => _completerFin;
   //
-  // maybe dart bug when use with dart:io: 
+  // maybe dart bug when use with dart:io:
   // must to use rawcompleterFin.future...
   //
-  async.Future<bool> get onFin => _completerFin.future;
+  Future<bool> get onFin => _completerFin.future;
 
   bool _immutable = false;
 
@@ -48,8 +46,8 @@ class HetimaReaderAdapter extends HetimaReader {
     _startIndex = startIndex;
   }
 
-  async.Future<int> getLength() {
-    async.Completer<int> completer = new async.Completer();
+  Future<int> getLength() {
+    Completer<int> completer = new Completer();
     _base.getLength().then((int v){
       completer.complete(v - _startIndex);
     }).catchError((e){
@@ -58,12 +56,12 @@ class HetimaReaderAdapter extends HetimaReader {
     return completer.future;
   }
 
-  async.Completer<bool> get rawcompleterFin => _base.rawcompleterFin;
+  Completer<bool> get rawcompleterFin => _base.rawcompleterFin;
   //
-  async.Future<bool> get onFin => _base.onFin;
+  Future<bool> get onFin => _base.onFin;
 
-  async.Future<List<int>> getByteFuture(int index, int length, {List<int> buffer:null,List<int> output:null}) {
-    async.Completer<List<int>> completer = new async.Completer();
+  Future<List<int>> getByteFuture(int index, int length, {List<int> buffer:null,List<int> output:null}) {
+    Completer<List<int>> completer = new Completer();
 
     _base.getByteFuture(index + _startIndex, length, buffer:buffer, output:output).then((List<int> d) {
       completer.complete(d);
@@ -72,11 +70,11 @@ class HetimaReaderAdapter extends HetimaReader {
     });
     return completer.future;
   }
-  
+
   void fin() {
     _base.fin();
   }
-  
+
   bool get immutable => _base.immutable;
 
   void set immutable(bool v) {

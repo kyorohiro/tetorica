@@ -1,9 +1,4 @@
-library hetimatorrent.util.bencode;
-
-import 'dart:typed_data' as data;
-import 'dart:convert' as convert;
-import 'dart:core';
-import '../parser/arraybuilder.dart' as hetima;
+part of hetimacore;
 
 class Bencode {
 

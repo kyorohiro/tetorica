@@ -1,10 +1,4 @@
-library hetimacore.parser;
-
-import 'dart:convert' as convert;
-import 'dart:async';
-import 'dart:core';
-import 'hetimareader.dart';
-import 'byteorder.dart';
+part of hetimacore;
 
 class EasyParser {
   int index = 0;

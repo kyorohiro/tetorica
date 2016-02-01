@@ -1,10 +1,5 @@
-library hetimatorrent.util.bencode.async;
+part of hetimacore;
 
-import 'dart:typed_data' as data;
-import 'dart:convert' as convert;
-import 'dart:async';
-import 'dart:core';
-import '../parser/easyparser.dart' as hetima;
 
 class BencodeAsync {
   static BdecoderAsync _decoder = new BdecoderAsync();

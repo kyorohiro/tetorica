@@ -1,8 +1,5 @@
-library hetimacore.mem;
+part of hetimacore;
 
-import 'dart:async' as async;
-import 'dart:core';
-import 'hetimadata.dart';
 
 class HetimaDataMemory extends HetimaData {
   bool get writable => true;
@@ -13,7 +10,7 @@ class HetimaDataMemory extends HetimaData {
     if(buffer != null) {
       _dataBuffer = new List.from(buffer);
     } else {
-      _dataBuffer = [];      
+      _dataBuffer = [];
     }
   }
 
@@ -29,14 +26,14 @@ class HetimaDataMemory extends HetimaData {
     return _dataBuffer.sublist(start, end);
   }
 
-  async.Future<int> getLength() {
-    async.Completer<int> comp = new async.Completer();
+  Future<int> getLength() {
+    Completer<int> comp = new Completer();
     comp.complete(_dataBuffer.length);
     return comp.future;
   }
 
-  async.Future<WriteResult> write(Object buffer, int start, [int length=null]) {
-    async.Completer<WriteResult> comp = new async.Completer();
+  Future<WriteResult> write(Object buffer, int start, [int length=null]) {
+    Completer<WriteResult> comp = new Completer();
     if (buffer is List<int>) {
       if (_dataBuffer.length < start) {
         _dataBuffer.addAll(new List.filled(start - _dataBuffer.length, 0));
@@ -60,8 +57,8 @@ class HetimaDataMemory extends HetimaData {
     return comp.future;
   }
 
-  async.Future<ReadResult> read(int offset, int length, {List<int> tmp:null}) {
-    async.Completer<ReadResult> comp = new async.Completer();
+  Future<ReadResult> read(int offset, int length, {List<int> tmp:null}) {
+    Completer<ReadResult> comp = new Completer();
     int end = offset + length;
     if (end > _dataBuffer.length) {
       end = _dataBuffer.length;

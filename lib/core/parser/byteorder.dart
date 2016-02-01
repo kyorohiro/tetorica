@@ -1,5 +1,4 @@
-library hetimacore.byteorder;
-import 'dart:core';
+part of hetimacore;
 
 
 class ByteOrder {
