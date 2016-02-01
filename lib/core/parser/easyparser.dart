@@ -8,7 +8,7 @@ class EasyParser {
   bool logon = false;
   Exception myException = new Exception();
   TetBufferPlus _cache;
-  convert.Utf8Decoder _utfDecoder = new convert.Utf8Decoder();
+  convert.Utf8Decoder _utfDecoder = new convert.Utf8Decoder(allowMalformed: true);
 
   EasyParser(HetimaReader builder, {this.logon: false, int cacheSize: 256}) {
     _buffer = builder;
@@ -54,6 +54,15 @@ class EasyParser {
 
   Future<List<int>> getPeek(int length) {
     return _buffer.getByteFuture(index, length);
+  }
+
+  Future<int> jumpBuffer(int length) async {
+    int i = await _buffer.getIndexFuture(index, length);
+    if (i + length > _buffer.currentSize) {
+      throw (logon == false ? myException : new Exception());
+    }
+    index += length;
+    return i;
   }
 
   Future<List<int>> nextBuffer(int length) async {
