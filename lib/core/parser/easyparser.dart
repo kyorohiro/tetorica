@@ -222,7 +222,6 @@ class EasyParserIncludeMatcher extends EasyParserMatcher {
     return include.contains(target);
   }
 }
-
 class EasyParserStringMatcher extends EasyParserMatcher {
   List<int> include = null;
   int index = 0;

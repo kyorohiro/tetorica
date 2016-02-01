@@ -1,7 +1,7 @@
 library hetimanet.http.response;
 
 import 'dart:convert' as convert;
-import 'dart:async' as async;
+import 'dart:async';
 import 'package:tetorica/core.dart';
 import '../net.dart';
 import '../net/tmp/rfctable.dart';
@@ -12,8 +12,8 @@ class HetiHttpResponse {
   static List<int> QUERY = convert.UTF8.encode(RfcTable.RFC3986_RESERVED_AS_STRING + RfcTable.RFC3986_UNRESERVED_AS_STRING);
 
 
-  static async.Future<HetiHttpMessageWithoutBody> decodeHttpMessage(EasyParser parser) {
-    async.Completer<HetiHttpMessageWithoutBody> completer = new async.Completer();
+  static Future<HetiHttpMessageWithoutBody> decodeHttpMessage(EasyParser parser) {
+    Completer<HetiHttpMessageWithoutBody> completer = new Completer();
     HetiHttpMessageWithoutBody result = new HetiHttpMessageWithoutBody();
     decodeStatusline(parser).then((HetiHttpResponseStatusLine line) {
       result.line = line;
@@ -28,10 +28,10 @@ class HetiHttpResponse {
     return completer.future;
   }
 
-  static async.Future<List<HetiHttpResponseHeaderField>> decodeHeaderFields(EasyParser parser) {
-    async.Completer<List<HetiHttpResponseHeaderField>> completer = new async.Completer();
+  static Future<List<HetiHttpResponseHeaderField>> decodeHeaderFields(EasyParser parser) {
+    Completer<List<HetiHttpResponseHeaderField>> completer = new Completer();
     List<HetiHttpResponseHeaderField> result = new List();
-    async.Future p() {
+    Future p() {
       return decodeHeaderField(parser).then((HetiHttpResponseHeaderField v) {
         result.add(v);
         return p();
@@ -49,9 +49,9 @@ class HetiHttpResponse {
   }
 
 
-  static async.Future<HetiHttpResponseHeaderField> decodeHeaderField(EasyParser parser) {
+  static Future<HetiHttpResponseHeaderField> decodeHeaderField(EasyParser parser) {
     HetiHttpResponseHeaderField result = new HetiHttpResponseHeaderField();
-    async.Completer<HetiHttpResponseHeaderField> completer = new async.Completer();
+    Completer<HetiHttpResponseHeaderField> completer = new Completer();
     decodeFieldName(parser).then((String v) {
       result.fieldName = v;
       return parser.nextString(":");
@@ -70,16 +70,16 @@ class HetiHttpResponse {
     return completer.future;
   }
 
-  static async.Future<String> decodeFieldName(EasyParser parser) {
-    async.Completer<String> completer = new async.Completer();
+  static Future<String> decodeFieldName(EasyParser parser) {
+    Completer<String> completer = new Completer();
     parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.TCHAR)).then((List<int> v) {
       completer.complete(convert.UTF8.decode(v));
     });
     return completer.future;
   }
 
-  static async.Future<String> decodeFieldValue(EasyParser parser) {
-    async.Completer<String> completer = new async.Completer();
+  static Future<String> decodeFieldValue(EasyParser parser) {
+    Completer<String> completer = new Completer();
     parser.nextBytePatternByUnmatch(new FieldValueMatcher()).then((List<int> v) {
       completer.complete(convert.UTF8.decode(v));
     });
@@ -88,8 +88,8 @@ class HetiHttpResponse {
 
   //
   // Http-version
-  static async.Future<String> decodeHttpVersion(EasyParser parser) {
-    async.Completer completer = new async.Completer();
+  static Future<String> decodeHttpVersion(EasyParser parser) {
+    Completer completer = new Completer();
     int major = 0;
     int minor = 0;
     try {
@@ -115,8 +115,8 @@ class HetiHttpResponse {
   //
   // Status Code
   // DIGIT DIGIT DIGIT
-  static async.Future<String> decodeStatusCode(EasyParser parser) {
-    async.Completer<String> completer = new async.Completer();
+  static Future<String> decodeStatusCode(EasyParser parser) {
+    Completer<String> completer = new Completer();
     int ret = 0;
     try {
       parser.nextBytePatternWithLength(new EasyParserIncludeMatcher(RfcTable.DIGIT), 3).then((List<int> v) {
@@ -130,8 +130,8 @@ class HetiHttpResponse {
   }
 
 
-  static async.Future<String> decodeReasonPhrase(EasyParser parser) {
-    async.Completer<String> completer = new async.Completer();
+  static Future<String> decodeReasonPhrase(EasyParser parser) {
+    Completer<String> completer = new Completer();
     parser.nextBytePatternByUnmatch(new TextMatcher()).then((List<int> vv) {
       String v = convert.UTF8.decode(vv);
       completer.complete(v);
@@ -140,9 +140,9 @@ class HetiHttpResponse {
   }
 
   //Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
-  static async.Future<HetiHttpResponseStatusLine> decodeStatusline(EasyParser parser) {
+  static Future<HetiHttpResponseStatusLine> decodeStatusline(EasyParser parser) {
     HetiHttpResponseStatusLine result = new HetiHttpResponseStatusLine();
-    async.Completer<HetiHttpResponseStatusLine> completer = new async.Completer();
+    Completer<HetiHttpResponseStatusLine> completer = new Completer();
     decodeHttpVersion(parser).then((String v) {
       result.version = v;
       return decodeSP(parser);
@@ -162,8 +162,8 @@ class HetiHttpResponse {
     return completer.future;
   }
 
-  static async.Future<String> decodeOWS(EasyParser parser) {
-    async.Completer completer = new async.Completer();
+  static Future<String> decodeOWS(EasyParser parser) {
+    Completer completer = new Completer();
     parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.OWS)).then((List<int> v) {
       completer.complete(convert.UTF8.decode(v));
     }).catchError((e) {
@@ -172,8 +172,8 @@ class HetiHttpResponse {
     return completer.future;
   }
 
-  static async.Future<String> decodeSP(EasyParser parser) {
-    async.Completer completer = new async.Completer();
+  static Future<String> decodeSP(EasyParser parser) {
+    Completer completer = new Completer();
     parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.SP)).then((List<int> v) {
       completer.complete(convert.UTF8.decode(v));
     }).catchError((e) {
@@ -183,8 +183,8 @@ class HetiHttpResponse {
   }
 
   //
-  static async.Future<String> decodeCrlf(EasyParser parser) {
-    async.Completer completer = new async.Completer();
+  static Future<String> decodeCrlf(EasyParser parser) {
+    Completer completer = new Completer();
     //bool lf = true;
     bool crlf = true;
     parser.push();
@@ -209,8 +209,8 @@ class HetiHttpResponse {
   }
 
   //
-  static async.Future<int> decodeChunkedSize(EasyParser parser) {
-    async.Completer<int> completer = new async.Completer();
+  static Future<int> decodeChunkedSize(EasyParser parser) {
+    Completer<int> completer = new Completer();
     int v = 0;
     parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.HEXDIG)).then((List<int> n) {
       if (n.length == 0) {
@@ -230,8 +230,8 @@ class HetiHttpResponse {
   }
 
   //  request-line   = method SP request-target SP HTTP-version CRLF
-  static async.Future<HetiRequestLine> decodeRequestLine(EasyParser parser) {
-    async.Completer<HetiRequestLine> completer = new async.Completer();
+  static Future<HetiRequestLine> decodeRequestLine(EasyParser parser) {
+    Completer<HetiRequestLine> completer = new Completer();
     HetiRequestLine result = new HetiRequestLine();
     decodeMethod(parser).then((String method) {
       result.method = method;
@@ -254,8 +254,8 @@ class HetiHttpResponse {
     return completer.future;
   }
 
-  static async.Future<HetiHttpRequestMessageWithoutBody> decodeRequestMessage(EasyParser parser) {
-    async.Completer<HetiHttpRequestMessageWithoutBody> completer = new async.Completer();
+  static Future<HetiHttpRequestMessageWithoutBody> decodeRequestMessage(EasyParser parser) {
+    Completer<HetiHttpRequestMessageWithoutBody> completer = new Completer();
     HetiHttpRequestMessageWithoutBody result = new HetiHttpRequestMessageWithoutBody();
     decodeRequestLine(parser).then((HetiRequestLine line) {
       result.line = line;
@@ -270,8 +270,8 @@ class HetiHttpResponse {
     return completer.future;
   }
   // metod = token = 1*tchar
-  static async.Future<String> decodeMethod(EasyParser parser) {
-    async.Completer<String> completer = new async.Completer();
+  static Future<String> decodeMethod(EasyParser parser) {
+    Completer<String> completer = new Completer();
     parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.TCHAR)).then((List<int> v) {
       completer.complete(convert.UTF8.decode(v));
     });
@@ -279,8 +279,8 @@ class HetiHttpResponse {
   }
 
   // CHAR_STRING
-  static async.Future<String> decodeRequestTarget(EasyParser parser) {
-    async.Completer<String> completer = new async.Completer();
+  static Future<String> decodeRequestTarget(EasyParser parser) {
+    Completer<String> completer = new Completer();
     parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.VCHAR)).then((List<int> v) {
       completer.complete(convert.UTF8.decode(v));
     });
@@ -291,10 +291,10 @@ class HetiHttpResponse {
   // absolute-URI  = scheme ":" hier-part [ "?" query ]
 
   //rfc2616
-  static async.Future<HetiHttpRequestRange> decodeRequestRangeValue(EasyParser parser) {
+  static Future<HetiHttpRequestRange> decodeRequestRangeValue(EasyParser parser) {
     //HetiHttpResponseStatusLine result = new HetiHttpResponseStatusLine();
     HetiHttpRequestRange ret = new HetiHttpRequestRange();
-    async.Completer<HetiHttpRequestRange> completer = new async.Completer();
+    Completer<HetiHttpRequestRange> completer = new Completer();
     parser.nextString("bytes=").then((String v) {
       return parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.DIGIT));
     }).then((List<int> startAsList) {
