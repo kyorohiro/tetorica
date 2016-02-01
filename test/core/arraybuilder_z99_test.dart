@@ -5,7 +5,7 @@ void main() {
 //  hetima.HetiTest test = new hetima.HetiTest("tt");
 
   unit.test("ArrayBuilderBuffer: ", () {
-    hetima.ArrayBuilderBuffer buffer = new hetima.ArrayBuilderBuffer(5);
+    hetima.TetBuffer buffer = new hetima.TetBuffer(5);
     unit.expect(5, buffer.length);
 
     buffer[0] = 1;
@@ -57,7 +57,7 @@ void main() {
   });
 
   unit.test("ArrayBuilderBuffer: ", () {
-    hetima.ArrayBuilderBuffer buffer = new hetima.ArrayBuilderBuffer(5);
+    hetima.TetBuffer buffer = new hetima.TetBuffer(5);
     unit.expect(5, buffer.length);
 
     buffer[0] = 1;

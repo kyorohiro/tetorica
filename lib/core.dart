@@ -11,7 +11,7 @@ part 'core/parser/hetimareader.dart';
 part 'core/parser/byteorder.dart';
 part 'core/parser/easyparser.dart';
 part 'core/parser/arraybuilder.dart';
-part 'core/parser/arraybuilderbuffer.dart';
+part 'core/parser/buffer.dart';
 part 'core/util/percentencode.dart';
 part 'core/data/hetimadata_mem.dart';
 part 'core/util/bencode.dart';

@@ -1,37 +1,33 @@
 part of hetimacore;
 
-class ArrayBuilderBuffer {
-  int _clearedBuffer = 0;
+class TetBuffer {
+  int _clearBuffer = 0;
   int _length = 0;
+  int get clearBuffer => _clearBuffer;
+
   List<int> _buffer8 = null;
   List<int> get rawbuffer8 => _buffer8;
 
-  int get clearedBuffer => _clearedBuffer;
+  int get clearedBuffer => _clearBuffer;
   bool logon = false;
 
-  ArrayBuilderBuffer(int max) {
+  TetBuffer(int max) {
     _length = max;
     _buffer8 = new data.Uint8List(max);
   }
 
-  ArrayBuilderBuffer.fromList(List<int> buffer) {
+  TetBuffer.fromList(List<int> buffer) {
     _length = buffer.length;
     _buffer8 = new data.Uint8List.fromList(buffer);
   }
 
   int operator [](int index) {
-    int i = index - _clearedBuffer;
-    if (i >= 0) {
-      return _buffer8[index - _clearedBuffer];
-    } else {
-      return 0;
-    }
+    return ((index - _clearBuffer >= 0)?_buffer8[index - _clearBuffer]:0);
   }
 
   void operator []=(int index, int value) {
-    int i = index - _clearedBuffer;
-    if (i >= 0) {
-      _buffer8[i] = value;
+    if (index  >= _clearBuffer) {
+      _buffer8[index - _clearBuffer] = value;
     }
   }
 
@@ -44,9 +40,9 @@ class ArrayBuilderBuffer {
   }
 
   void clearInnerBuffer(int len, {bool reuse: true}) {
-    if (_clearedBuffer >= len) {
+    if (_clearBuffer >= len) {
       if(logon) {
-        print("(_clearedBuffer >= len) == (${_clearedBuffer} >= ${len})");
+        print("(_clearedBuffer >= len) == (${_clearBuffer} >= ${len})");
       }
       return;
     }
@@ -58,9 +54,9 @@ class ArrayBuilderBuffer {
       return;
     }
 
-    int erace = len - _clearedBuffer;
+    int erace = len - _clearBuffer;
     if(logon) {
-      print("(int erace = len - _clearedBuffer) == ${erace} = ${len} - ${_clearedBuffer})");
+      print("(int erace = len - _clearedBuffer) == ${erace} = ${len} - ${_clearBuffer})");
     }
     if (reuse == false) {
       _buffer8 = _buffer8.sublist(erace);
@@ -74,14 +70,14 @@ class ArrayBuilderBuffer {
     if(logon) {
       print("(_length) == ${erace} = ${_length})");
     }
-    _clearedBuffer = len;
+    _clearBuffer = len;
   }
 
   void expand(int nextMax) {
     if(logon) {
-      print("(nextMax - _clearedBuffer) == (${nextMax - _clearedBuffer}=${nextMax} - ${_clearedBuffer};)");
+      print("(nextMax - _clearedBuffer) == (${nextMax - _clearBuffer}=${nextMax} - ${_clearBuffer};)");
     }
-    nextMax = nextMax - _clearedBuffer;
+    nextMax = nextMax - _clearBuffer;
     if (_buffer8.length >= nextMax) {
       _length = nextMax;
       return;
@@ -95,5 +91,5 @@ class ArrayBuilderBuffer {
     _length = _buffer8.length;
   }
 
-  int get length => _length + _clearedBuffer;
+  int get length => _length + _clearBuffer;
 }

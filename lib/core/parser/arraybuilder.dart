@@ -2,8 +2,8 @@ part of hetimacore;
 
 class ArrayBuilder extends HetimaReader {
   int _max = 1024;
-  ArrayBuilderBuffer _buffer8;
-  ArrayBuilderBuffer get rawbuffer8 => _buffer8;
+  TetBuffer _buffer8;
+  TetBuffer get rawbuffer8 => _buffer8;
   int _length = 0;
   List<GetByteFutureInfo> mGetByteFutreList = new List();
 
@@ -13,11 +13,11 @@ class ArrayBuilder extends HetimaReader {
   ArrayBuilder({bufferSize: 1024}) {
     this.logon = logon;
     _max = bufferSize;
-    _buffer8 = new ArrayBuilderBuffer(_max); //new data.Uint8List(_max);
+    _buffer8 = new TetBuffer(_max); //new data.Uint8List(_max);
   }
 
   ArrayBuilder.fromList(List<int> buffer, [isFin = false]) {
-    _buffer8 = new ArrayBuilderBuffer.fromList(buffer);
+    _buffer8 = new TetBuffer.fromList(buffer);
     _length = buffer.length;
     if (isFin == true) {
       fin();
