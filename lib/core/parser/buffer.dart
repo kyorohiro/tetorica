@@ -1,6 +1,17 @@
 part of hetimacore;
 
-class TetBuffer {
+abstract class TetBuffer {
+  List<int> get rawbuffer8;
+  int get clearedBuffer;
+  int get length;
+  int operator [](int index);
+  void operator []=(int index, int value);
+  List<int> sublist(int start, int end);
+  void clearBuffer(int len, {bool reuse: true});
+  void expandBuffer(int nextMax);
+}
+
+class TetBufferPlus implements TetBuffer {
   //
   bool logon = false;
 
@@ -10,30 +21,38 @@ class TetBuffer {
   List<int> _buffer8 = null;
 
   //
+  @override
   List<int> get rawbuffer8 => _buffer8;
+
+  @override
   int get clearedBuffer => _clearedBuffer;
+
+  @override
   int get length => _length + _clearedBuffer;
 
-  TetBuffer(int max) {
+  TetBufferPlus(int max) {
     _length = max;
     _buffer8 = new data.Uint8List(max);
   }
 
-  TetBuffer.fromList(List<int> buffer) {
+  TetBufferPlus.fromList(List<int> buffer) {
     _length = buffer.length;
     _buffer8 = new data.Uint8List.fromList(buffer);
   }
 
+  @override
   int operator [](int index) {
     return ((index - _clearedBuffer >= 0)?_buffer8[index - _clearedBuffer]:0);
   }
 
+  @override
   void operator []=(int index, int value) {
     if (index  >= _clearedBuffer) {
       _buffer8[index - _clearedBuffer] = value;
     }
   }
 
+  @override
   List<int> sublist(int start, int end) {
     data.Uint8List ret = new data.Uint8List(end - start);
     for (int j = 0; j < end - start; j++) {
@@ -42,7 +61,7 @@ class TetBuffer {
     return ret;
   }
 
-
+  @override
   void clearBuffer(int len, {bool reuse: true}) {
     if (_clearedBuffer >= len) {
       return;
@@ -63,6 +82,7 @@ class TetBuffer {
     _clearedBuffer = len;
   }
 
+  @override
   void expandBuffer(int nextMax) {
     nextMax = nextMax - _clearedBuffer;
     if (_buffer8.length >= nextMax) {
