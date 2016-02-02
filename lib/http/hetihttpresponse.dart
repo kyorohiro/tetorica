@@ -163,7 +163,7 @@ class HetiHttpResponse {
 
   // CHAR_STRING
   static Future<String> decodeRequestTarget(EasyParser parser) async {
-    List<int> v= await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.VCHAR));
+    List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.VCHAR));
     return convert.UTF8.decode(v);
   }
 
@@ -175,20 +175,20 @@ class HetiHttpResponse {
     HetiHttpRequestRange ret = new HetiHttpRequestRange();
     await parser.nextString("bytes=");
     List<int> startAsList = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.DIGIT));
-      ret.start = 0;
-      for (int d in startAsList) {
-        ret.start = (d - 48) + ret.start * 10;
-      }
+    ret.start = 0;
+    for (int d in startAsList) {
+      ret.start = (d - 48) + ret.start * 10;
+    }
     await parser.nextString("-");
     List<int> endAsList = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.DIGIT));
-      if (endAsList.length == 0) {
-        ret.end = -1;
-      } else {
-        ret.end = 0;
-        for (int d in endAsList) {
-          ret.end = (d - 48) + ret.end * 10;
-        }
+    if (endAsList.length == 0) {
+      ret.end = -1;
+    } else {
+      ret.end = 0;
+      for (int d in endAsList) {
+        ret.end = (d - 48) + ret.end * 10;
       }
+    }
     return ret;
   }
 }
