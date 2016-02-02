@@ -1,6 +1,5 @@
 part of hetimanet_http;
 
-
 //rfc2616 rfc7230
 class HetiHttpResponse {
   static List<int> PATH = convert.UTF8.encode(RfcTable.RFC3986_PCHAR_AS_STRING + "/");
@@ -40,68 +39,42 @@ class HetiHttpResponse {
     return result;
   }
 
-
   static Future<String> decodeFieldName(EasyParser parser) async {
     List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.TCHAR));
     return convert.UTF8.decode(v);
   }
 
-  static Future<String> decodeFieldValue(EasyParser parser) {
-    Completer<String> completer = new Completer();
-    parser.nextBytePatternByUnmatch(new FieldValueMatcher()).then((List<int> v) {
-      completer.complete(convert.UTF8.decode(v));
-    });
-    return completer.future;
+  static Future<String> decodeFieldValue(EasyParser parser) async {
+    List<int> v = await parser.nextBytePatternByUnmatch(new FieldValueMatcher());
+    return convert.UTF8.decode(v);
   }
 
   //
   // Http-version
-  static Future<String> decodeHttpVersion(EasyParser parser) {
-    Completer completer = new Completer();
+  static Future<String> decodeHttpVersion(EasyParser parser) async {
     int major = 0;
     int minor = 0;
-    try {
-      parser.nextString("HTTP" + "/").then((String v) {}).then((e) {
-        return parser.nextBytePattern(new EasyParserIncludeMatcher(RfcTable.DIGIT));
-      }).then((int v) {
-        major = v - 48;
-        return parser.nextString(".");
-      }).then((e) {
-        return parser.nextBytePattern(new EasyParserIncludeMatcher(RfcTable.DIGIT));
-      }).then((int v) {
-        minor = v - 48;
-        return completer.complete("HTTP/" + major.toString() + "." + minor.toString());
-      });
-    } catch (e) {
-      throw new EasyParseError();
-    }
-    return completer.future;
+    await parser.nextString("HTTP" + "/");
+    int v1 = await parser.nextBytePattern(new EasyParserIncludeMatcher(RfcTable.DIGIT));
+    major = v1 - 48;
+    await parser.nextString(".");
+    int v2 = await parser.nextBytePattern(new EasyParserIncludeMatcher(RfcTable.DIGIT));
+    minor = v2 - 48;
+    return ("HTTP/${major}.${minor}");
   }
 
   //
   // Status Code
   // DIGIT DIGIT DIGIT
-  static Future<String> decodeStatusCode(EasyParser parser) {
-    Completer<String> completer = new Completer();
-    int ret = 0;
-    try {
-      parser.nextBytePatternWithLength(new EasyParserIncludeMatcher(RfcTable.DIGIT), 3).then((List<int> v) {
-        ret = 100 * (v[0] - 48) + 10 * (v[1] - 48) + (v[2] - 48);
-        completer.complete(ret.toString());
-      });
-    } catch (e) {
-      throw new EasyParseError();
-    }
-    return completer.future;
+  static Future<String> decodeStatusCode(EasyParser parser) async {
+    List<int> v = await parser.nextBytePatternWithLength(new EasyParserIncludeMatcher(RfcTable.DIGIT), 3);
+    int ret = 100 * (v[0] - 48) + 10 * (v[1] - 48) + (v[2] - 48);
+    return "${ret}";
   }
 
-  static Future<String> decodeReasonPhrase(EasyParser parser) {
-    Completer<String> completer = new Completer();
-    parser.nextBytePatternByUnmatch(new TextMatcher()).then((List<int> vv) {
-      String v = convert.UTF8.decode(vv);
-      completer.complete(v);
-    });
-    return completer.future;
+  static Future<String> decodeReasonPhrase(EasyParser parser) async {
+    List<int> vv = await parser.nextBytePatternByUnmatch(new TextMatcher());
+    return convert.UTF8.decode(vv);
   }
 
   //Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
