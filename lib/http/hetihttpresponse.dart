@@ -78,152 +78,93 @@ class HetiHttpResponse {
   }
 
   //Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
-  static Future<HetiHttpResponseStatusLine> decodeStatusline(EasyParser parser) {
+  static Future<HetiHttpResponseStatusLine> decodeStatusline(EasyParser parser) async {
     HetiHttpResponseStatusLine result = new HetiHttpResponseStatusLine();
-    Completer<HetiHttpResponseStatusLine> completer = new Completer();
-    decodeHttpVersion(parser).then((String v) {
-      result.version = v;
-      return decodeSP(parser);
-    }).then((String v) {
-      return decodeStatusCode(parser);
-    }).then((String v) {
-      result.statusCode = int.parse(v);
-      return decodeSP(parser);
-    }).then((onValue) {
-      return decodeReasonPhrase(parser);
-    }).then((String v) {
-      result.statusPhrase = v;
-      return decodeCrlf(parser);
-    }).then((String v) {
-      completer.complete(result);
-    });
-    return completer.future;
+    result.version = await decodeHttpVersion(parser);
+    await decodeSP(parser);
+    result.statusCode = int.parse(await decodeStatusCode(parser));
+    await decodeSP(parser);
+    result.statusPhrase = await decodeReasonPhrase(parser);
+    await decodeCrlf(parser);
+    return result;
   }
 
-  static Future<String> decodeOWS(EasyParser parser) {
-    Completer completer = new Completer();
-    parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.OWS)).then((List<int> v) {
-      completer.complete(convert.UTF8.decode(v));
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
+  static Future<String> decodeOWS(EasyParser parser) async {
+    List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.OWS));
+    return convert.UTF8.decode(v);
   }
 
-  static Future<String> decodeSP(EasyParser parser) {
-    Completer completer = new Completer();
-    parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.SP)).then((List<int> v) {
-      completer.complete(convert.UTF8.decode(v));
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
+  static Future<String> decodeSP(EasyParser parser) async {
+    List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.SP));
+    return convert.UTF8.decode(v);
   }
 
   //
-  static Future<String> decodeCrlf(EasyParser parser) {
-    Completer completer = new Completer();
-    //bool lf = true;
+  static Future<String> decodeCrlf(EasyParser parser) async {
     bool crlf = true;
     parser.push();
-    parser.nextString("\r\n").catchError((e) {
-      parser.back();
-      parser.pop();
-      parser.push();
-      crlf = false;
-      return parser.nextString("\n");
-    }).then((e) {
-      if (crlf == true) {
-        completer.complete("\r\n");
-      } else {
-        completer.complete("\n");
+    try {
+      try {
+        await parser.nextString("\r\n");
+      } catch (e) {
+        parser.back();
+        parser.pop();
+        parser.push();
+        crlf = false;
+        await parser.nextString("\n");
       }
-    }).catchError((e) {
-      completer.completeError(e);
-    }).whenComplete(() {
+      if (crlf == true) {
+        return "\r\n";
+      } else {
+        return "\n";
+      }
+    } finally {
       parser.pop();
-    });
-    return completer.future;
+    }
   }
 
   //
-  static Future<int> decodeChunkedSize(EasyParser parser) {
-    Completer<int> completer = new Completer();
-    int v = 0;
-    parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.HEXDIG)).then((List<int> n) {
-      if (n.length == 0) {
-        throw new EasyParseError();
-      } else {
-        String nn = convert.UTF8.decode(n);
-        //  print("nn=" + nn);
-        v = int.parse(nn, radix: 16);
-        return HetiHttpResponse.decodeCrlf(parser);
-      }
-    }).then((d) {
-      completer.complete(v);
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
+  static Future<int> decodeChunkedSize(EasyParser parser) async {
+    List<int> n = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.HEXDIG));
+    if (n.length == 0) {
+      throw new EasyParseError();
+    }
+    String nn = convert.UTF8.decode(n);
+    int v = int.parse(nn, radix: 16);
+    await HetiHttpResponse.decodeCrlf(parser);
+    return v;
   }
 
   //  request-line   = method SP request-target SP HTTP-version CRLF
-  static Future<HetiRequestLine> decodeRequestLine(EasyParser parser) {
-    Completer<HetiRequestLine> completer = new Completer();
+  static Future<HetiRequestLine> decodeRequestLine(EasyParser parser) async {
     HetiRequestLine result = new HetiRequestLine();
-    decodeMethod(parser).then((String method) {
-      result.method = method;
-      return decodeSP(parser);
-    }).then((t) {
-      return decodeRequestTarget(parser);
-    }).then((String requestTarget) {
-      result.requestTarget = requestTarget;
-      return decodeSP(parser);
-    }).then((t) {
-      return decodeHttpVersion(parser);
-    }).then((String httpVersion) {
-      result.httpVersion = httpVersion;
-      return decodeCrlf(parser);
-    }).then((String crlf) {
-      completer.complete(result);
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
+    result.method = await decodeMethod(parser);
+    await decodeSP(parser);
+    result.requestTarget = await decodeRequestTarget(parser);
+    await decodeSP(parser);
+    result.httpVersion = await decodeHttpVersion(parser);
+    await decodeCrlf(parser);
+    return result;
   }
 
-  static Future<HetiHttpRequestMessageWithoutBody> decodeRequestMessage(EasyParser parser) {
-    Completer<HetiHttpRequestMessageWithoutBody> completer = new Completer();
+  static Future<HetiHttpRequestMessageWithoutBody> decodeRequestMessage(EasyParser parser) async {
     HetiHttpRequestMessageWithoutBody result = new HetiHttpRequestMessageWithoutBody();
-    decodeRequestLine(parser).then((HetiRequestLine line) {
-      result.line = line;
-      return decodeHeaderFields(parser);
-    }).then((List<HetiHttpResponseHeaderField> httpfields) {
-      result.headerField = httpfields;
-      result.index = parser.index;
-      completer.complete(result);
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
+    result.line = await decodeRequestLine(parser);
+    result.headerField = await decodeHeaderFields(parser);
+    result.index = parser.index;
+    return result;
   }
 
   // metod = token = 1*tchar
-  static Future<String> decodeMethod(EasyParser parser) {
-    Completer<String> completer = new Completer();
-    parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.TCHAR)).then((List<int> v) {
-      completer.complete(convert.UTF8.decode(v));
-    });
-    return completer.future;
+  static Future<String> decodeMethod(EasyParser parser) async {
+    List<int> v = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.TCHAR));
+    return convert.UTF8.decode(v);
   }
 
   // CHAR_STRING
-  static Future<String> decodeRequestTarget(EasyParser parser) {
-    Completer<String> completer = new Completer();
-    parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.VCHAR)).then((List<int> v) {
-      completer.complete(convert.UTF8.decode(v));
-    });
-    return completer.future;
+  static Future<String> decodeRequestTarget(EasyParser parser) async {
+    List<int> v= await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.VCHAR));
+    return convert.UTF8.decode(v);
   }
 
   // request-target = origin-form / absolute-form / authority-form / asterisk-form
