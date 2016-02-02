@@ -104,22 +104,20 @@ class HetiHttpResponse {
     bool crlf = true;
     parser.push();
     try {
-      try {
-        await parser.nextString("\r\n");
-      } catch (e) {
-        parser.back();
-        parser.pop();
-        parser.push();
-        crlf = false;
-        await parser.nextString("\n");
-      }
-      if (crlf == true) {
-        return "\r\n";
-      } else {
-        return "\n";
-      }
+      await parser.nextString("\r\n");
+    } catch (e) {
+      parser.back();
+      parser.pop();
+      parser.push();
+      crlf = false;
+      await parser.nextString("\n");
     } finally {
       parser.pop();
+    }
+    if (crlf == true) {
+      return "\r\n";
+    } else {
+      return "\n";
     }
   }
 
