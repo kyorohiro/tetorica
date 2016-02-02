@@ -14,6 +14,7 @@ encrypt(List<int> key, List<int> iv, List<int> src) {
   //
   List<int> ipBlock = permuteFunc(input, IP, 8);
   List<int> pc1key = permuteFunc(key, PC1, 7);
+
   for (int round = 0; round < 16; round++) {
     List<int> expansionBlock = permuteFunc(ipBlock.sublist(4), EX, 6);
     //
@@ -27,13 +28,42 @@ encrypt(List<int> key, List<int> iv, List<int> src) {
     List<int> subKey = permuteFunc(pc1key, PC2, 6);
     if (!isEncrypt) {
       ror(pc1key);
-      if ( !( round == 14 || round == 15|| round == 7 || round == 0 ) )
-       {
-         ror( pc1key );
-       }
+      if (!(round == 14 || round == 15 || round == 7 || round == 0)) {
+        ror(pc1key);
+      }
     }
     expansionBlock = xorFun(expansionBlock, subKey, 6);
+    //
+    //
+
+    // Substitution; "copy" from updated expansion block to ciphertext block
+    List<int> substitution_block = new List.filled(4, 0);
+    substitution_block[0] = S1[(expansionBlock[0] & 0xFC) >> 2] << 4;
+    substitution_block[0] |= S2[(expansionBlock[0] & 0x03) << 4 | (expansionBlock[1] & 0xF0) >> 4];
+    substitution_block[1] = S3[(expansionBlock[1] & 0x0F) << 2 | (expansionBlock[2] & 0xC0) >> 6] << 4;
+    substitution_block[1] |= S4[(expansionBlock[2] & 0x3F)];
+    substitution_block[2] = S5[(expansionBlock[3] & 0xFC) >> 2] << 4;
+    substitution_block[2] |= S6[(expansionBlock[3] & 0x03) << 4 | (expansionBlock[4] & 0xF0) >> 4];
+    substitution_block[3] = S7[(expansionBlock[4] & 0x0F) << 2 | (expansionBlock[5] & 0xC0) >> 6] << 4;
+    substitution_block[3] |= S8[(expansionBlock[5] & 0x3F)];
+    //
+    // Permutation
+    List<int> pbox_target = permuteFunc(substitution_block, P, 4);
+
+    // Recombination. XOR the pbox with left half and then switch sides.
+    List<int> recomb_box = ipBlock.sublist(0, 4);
+    ipBlock = ipBlock.sublist(4);
+
+    xorFun(recomb_box, pbox_target, 4);
+    ipBlock.addAll(recomb_box);
   }
+
+  // Swap one last time
+  List<int> recomb_box = ipBlock.sublist(0, 4);
+  ipBlock = ipBlock.sublist(4);
+  ipBlock.addAll(recomb_box);
+  List<int> ciphertext = permuteFunc(ipBlock, IPm1, 8);
+  return ciphertext;
 }
 
 void rol(List<int> target) {
