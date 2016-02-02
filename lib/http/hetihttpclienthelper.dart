@@ -1,9 +1,6 @@
-library hetimanet.http.client.helper;
+part of hetimanet_http;
 
-import 'dart:async' as async;
-import 'package:tetorica/core.dart';
-import '../net.dart';
-import 'hetihttpclient.dart';
+
 
 
 class HetiHttpClientHelper {
@@ -21,7 +18,7 @@ class HetiHttpClientHelper {
   //  this._fileBuilder = fileBuilder;
   }
 
-  async.Future<HetimaData> get(String pathAndOption) {
+  Future<HetimaData> get(String pathAndOption) {
     HetiHttpClient client  = new HetiHttpClient(_socketBuilder);
     client.connect(_address, _port).then((HetiHttpClientConnectResult b){
       return client.get(pathAndOption);

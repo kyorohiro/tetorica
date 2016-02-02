@@ -116,21 +116,6 @@ List<int> xorFun(List<int> v1, List<int> v2, int size) {
   return ret;
 }
 
-initFunc(List<int> v1) {
-  List<int> output = [];
-  for (int i in [1, 3, 5, 7, 0, 2, 4, 6]) {
-    for (int j in [7, 6, 5, 4, 3, 2, 1, 0]) {
-      int a = v1[j] & (0x80 >> i);
-      a = (a >> (7 - i)) << j;
-      if (i % 2 != 0) {
-        output[(i - 1) >> 1] |= a;
-      } else {
-        output[(4 + (i >> 1))] |= a;
-      }
-    }
-  }
-}
-
 List<int> permuteFunc(List<int> v1, List<int> table, int byteSize) {
   List<int> ret = new List(byteSize);
   for (int i = 0, len = byteSize * 8; i < len; i++) {

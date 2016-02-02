@@ -1,12 +1,5 @@
-library hetimanet.http.client;
+part of hetimanet_http;
 
-import 'dart:convert' as convert;
-import 'dart:async' as async;
-import 'package:tetorica/core.dart';
-import '../net.dart';
-import 'hetihttpresponse.dart';
-import 'chunkedbuilderadapter.dart';
-import '../net/tmp/rfctable.dart';
 
 class HetiHttpClientResponse {
   HetiHttpMessageWithoutBody message;
@@ -37,7 +30,7 @@ class HetiHttpClient {
     _verbose = verbose;
   }
 
-  async.Future<HetiHttpClientConnectResult> connect(String _host, int _port) async {
+  Future<HetiHttpClientConnectResult> connect(String _host, int _port) async {
     host = _host;
     port = _port;
     socket = _socketBuilder.createClient();
@@ -52,7 +45,7 @@ class HetiHttpClient {
     return new HetiHttpClientConnectResult();
   }
 
-  async.Future<HetiHttpClientResponse> get(String path, [Map<String, String> header]) async {
+  Future<HetiHttpClientResponse> get(String path, [Map<String, String> header]) async {
     Map<String, String> headerTmp = {};
     headerTmp["Host"] = host + ":" + port.toString();
     headerTmp["Connection"] = "Close";
@@ -81,7 +74,7 @@ class HetiHttpClient {
   //
   // post
   //
-  async.Future<HetiHttpClientResponse> post(String path, List<int> body, [Map<String, String> header]) async {
+  Future<HetiHttpClientResponse> post(String path, List<int> body, [Map<String, String> header]) async {
     Map<String, String> headerTmp = {};
     headerTmp["Host"] = host + ":" + port.toString();
     headerTmp["Connection"] = "Close";
@@ -111,7 +104,7 @@ class HetiHttpClient {
   //
   // mpost for upnp protocol
   //
-  async.Future<HetiHttpClientResponse> mpost(String path, List<int> body, [Map<String, String> header]) async {
+  Future<HetiHttpClientResponse> mpost(String path, List<int> body, [Map<String, String> header]) async {
     Map<String, String> headerTmp = {};
     headerTmp["Host"] = host + ":" + port.toString();
     headerTmp["Connection"] = "Close";
@@ -137,7 +130,7 @@ class HetiHttpClient {
     return handleResponse();
   }
 
-  async.Future<HetiHttpClientResponse> handleResponse() async {
+  Future<HetiHttpClientResponse> handleResponse() async {
     EasyParser parser = new EasyParser(socket.buffer);
     HetiHttpMessageWithoutBody message = await HetiHttpResponse.decodeHttpMessage(parser);
     HetiHttpClientResponse result = new HetiHttpClientResponse();

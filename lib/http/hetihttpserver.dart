@@ -1,13 +1,9 @@
-library hetimanet.http.server;
+part of hetimanet_http;
 
-import 'dart:async' as async;
-import 'package:tetorica/core.dart';
-import '../net.dart';
-import 'hetihttpresponse.dart';
 
 class HetiHttpServer {
 
-  async.StreamController _controllerOnNewRequest = new async.StreamController.broadcast();
+  StreamController _controllerOnNewRequest = new StreamController.broadcast();
 //  HetimaSocketBuilder _builder;
   String host;
   int port;
@@ -25,8 +21,8 @@ class HetiHttpServer {
     }
   }
 
-  static async.Future<HetiHttpServer> bind(TetSocketBuilder builder, String address, int port) {
-    async.Completer<HetiHttpServer> completer = new async.Completer();
+  static Future<HetiHttpServer> bind(TetSocketBuilder builder, String address, int port) {
+    Completer<HetiHttpServer> completer = new Completer();
     builder.startServer(address, port).then((TetServerSocket serverSocket){
       if(serverSocket == null) {
         completer.completeError({});
@@ -54,7 +50,7 @@ class HetiHttpServer {
     return completer.future;
   }
 
-  async.Stream<HetiHttpServerRequest> onNewRequest() {
+  Stream<HetiHttpServerRequest> onNewRequest() {
     return _controllerOnNewRequest.stream;
   }
 }

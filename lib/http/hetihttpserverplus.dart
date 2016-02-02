@@ -1,15 +1,4 @@
-library hetimanet.http.server.plus;
-
-import 'dart:convert' as convert;
-import 'dart:async' as async;
-import 'package:tetorica/core.dart';
-import '../net.dart';
-import 'hetihttp.dart';
-import 'hetihttpresponse.dart';
-import 'hetihttpserver.dart';
-import 'dart:typed_data' as typed_data;
-import '../net/tmp/rfctable.dart';
-
+part of hetimanet_http;
 
 class HetiHttpStartServerResult {
 
@@ -25,10 +14,10 @@ class HetiHttpServerHelper {
   HetiHttpServer _server = null;
   TetSocketBuilder _socketBuilder = null;
 
-  async.StreamController<String> _controllerUpdateLocalServer = new async.StreamController.broadcast();
-  async.Stream<String> get onUpdateLocalServer => _controllerUpdateLocalServer.stream;
-  async.StreamController<HetiHttpServerPlusResponseItem> _onResponse = new async.StreamController();
-  async.Stream<HetiHttpServerPlusResponseItem> get onResponse => _onResponse.stream;
+  StreamController<String> _controllerUpdateLocalServer = new StreamController.broadcast();
+  Stream<String> get onUpdateLocalServer => _controllerUpdateLocalServer.stream;
+  StreamController<HetiHttpServerPlusResponseItem> _onResponse = new StreamController();
+  Stream<HetiHttpServerPlusResponseItem> get onResponse => _onResponse.stream;
 
   HetiHttpServerHelper(TetSocketBuilder socketBuilder) {
     _socketBuilder = socketBuilder;
@@ -42,10 +31,10 @@ class HetiHttpServerHelper {
     _server = null;
   }
 
-  async.Future<HetiHttpStartServerResult> startServer() {
+  Future<HetiHttpStartServerResult> startServer() {
     //print("startServer");
     _localPort = basePort;
-    async.Completer<HetiHttpStartServerResult> completer = new async.Completer();
+    Completer<HetiHttpStartServerResult> completer = new Completer();
     if (_server != null) {
       completer.completeError({});
       return completer.future;
@@ -78,7 +67,7 @@ class HetiHttpServerHelper {
     headerList["Content-Type"] = contentType;
     HetiHttpResponseHeaderField fieldRangeHeader = req.info.find(RfcTable.HEADER_FIELD_RANGE);
     if (fieldRangeHeader != null && statusCode == null) {
-      typed_data.Uint8List buff = new typed_data.Uint8List.fromList(convert.UTF8.encode(fieldRangeHeader.fieldValue));
+      data.Uint8List buff = new data.Uint8List.fromList(convert.UTF8.encode(fieldRangeHeader.fieldValue));
       ArrayBuilder builder = new ArrayBuilder.fromList(buff);
       builder.fin();
       HetiHttpResponse.decodeRequestRangeValue(new EasyParser(builder)).then((HetiHttpRequestRange range) {
@@ -162,8 +151,8 @@ class HetiHttpServerHelper {
   }
 
 
-  async.Future<HetiHttpServer> _retryBind() {
-    async.Completer<HetiHttpServer> completer = new async.Completer();
+  Future<HetiHttpServer> _retryBind() {
+    Completer<HetiHttpServer> completer = new Completer();
     int portMax = _localPort + numOfRetry;
     bindFunc() {
       HetiHttpServer.bind(_socketBuilder, localIP, _localPort).then((HetiHttpServer server) {

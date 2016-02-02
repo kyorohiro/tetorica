@@ -1,9 +1,5 @@
-library hetimanet.http.response;
+part of hetimanet_http;
 
-import 'dart:convert' as convert;
-import 'dart:async';
-import 'package:tetorica/core.dart';
-import '../net/tmp/rfctable.dart';
 
 //rfc2616 rfc7230
 class HetiHttpResponse {

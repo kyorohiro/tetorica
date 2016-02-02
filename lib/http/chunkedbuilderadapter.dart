@@ -1,8 +1,5 @@
-library hetimanet.http.response.chunk;
+part of hetimanet_http;
 
-import 'dart:async' as async;
-import 'package:tetorica/core.dart';
-import 'hetihttpresponse.dart';
 
 
 class ChunkedBuilderAdapter extends HetimaReader {
@@ -29,8 +26,8 @@ class ChunkedBuilderAdapter extends HetimaReader {
     return this;
   }
 
-  async.Future<bool> _decodeChunked(EasyParser parser) {
-    async.Completer complter = new async.Completer();
+  Future<bool> _decodeChunked(EasyParser parser) {
+    Completer complter = new Completer();
     HetiHttpResponse.decodeChunkedSize(parser).then((int size) {
       return parser.buffer.getByteFuture(parser.index, size).then((List<int> v) {
         _buffer.appendIntList(v, 0, v.length);
@@ -55,16 +52,16 @@ class ChunkedBuilderAdapter extends HetimaReader {
   int get currentSize {
     return _buffer.currentSize;
   }
-  async.Future<int> getLength() {
+  Future<int> getLength() {
     return _buffer.getLength();
   }
 
-  async.Completer<bool> get rawcompleterFin => _buffer.rawcompleterFin;
+  Completer<bool> get rawcompleterFin => _buffer.rawcompleterFin;
 
-  async.Future<List<int>> getByteFuture(int index, int length, {List<int> out:null}) {
+  Future<List<int>> getByteFuture(int index, int length, {List<int> out:null}) {
     return _buffer.getByteFuture(index, length, out:out);
   }
-  async.Future<int> getIndexFuture(int index, int length) {
+  Future<int> getIndexFuture(int index, int length) {
     return _buffer.getIndexFuture(index, length);
   }
   int operator [](int index) {
