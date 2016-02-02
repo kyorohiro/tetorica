@@ -8,9 +8,6 @@ import 'dart:typed_data' as data;
 
 encrypt(List<int> key, List<int> iv, List<int> src) {
   bool isEncrypt = true;
-  if (src.length % 8 == 0) {
-    throw new Exception("expect: src.length %8 == 0");
-  }
   List<int> input = src;
   input = xorFun(input, iv, 8);
   //
