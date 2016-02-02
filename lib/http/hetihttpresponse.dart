@@ -171,21 +171,16 @@ class HetiHttpResponse {
   // absolute-URI  = scheme ":" hier-part [ "?" query ]
 
   //rfc2616
-  static Future<HetiHttpRequestRange> decodeRequestRangeValue(EasyParser parser) {
-    //HetiHttpResponseStatusLine result = new HetiHttpResponseStatusLine();
+  static Future<HetiHttpRequestRange> decodeRequestRangeValue(EasyParser parser) async {
     HetiHttpRequestRange ret = new HetiHttpRequestRange();
-    Completer<HetiHttpRequestRange> completer = new Completer();
-    parser.nextString("bytes=").then((String v) {
-      return parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.DIGIT));
-    }).then((List<int> startAsList) {
+    await parser.nextString("bytes=");
+    List<int> startAsList = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.DIGIT));
       ret.start = 0;
       for (int d in startAsList) {
         ret.start = (d - 48) + ret.start * 10;
       }
-      return parser.nextString("-");
-    }).then((String v) {
-      return parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.DIGIT));
-    }).then((List<int> endAsList) {
+    await parser.nextString("-");
+    List<int> endAsList = await parser.nextBytePatternByUnmatch(new EasyParserIncludeMatcher(RfcTable.DIGIT));
       if (endAsList.length == 0) {
         ret.end = -1;
       } else {
@@ -194,11 +189,7 @@ class HetiHttpResponse {
           ret.end = (d - 48) + ret.end * 10;
         }
       }
-      completer.complete(ret);
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
+    return ret;
   }
 }
 
