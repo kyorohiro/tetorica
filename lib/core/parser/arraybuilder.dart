@@ -1,6 +1,6 @@
 part of hetimacore;
 
-class ArrayBuilder extends HetimaReader {
+class ArrayBuilder extends TetReader {
   int _max = 1024;
   TetBufferPlus _buffer8;
   int _length = 0;

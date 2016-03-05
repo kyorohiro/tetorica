@@ -1,20 +1,34 @@
 part of hetimacore;
 
-abstract class HetimaReader {
+abstract class TetReader {
+  bool _immutable = false;
+  Completer<bool> _completerFin = new Completer();
+
   Future<int> getIndex(int index, int length);
   Future<List<int>> getBytes(int index, int length, {List<int> out: null});
   Future<int> getLength();
   int get currentSize;
   int operator [](int index);
 
-  Completer<bool> _completerFin = new Completer();
   Completer<bool> get rawcompleterFin => _completerFin;
-  Future<bool> get onFin => _completerFin.future;
+  Future<bool> getStockedSignal() {
+    return _completerFin.future;
+  }
+
+  Future<List<int>> getAllBytes({bool allowMalformed: true}) async {
+    await getStockedSignal();
+    int length = await getLength();
+    return await getBytes(0, length);
+  }
+
+  Future<String> getString({bool allowMalformed: true}) async {
+    return convert.UTF8.decode(await getAllBytes(), allowMalformed: allowMalformed);
+  }
+
   void fin() {
     immutable = true;
   }
 
-  bool _immutable = false;
   bool get immutable => _immutable;
   void set immutable(bool v) {
     bool prev = _immutable;
@@ -29,14 +43,14 @@ abstract class HetimaReader {
   }
 }
 
-class HetimaReaderAdapter extends HetimaReader {
-  HetimaReader _base = null;
+class TetReaderAdapter extends TetReader {
+  TetReader _base = null;
   int _startIndex = 0;
   int operator [](int index) {
     return _base[index + _startIndex];
   }
 
-  HetimaReaderAdapter(HetimaReader builder, int startIndex) {
+  TetReaderAdapter(TetReader builder, int startIndex) {
     _base = builder;
     _startIndex = startIndex;
   }
@@ -57,7 +71,7 @@ class HetimaReaderAdapter extends HetimaReader {
 
   Completer<bool> get rawcompleterFin => _base.rawcompleterFin;
   //
-  Future<bool> get onFin => _base.onFin;
+  Future<bool> getStockedSignal() => _base.getStockedSignal();
 
   Future<List<int>> getBytes(int index, int length, {List<int> out: null}) async {
     return await _base.getBytes(index + _startIndex, length);

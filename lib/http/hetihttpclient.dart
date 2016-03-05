@@ -2,7 +2,7 @@ part of hetimanet_http;
 
 class HttpClientResponse {
   HttpClientResponseInfo message;
-  HetimaReader body;
+  TetReader body;
 }
 
 //class HttpClientConnectResult {}
@@ -130,7 +130,7 @@ class HttpClient {
     HetiHttpResponseHeaderField transferEncodingField = message.find("Transfer-Encoding");
 
     if (transferEncodingField == null || transferEncodingField.fieldValue != "chunked") {
-      result.body = new HetimaReaderAdapter(socket.buffer, message.index);
+      result.body = new TetReaderAdapter(socket.buffer, message.index);
       if (result.message.contentLength > 0) {
         await result.body.getBytes(0, result.message.contentLength);
         result.body.immutable = true;
@@ -138,7 +138,7 @@ class HttpClient {
         result.body.immutable = true;
       }
     } else {
-      result.body = new ChunkedBuilderAdapter(new HetimaReaderAdapter(socket.buffer, message.index)).start();
+      result.body = new ChunkedBuilderAdapter(new TetReaderAdapter(socket.buffer, message.index)).start();
     }
     return result;
   }

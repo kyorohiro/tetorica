@@ -2,13 +2,13 @@ part of hetimanet_http;
 
 
 
-class ChunkedBuilderAdapter extends HetimaReader {
+class ChunkedBuilderAdapter extends TetReader {
 
   bool _started = false;
   ArrayBuilder _buffer = new ArrayBuilder();
-  HetimaReader _base = null;
+  TetReader _base = null;
 
-  ChunkedBuilderAdapter(HetimaReader builder) {
+  ChunkedBuilderAdapter(TetReader builder) {
     _base = builder;
     start();
   }
