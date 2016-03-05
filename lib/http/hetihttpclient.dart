@@ -37,65 +37,24 @@ class HttpClient {
   }
 
   Future<HttpClientResponse> get(String path, {Map<String, String> header}) async {
-    Map<String, String> headerTmp = {};
-    headerTmp["Host"] = host + ":" + port.toString();
-    headerTmp["Connection"] = "Close";
-    if (header != null) {
-      for (String key in header.keys) {
-        headerTmp[key] = header[key];
-      }
-    }
-
-    ArrayBuilder builder = new ArrayBuilder();
-    builder.appendString("GET" + " " + path + " " + "HTTP/1.1" + "\r\n");
-    for (String key in headerTmp.keys) {
-      builder.appendString("" + key + ": " + headerTmp[key] + "\r\n");
-    }
-    builder.appendString("\r\n");
-
-    socket.onReceive.listen((HetimaReceiveInfo info) {
-      if (_verbose == true) {
-        log("<hetihttpclient f=onReceive> Length${path}:${info.data.length} ${convert.UTF8.decode(info.data, allowMalformed:true)}</hetihttpclient>");
-      }
-    });
-    socket.send(builder.toList()).then((HetimaSendInfo info) {});
-    return handleResponse();
+     return base("GET", path, null, header:header);
   }
 
   //
   // post
   //
   Future<HttpClientResponse> post(String path, List<int> body, {Map<String, String> header}) async {
-    Map<String, String> headerTmp = {};
-    headerTmp["Host"] = host + ":" + port.toString();
-    headerTmp["Connection"] = "Close";
-    if (header != null) {
-      for (String key in header.keys) {
-        headerTmp[key] = header[key];
-      }
-    }
-    headerTmp[RfcTable.HEADER_FIELD_CONTENT_LENGTH] = body.length.toString();
-
-    ArrayBuilder builder = new ArrayBuilder();
-    builder.appendString("POST" + " " + path + " " + "HTTP/1.1" + "\r\n");
-    for (String key in headerTmp.keys) {
-      builder.appendString("" + key + ": " + headerTmp[key] + "\r\n");
-    }
-
-    builder.appendString("\r\n");
-    builder.appendIntList(body, 0, body.length);
-
-    //
-    socket.onReceive.listen((HetimaReceiveInfo info) {});
-    socket.send(builder.toList()).then((HetimaSendInfo info) {});
-
-    return handleResponse();
+    return base("POST", path, body, header:header);
   }
 
   //
   // mpost for upnp protocol
   //
   Future<HttpClientResponse> mpost(String path, List<int> body, [Map<String, String> header]) async {
+    return base("M-POST", path, body, header:header);
+  }
+
+  Future<HttpClientResponse> base(String action, String path, List<int> body, {Map<String, String> header}) async {
     Map<String, String> headerTmp = {};
     headerTmp["Host"] = host + ":" + port.toString();
     headerTmp["Connection"] = "Close";
@@ -104,22 +63,26 @@ class HttpClient {
         headerTmp[key] = header[key];
       }
     }
-    headerTmp[RfcTable.HEADER_FIELD_CONTENT_LENGTH] = body.length.toString();
-
+    if(body != null) {
+      headerTmp[RfcTable.HEADER_FIELD_CONTENT_LENGTH] = body.length.toString();
+    }
     ArrayBuilder builder = new ArrayBuilder();
-    builder.appendString("M-POST" + " " + path + " " + "HTTP/1.1" + "\r\n");
+    builder.appendString(action + " " + path + " " + "HTTP/1.1" + "\r\n");
     for (String key in headerTmp.keys) {
       builder.appendString("" + key + ": " + headerTmp[key] + "\r\n");
     }
 
     builder.appendString("\r\n");
-    builder.appendIntList(body, 0, body.length);
+    if(body != null) {
+      builder.appendIntList(body, 0, body.length);
+    }
     //
     socket.onReceive.listen((HetimaReceiveInfo info) {});
     socket.send(builder.toList()).then((HetimaSendInfo info) {});
 
     return handleResponse();
   }
+
 
   Future<HttpClientResponse> handleResponse() async {
     EasyParser parser = new EasyParser(socket.buffer);
