@@ -14,7 +14,7 @@ dependencies:
     path: ../
 
 dev_dependencies:
-  unittest: any
+  test: any
 
 transformers:
 - dart_to_js_script_rewriter
