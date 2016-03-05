@@ -145,7 +145,7 @@ class UpnpPPPDevice {
     await client.connect(host, port);
     HetiHttpClientResponse response = null;
     if (mode == MODE_POST) {
-      response = await client.post(path, convert.UTF8.encode(bbody), {KEY_SOAPACTION: soapAction, "Content-Type": "text/xml"});
+      response = await client.post(path, convert.UTF8.encode(bbody), header:{KEY_SOAPACTION: soapAction, "Content-Type": "text/xml"});
     } else {
       response = await client.mpost(path, convert.UTF8.encode(bbody), {"MAN": "\"http://schemas.xmlsoap.org/soap/envelope/\"; ns=01", "01-SOAPACTION": soapAction, "Content-Type": "text/xml"});
     }

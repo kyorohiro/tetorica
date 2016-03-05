@@ -1,6 +1,5 @@
 part of hetimanet_http;
 
-
 class HetiHttpClientResponse {
   HetiHttpMessageWithoutBody message;
   HetimaReader body;
@@ -45,7 +44,7 @@ class HetiHttpClient {
     return new HetiHttpClientConnectResult();
   }
 
-  Future<HetiHttpClientResponse> get(String path, [Map<String, String> header]) async {
+  Future<HetiHttpClientResponse> get(String path, {Map<String, String> header}) async {
     Map<String, String> headerTmp = {};
     headerTmp["Host"] = host + ":" + port.toString();
     headerTmp["Connection"] = "Close";
@@ -74,7 +73,7 @@ class HetiHttpClient {
   //
   // post
   //
-  Future<HetiHttpClientResponse> post(String path, List<int> body, [Map<String, String> header]) async {
+  Future<HetiHttpClientResponse> post(String path, List<int> body, {Map<String, String> header}) async {
     Map<String, String> headerTmp = {};
     headerTmp["Host"] = host + ":" + port.toString();
     headerTmp["Connection"] = "Close";
@@ -141,7 +140,7 @@ class HetiHttpClient {
     if (transferEncodingField == null || transferEncodingField.fieldValue != "chunked") {
       result.body = new HetimaReaderAdapter(socket.buffer, message.index);
       if (result.message.contentLength > 0) {
-        await  result.body.getByteFuture(0, result.message.contentLength);
+        await result.body.getByteFuture(0, result.message.contentLength);
         result.body.immutable = true;
       } else {
         result.body.immutable = true;
