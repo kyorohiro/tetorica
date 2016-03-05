@@ -5,7 +5,7 @@ class HttpClientResponse {
   HetimaReader body;
 }
 
-class HttpClientConnectResult {}
+//class HttpClientConnectResult {}
 
 class HttpClient {
   TetSocketBuilder _socketBuilder;
@@ -20,7 +20,8 @@ class HttpClient {
     _verbose = verbose;
   }
 
-  Future<HttpClientConnectResult> connect(String _host, int _port) async {
+//  Future<HttpClientConnectResult>
+  Future connect(String _host, int _port) async {
     host = _host;
     port = _port;
     socket = _socketBuilder.createClient();
@@ -32,7 +33,7 @@ class HttpClient {
     if (s == null) {
       throw {};
     }
-    return new HttpClientConnectResult();
+    //return new HttpClientConnectResult();
   }
 
   Future<HttpClientResponse> get(String path, {Map<String, String> header}) async {
@@ -131,7 +132,7 @@ class HttpClient {
     if (transferEncodingField == null || transferEncodingField.fieldValue != "chunked") {
       result.body = new HetimaReaderAdapter(socket.buffer, message.index);
       if (result.message.contentLength > 0) {
-        await result.body.getByteFuture(0, result.message.contentLength);
+        await result.body.getBytes(0, result.message.contentLength);
         result.body.immutable = true;
       } else {
         result.body.immutable = true;

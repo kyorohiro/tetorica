@@ -53,11 +53,11 @@ class EasyParser {
   }
 
   Future<List<int>> getPeek(int length) {
-    return _buffer.getByteFuture(index, length);
+    return _buffer.getBytes(index, length);
   }
 
   Future<int> jumpBuffer(int length) async {
-    int i = await _buffer.getIndexFuture(index, length);
+    int i = await _buffer.getIndex(index, length);
     if (i + length > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
@@ -66,7 +66,7 @@ class EasyParser {
   }
 
   Future<List<int>> nextBuffer(int length) async {
-    List<int> v = await _buffer.getByteFuture(index, length);
+    List<int> v = await _buffer.getBytes(index, length);
     index += v.length;
     return v;
   }
@@ -75,7 +75,7 @@ class EasyParser {
 // todo write test
   Future<bool> checkString(String value) async {
     List<int> encoded = convert.UTF8.encode(value);
-    int i = await _buffer.getIndexFuture(index, encoded.length);
+    int i = await _buffer.getIndex(index, encoded.length);
     if (i + encoded.length > _buffer.currentSize) {
       return false;
     }
@@ -89,7 +89,7 @@ class EasyParser {
 
   Future<String> nextString(String value) async {
     List<int> encoded = convert.UTF8.encode(value);
-    int i = await _buffer.getIndexFuture(index, encoded.length);
+    int i = await _buffer.getIndex(index, encoded.length);
     if (i + encoded.length > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
@@ -106,9 +106,9 @@ class EasyParser {
     List<int> va = null;
     int i = index;
     if (_cache.rawbuffer8.length > length) {
-      va = await _buffer.getByteFuture(index, length, out: _cache.rawbuffer8);
+      va = await _buffer.getBytes(index, length, out: _cache.rawbuffer8);
     } else {
-      va = await _buffer.getByteFuture(index, length);
+      va = await _buffer.getBytes(index, length);
     }
     if (i + length > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
@@ -118,7 +118,7 @@ class EasyParser {
   }
 
   Future<int> readLong(int byteorder) async {
-    int i = await _buffer.getIndexFuture(index, 8);
+    int i = await _buffer.getIndex(index, 8);
     if (i + 8 > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
@@ -127,7 +127,7 @@ class EasyParser {
   }
 
   Future<int> readInt(int byteorder) async {
-    int i = await _buffer.getIndexFuture(index, 4);
+    int i = await _buffer.getIndex(index, 4);
     if (i + 4 > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
@@ -136,7 +136,7 @@ class EasyParser {
   }
 
   Future<int> readShort(int byteorder) async {
-    int i = await _buffer.getIndexFuture(index, 2);
+    int i = await _buffer.getIndex(index, 2);
     if (i + 2 > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
@@ -145,7 +145,7 @@ class EasyParser {
   }
 
   Future<int> readByte() async {
-    int i = await _buffer.getIndexFuture(index, 1);
+    int i = await _buffer.getIndex(index, 1);
     if (i + 1 > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
     }
@@ -156,7 +156,7 @@ class EasyParser {
   Future<int> nextBytePattern(EasyParserMatcher matcher) {
     Completer completer = new Completer();
     matcher.init();
-    _buffer.getByteFuture(index, 1).then((List<int> v) {
+    _buffer.getBytes(index, 1).then((List<int> v) {
       if (v.length < 1) {
         throw new EasyParseError();
       }
@@ -173,7 +173,7 @@ class EasyParser {
   Future<List<int>> nextBytePatternWithLength(EasyParserMatcher matcher, int length) {
     Completer completer = new Completer();
     matcher.init();
-    _buffer.getByteFuture(index, length).then((List<int> va) {
+    _buffer.getBytes(index, length).then((List<int> va) {
       if (va.length < length) {
         completer.completeError(new EasyParseError());
       }
@@ -195,7 +195,7 @@ class EasyParser {
     matcher.init();
     List<int> ret = new List<int>();
     Future<Object> p() {
-      return _buffer.getByteFuture(index, 1).then((List<int> va) {
+      return _buffer.getBytes(index, 1).then((List<int> va) {
         if (va.length < 1) {
           completer.complete(ret);
         } else if (keepWhenMatchIsTrue == matcher.match(va[0])) {

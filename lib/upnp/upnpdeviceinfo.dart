@@ -108,7 +108,7 @@ class UpnpDeviceInfo {
     await new Future.delayed(new Duration(seconds: 1));
     await res.body.rawcompleterFin.future;
     int length = await res.body.getLength();
-    List<int> v = await res.body.getByteFuture(0, length);
+    List<int> v = await res.body.getBytes(0, length);
     return convert.UTF8.decode(v, allowMalformed:true);
   }
 

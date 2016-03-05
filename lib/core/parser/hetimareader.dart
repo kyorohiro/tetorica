@@ -1,9 +1,8 @@
 part of hetimacore;
 
 abstract class HetimaReader {
-
-  Future<int> getIndexFuture(int index, int length) ;
-  Future<List<int>> getByteFuture(int index, int length, {List<int> out:null});
+  Future<int> getIndex(int index, int length);
+  Future<List<int>> getBytes(int index, int length, {List<int> out: null});
   Future<int> getLength();
   int get currentSize;
   int operator [](int index);
@@ -20,7 +19,7 @@ abstract class HetimaReader {
   void set immutable(bool v) {
     bool prev = _immutable;
     _immutable = v;
-    if(prev == false && v== true) {
+    if (prev == false && v == true) {
       _completerFin.complete(v);
     }
   }
@@ -28,7 +27,6 @@ abstract class HetimaReader {
   void clearInnerBuffer(int len) {
     ;
   }
-
 }
 
 class HetimaReaderAdapter extends HetimaReader {
@@ -45,9 +43,9 @@ class HetimaReaderAdapter extends HetimaReader {
 
   Future<int> getLength() {
     Completer<int> completer = new Completer();
-    _base.getLength().then((int v){
+    _base.getLength().then((int v) {
       completer.complete(v - _startIndex);
-    }).catchError((e){
+    }).catchError((e) {
       completer.completeError(e);
     });
     return completer.future;
@@ -61,12 +59,12 @@ class HetimaReaderAdapter extends HetimaReader {
   //
   Future<bool> get onFin => _base.onFin;
 
-  Future<List<int>> getByteFuture(int index, int length, {List<int> out:null}) async {
-    return await _base.getByteFuture(index + _startIndex, length);
+  Future<List<int>> getBytes(int index, int length, {List<int> out: null}) async {
+    return await _base.getBytes(index + _startIndex, length);
   }
 
-  Future<int> getIndexFuture(int index, int length) async {
-    return await _base.getIndexFuture(index + _startIndex, length);
+  Future<int> getIndex(int index, int length) async {
+    return await _base.getIndex(index + _startIndex, length);
   }
 
   void fin() {

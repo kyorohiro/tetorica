@@ -29,7 +29,7 @@ class ChunkedBuilderAdapter extends HetimaReader {
   Future<bool> _decodeChunked(EasyParser parser) {
     Completer complter = new Completer();
     HetiHttpResponse.decodeChunkedSize(parser).then((int size) {
-      return parser.buffer.getByteFuture(parser.index, size).then((List<int> v) {
+      return parser.buffer.getBytes(parser.index, size).then((List<int> v) {
         _buffer.appendIntList(v, 0, v.length);
         parser.index += v.length;
         if (v.length == 0) {
@@ -58,11 +58,11 @@ class ChunkedBuilderAdapter extends HetimaReader {
 
   Completer<bool> get rawcompleterFin => _buffer.rawcompleterFin;
 
-  Future<List<int>> getByteFuture(int index, int length, {List<int> out:null}) {
-    return _buffer.getByteFuture(index, length, out:out);
+  Future<List<int>> getBytes(int index, int length, {List<int> out:null}) {
+    return _buffer.getBytes(index, length, out:out);
   }
-  Future<int> getIndexFuture(int index, int length) {
-    return _buffer.getIndexFuture(index, length);
+  Future<int> getIndex(int index, int length) {
+    return _buffer.getIndex(index, length);
   }
   int operator [](int index) {
     return _base[index];

@@ -51,7 +51,7 @@ class ArrayBuilder extends HetimaReader {
     }
   }
 
-  Future<int> getIndexFuture(int index, int length) {
+  Future<int> getIndex(int index, int length) {
     GetByteFutureInfo info = new GetByteFutureInfo();
 
     info.completerResultLength = length;
@@ -65,11 +65,11 @@ class ArrayBuilder extends HetimaReader {
     return info.completer.future;
   }
 
-  Future<List<int>> getByteFuture(int index, int length, {List<int> out:null}) async {
+  Future<List<int>> getBytes(int index, int length, {List<int> out:null}) async {
     if(out != null && out.length < length) {
       throw new Exception();
     }
-    await getIndexFuture(index, length);
+    await getIndex(index, length);
     int len = currentSize - index;
     len = (len > length ? length : len);
     if(out == null) {

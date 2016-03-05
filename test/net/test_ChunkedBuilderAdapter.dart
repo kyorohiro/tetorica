@@ -10,7 +10,7 @@ void main() {
   unit.test("ChunkedBuilderAdapter_a", () async {
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     hetima.ChunkedBuilderAdapter a = new hetima.ChunkedBuilderAdapter(builder);
-    Future r = a.getByteFuture(0, 3);
+    Future r = a.getBytes(0, 3);
     a.start();
     builder.appendString("3\r\nabc");
 
@@ -21,7 +21,7 @@ void main() {
   unit.test("ChunkedBuilderAdapter_b", () async {
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     hetima.ChunkedBuilderAdapter a = new hetima.ChunkedBuilderAdapter(builder);
-    Future r = a.getByteFuture(0, 13);
+    Future r = a.getBytes(0, 13);
     builder.appendString("3\r\nabc\r\n10\r\n1234567890");
     builder.fin();
     String s = conv.UTF8.decode(await r);
@@ -31,7 +31,7 @@ void main() {
   unit.test("ChunkedBuilderAdapter_c", () async {
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     hetima.ChunkedBuilderAdapter a = new hetima.ChunkedBuilderAdapter(builder);
-    Future r = a.getByteFuture(0, 13);
+    Future r = a.getBytes(0, 13);
     builder.appendString("3\r\nabc\r\n10\r\n12345678");
     builder.fin();
     try {
@@ -43,7 +43,7 @@ void main() {
   unit.test("ChunkedBuilderAdapter_d", () async {
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     hetima.ChunkedBuilderAdapter a = new hetima.ChunkedBuilderAdapter(builder);
-    Future r = a.getByteFuture(0, 13);
+    Future r = a.getBytes(0, 13);
     builder.appendString("3\r\nabc10\r\n12345678");
     builder.fin();
     try {
@@ -55,7 +55,7 @@ void main() {
   unit.test("ChunkedBuilderAdapter_f", () async {
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     hetima.ChunkedBuilderAdapter a = new hetima.ChunkedBuilderAdapter(builder);
-    Future r = a.getByteFuture(0, 13);
+    Future r = a.getBytes(0, 13);
     new Future.delayed(new Duration(milliseconds: 500), () {
       builder.appendString("3\r\nabc\r\n");
     });

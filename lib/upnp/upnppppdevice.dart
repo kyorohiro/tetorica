@@ -152,7 +152,7 @@ class UpnpPPPDevice {
 
     await response.body.rawcompleterFin.future;
     int length = await response.body.getLength();
-    List<int> body = await response.body.getByteFuture(0, length);
+    List<int> body = await response.body.getBytes(0, length);
     return new UpnpPPPDeviceRequestResponse(response.message.line.statusCode, convert.UTF8.decode(body));
   }
 
