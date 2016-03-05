@@ -1,6 +1,6 @@
 part of hetimanet_http;
 
-class HetiHttpClientResponse {
+class HttpClientResponse {
   HetiHttpMessageWithoutBody message;
   HetimaReader body;
   int getContentLength() {
@@ -14,9 +14,9 @@ class HetiHttpClientResponse {
   }
 }
 
-class HetiHttpClientConnectResult {}
+class HttpClientConnectResult {}
 
-class HetiHttpClient {
+class HttpClient {
   TetSocketBuilder _socketBuilder;
   TetSocket socket = null;
   String host;
@@ -24,12 +24,12 @@ class HetiHttpClient {
 
   bool _verbose = false;
 
-  HetiHttpClient(TetSocketBuilder socketBuilder, {HetimaDataBuilder dataBuilder: null, bool verbose: false}) {
+  HttpClient(TetSocketBuilder socketBuilder, {HetimaDataBuilder dataBuilder: null, bool verbose: false}) {
     _socketBuilder = socketBuilder;
     _verbose = verbose;
   }
 
-  Future<HetiHttpClientConnectResult> connect(String _host, int _port) async {
+  Future<HttpClientConnectResult> connect(String _host, int _port) async {
     host = _host;
     port = _port;
     socket = _socketBuilder.createClient();
@@ -41,10 +41,10 @@ class HetiHttpClient {
     if (s == null) {
       throw {};
     }
-    return new HetiHttpClientConnectResult();
+    return new HttpClientConnectResult();
   }
 
-  Future<HetiHttpClientResponse> get(String path, {Map<String, String> header}) async {
+  Future<HttpClientResponse> get(String path, {Map<String, String> header}) async {
     Map<String, String> headerTmp = {};
     headerTmp["Host"] = host + ":" + port.toString();
     headerTmp["Connection"] = "Close";
@@ -73,7 +73,7 @@ class HetiHttpClient {
   //
   // post
   //
-  Future<HetiHttpClientResponse> post(String path, List<int> body, {Map<String, String> header}) async {
+  Future<HttpClientResponse> post(String path, List<int> body, {Map<String, String> header}) async {
     Map<String, String> headerTmp = {};
     headerTmp["Host"] = host + ":" + port.toString();
     headerTmp["Connection"] = "Close";
@@ -103,7 +103,7 @@ class HetiHttpClient {
   //
   // mpost for upnp protocol
   //
-  Future<HetiHttpClientResponse> mpost(String path, List<int> body, [Map<String, String> header]) async {
+  Future<HttpClientResponse> mpost(String path, List<int> body, [Map<String, String> header]) async {
     Map<String, String> headerTmp = {};
     headerTmp["Host"] = host + ":" + port.toString();
     headerTmp["Connection"] = "Close";
@@ -129,10 +129,10 @@ class HetiHttpClient {
     return handleResponse();
   }
 
-  Future<HetiHttpClientResponse> handleResponse() async {
+  Future<HttpClientResponse> handleResponse() async {
     EasyParser parser = new EasyParser(socket.buffer);
     HetiHttpMessageWithoutBody message = await HetiHttpResponse.decodeHttpMessage(parser);
-    HetiHttpClientResponse result = new HetiHttpClientResponse();
+    HttpClientResponse result = new HttpClientResponse();
     result.message = message;
 
     HetiHttpResponseHeaderField transferEncodingField = message.find("Transfer-Encoding");

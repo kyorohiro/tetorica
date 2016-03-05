@@ -126,7 +126,7 @@ class UpnpPPPDevice {
     if ("" == location) {
       throw {};
     }
-    HetiHttpClient client = new HetiHttpClient(_base.getSocketBuilder());
+    HttpClient client = new HttpClient(_base.getSocketBuilder());
     HttpUrl url = HttpUrlDecoder.decodeUrl(location);
     String host = url.host;
     String path = "/";
@@ -143,7 +143,7 @@ class UpnpPPPDevice {
     }
     log("upnppppdevice.request ${host}:${port}");
     await client.connect(host, port);
-    HetiHttpClientResponse response = null;
+    HttpClientResponse response = null;
     if (mode == MODE_POST) {
       response = await client.post(path, convert.UTF8.encode(bbody), header:{KEY_SOAPACTION: soapAction, "Content-Type": "text/xml"});
     } else {

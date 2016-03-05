@@ -19,10 +19,10 @@ class HetiHttpClientHelper {
   }
 
   Future<HetimaData> get(String pathAndOption) {
-    HetiHttpClient client  = new HetiHttpClient(_socketBuilder);
-    client.connect(_address, _port).then((HetiHttpClientConnectResult b){
+    HttpClient client  = new HttpClient(_socketBuilder);
+    client.connect(_address, _port).then((HttpClientConnectResult b){
       return client.get(pathAndOption);
-    }).then((HetiHttpClientResponse res) {
+    }).then((HttpClientResponse res) {
       ;
     });
   }

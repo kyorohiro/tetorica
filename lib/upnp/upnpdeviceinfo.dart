@@ -101,10 +101,10 @@ class UpnpDeviceInfo {
       throw {"message": "invalid location"};
     }
 
-    HetiHttpClient client = new HetiHttpClient(socketBuilder, verbose: _verbose);
+    HttpClient client = new HttpClient(socketBuilder, verbose: _verbose);
     HttpUrl url = HttpUrlDecoder.decodeUrl(location);
     await client.connect(url.host, url.port);
-    HetiHttpClientResponse res = await client.get(url.path);
+    HttpClientResponse res = await client.get(url.path);
     await new Future.delayed(new Duration(seconds: 1));
     await res.body.rawcompleterFin.future;
     int length = await res.body.getLength();
