@@ -5,8 +5,8 @@ class HetiHttpResponse {
   static List<int> PATH = convert.UTF8.encode(RfcTable.RFC3986_PCHAR_AS_STRING + "/");
   static List<int> QUERY = convert.UTF8.encode(RfcTable.RFC3986_RESERVED_AS_STRING + RfcTable.RFC3986_UNRESERVED_AS_STRING);
 
-  static Future<HetiHttpMessageWithoutBody> decodeHttpMessage(EasyParser parser) async {
-    HetiHttpMessageWithoutBody result = new HetiHttpMessageWithoutBody();
+  static Future<HttpClientResponseInfo> decodeHttpMessage(EasyParser parser) async {
+    HttpClientResponseInfo result = new HttpClientResponseInfo();
     HetiHttpResponseStatusLine line = await decodeStatusline(parser);
     List<HetiHttpResponseHeaderField> httpfields = await decodeHeaderFields(parser);
     result.line = line;
@@ -267,7 +267,7 @@ class HetiHttpRequestMessageWithoutBody {
 // *( header-field CRLF )
 // CRLF
 // [ message-body ]
-class HetiHttpMessageWithoutBody {
+class HttpClientResponseInfo {
   int index = 0;
   HetiHttpResponseStatusLine line = new HetiHttpResponseStatusLine();
   List<HetiHttpResponseHeaderField> headerField = new List();

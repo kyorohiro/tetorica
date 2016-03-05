@@ -1,17 +1,8 @@
 part of hetimanet_http;
 
 class HttpClientResponse {
-  HetiHttpMessageWithoutBody message;
+  HttpClientResponseInfo message;
   HetimaReader body;
-  int getContentLength() {
-    HetiHttpResponseHeaderField contentLength = message.find(RfcTable.HEADER_FIELD_CONTENT_LENGTH);
-    if (contentLength != null) {
-      try {
-        return int.parse(contentLength.fieldValue);
-      } catch (e) {}
-    }
-    return -1;
-  }
 }
 
 class HttpClientConnectResult {}
@@ -131,7 +122,7 @@ class HttpClient {
 
   Future<HttpClientResponse> handleResponse() async {
     EasyParser parser = new EasyParser(socket.buffer);
-    HetiHttpMessageWithoutBody message = await HetiHttpResponse.decodeHttpMessage(parser);
+    HttpClientResponseInfo message = await HetiHttpResponse.decodeHttpMessage(parser);
     HttpClientResponse result = new HttpClientResponse();
     result.message = message;
 

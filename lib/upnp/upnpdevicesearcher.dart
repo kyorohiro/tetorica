@@ -78,7 +78,7 @@ class UpnpDeviceSearcher {
     ArrayBuilder builder = new ArrayBuilder();
     EasyParser parser = new EasyParser(builder);
     builder.appendIntList(buffer, 0, buffer.length);
-    HetiHttpMessageWithoutBody message = await HetiHttpResponse.decodeHttpMessage(parser);
+    HttpClientResponseInfo message = await HetiHttpResponse.decodeHttpMessage(parser);
     UpnpDeviceInfo info = new UpnpDeviceInfo(message.headerField, _socketBuilder, verbose:_verbose);
 
     if (!deviceInfoList.contains(info)) {
