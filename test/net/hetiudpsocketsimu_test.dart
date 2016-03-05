@@ -1,6 +1,6 @@
 library knodecommsimu.test;
 
-import 'package:unittest/unittest.dart' as unit;
+import 'package:test/test.dart' as unit;
 import 'package:tetorica/net.dart';
 import 'dart:convert' as convert;
 import 'dart:async';

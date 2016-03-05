@@ -1,7 +1,7 @@
 library dart_hetimaregex_test_vm;
 
 import 'package:tetorica/regex.dart' as regex;
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 
 import 'dart:convert' as conv;
 

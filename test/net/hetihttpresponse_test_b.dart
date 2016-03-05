@@ -2,7 +2,7 @@
 import 'package:tetorica/core.dart' as hetima;
 import 'package:tetorica/net.dart' as hetima;
 import 'package:tetorica/http.dart' as hetima;
-import 'package:unittest/unittest.dart' as unit;
+import 'package:test/test.dart' as unit;
 
 import 'dart:async';
 

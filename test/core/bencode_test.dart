@@ -1,6 +1,6 @@
 library bencode.test;
 
-import 'package:unittest/unittest.dart' as unit;
+import 'package:test/test.dart' as unit;
 import 'package:tetorica/core.dart';
 import 'dart:typed_data' as type;
 import 'dart:convert' as convert;

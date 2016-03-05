@@ -1,6 +1,6 @@
 library pieceinfo.test;
 
-import 'package:unittest/unittest.dart' as unit;
+import 'package:test/test.dart' as unit;
 import 'package:tetorica/core.dart';
 
 void main() {
