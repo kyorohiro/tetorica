@@ -34,6 +34,9 @@ abstract class HetimaReader {
 class HetimaReaderAdapter extends HetimaReader {
   HetimaReader _base = null;
   int _startIndex = 0;
+  int operator [](int index) {
+    return _base[index + _startIndex];
+  }
 
   HetimaReaderAdapter(HetimaReader builder, int startIndex) {
     _base = builder;
@@ -58,7 +61,7 @@ class HetimaReaderAdapter extends HetimaReader {
   //
   Future<bool> get onFin => _base.onFin;
 
-  Future<List<int>> getByteFuture(int index, int length) async {
+  Future<List<int>> getByteFuture(int index, int length, {List<int> out:null}) async {
     return await _base.getByteFuture(index + _startIndex, length);
   }
 

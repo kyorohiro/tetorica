@@ -8,7 +8,7 @@ packages:
   args:
     description: args
     source: hosted
-    version: "0.13.3+1"
+    version: "0.13.3+6"
   async:
     description: async
     source: hosted
@@ -33,10 +33,6 @@ packages:
     description: collection
     source: hosted
     version: "1.4.0"
-  convert:
-    description: convert
-    source: hosted
-    version: "1.0.1"
   crypto:
     description: crypto
     source: hosted
@@ -64,7 +60,7 @@ packages:
   http_parser:
     description: http_parser
     source: hosted
-    version: "1.1.0"
+    version: "0.0.2+8"
   logging:
     description: logging
     source: hosted
@@ -104,11 +100,11 @@ packages:
   shelf:
     description: shelf
     source: hosted
-    version: "0.6.5"
+    version: "0.6.3"
   shelf_static:
     description: shelf_static
     source: hosted
-    version: "0.2.3+2"
+    version: "0.2.3+3"
   shelf_web_socket:
     description: shelf_web_socket
     source: hosted
@@ -124,15 +120,11 @@ packages:
   source_span:
     description: source_span
     source: hosted
-    version: "1.2.1"
+    version: "1.2.2"
   stack_trace:
     description: stack_trace
     source: hosted
-    version: "1.6.0"
-  stream_channel:
-    description: stream_channel
-    source: hosted
-    version: "1.0.1"
+    version: "1.6.1"
   string_scanner:
     description: string_scanner
     source: hosted
@@ -140,19 +132,15 @@ packages:
   test:
     description: test
     source: hosted
-    version: "0.12.4+9"
-  typed_data:
-    description: typed_data
-    source: hosted
-    version: "1.1.1"
+    version: "0.12.3+9"
   unittest:
     description: unittest
     source: hosted
-    version: "0.12.4+1"
+    version: "0.12.3"
   utf:
     description: utf
     source: hosted
-    version: "0.9.0+2"
+    version: "0.9.0+3"
   watcher:
     description: watcher
     source: hosted
@@ -165,3 +153,4 @@ packages:
     description: yaml
     source: hosted
     version: "2.1.8"
+sdk: ">=1.14.0 <2.0.0"
