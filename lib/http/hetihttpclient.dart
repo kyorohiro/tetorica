@@ -40,12 +40,26 @@ class HttpClient {
      return base("GET", path, null, header:header);
   }
 
-  //
-  // post
-  //
   Future<HttpClientResponse> post(String path, List<int> body, {Map<String, String> header}) async {
     return base("POST", path, body, header:header);
   }
+
+  Future<HttpClientResponse> put(String path, List<int> body, {Map<String, String> header}) async {
+     return base("PUT", path, body, header:header);
+  }
+
+  Future<HttpClientResponse> patch(String path, List<int> body, {Map<String, String> header}) async {
+     return base("PATCH", path, body, header:header);
+  }
+
+  Future<HttpClientResponse> delete(String path, {Map<String, String> header}) async {
+     return base("DELETE", path, null, header:header);
+  }
+
+  Future<HttpClientResponse> head(String path, {Map<String, String> header}) async {
+     return base("HEAD", path, null, header:header);
+  }
+
 
   //
   // mpost for upnp protocol
