@@ -25,10 +25,10 @@ class UpnpDeviceInfo {
 
   bool _verbose = false;
   bool get verbose => _verbose;
-  UpnpDeviceInfo(List<HetiHttpResponseHeaderField> headerField, TetSocketBuilder builder, {bool verbose:false}) {
+  UpnpDeviceInfo(List<HttpResponseHeaderField> headerField, TetSocketBuilder builder, {bool verbose:false}) {
     _verbose = verbose;
     socketBuilder = builder;
-    for (HetiHttpResponseHeaderField header in headerField) {
+    for (HttpResponseHeaderField header in headerField) {
       if (header.fieldName != null) {
         _headerMap[header.fieldName] = header.fieldValue;
       }

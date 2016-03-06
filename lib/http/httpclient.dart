@@ -109,7 +109,7 @@ class HttpClient {
       return result;
     }
 
-    HetiHttpResponseHeaderField transferEncodingField = message.find("Transfer-Encoding");
+    HttpResponseHeaderField transferEncodingField = message.find("Transfer-Encoding");
 
     if (transferEncodingField == null || transferEncodingField.fieldValue != "chunked") {
       result.body = new TetReaderAdapter(socket.buffer, message.index);

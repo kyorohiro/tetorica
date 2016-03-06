@@ -82,7 +82,7 @@ class HttpClientHelper {
     client.close();
     //
     if (redirectStatusCode.contains(res.message.line.statusCode)) {
-      HetiHttpResponseHeaderField locationField = res.message.find("Location");
+      HttpResponseHeaderField locationField = res.message.find("Location");
       HttpUrl hurl = HttpUrlDecoder.decodeUrl(locationField.fieldValue, "http://${address}:${port}");
       int optionIndex = pathAndOption.indexOf("?");
       String option = "";

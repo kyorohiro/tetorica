@@ -65,7 +65,7 @@ class HetiHttpServerHelper {
   void response(HetiHttpServerRequest req, HetimaData file, {String contentType:"application/octet-stream", Map<String,String> headerList:null, int statusCode:null}) {
     if(headerList == null) {headerList = {};}
     headerList["Content-Type"] = contentType;
-    HetiHttpResponseHeaderField fieldRangeHeader = req.info.find(RfcTable.HEADER_FIELD_RANGE);
+    HttpResponseHeaderField fieldRangeHeader = req.info.find(RfcTable.HEADER_FIELD_RANGE);
     if (fieldRangeHeader != null && statusCode == null) {
       data.Uint8List buff = new data.Uint8List.fromList(convert.UTF8.encode(fieldRangeHeader.fieldValue));
       ArrayBuilder builder = new ArrayBuilder.fromList(buff);

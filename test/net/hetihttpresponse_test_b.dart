@@ -73,7 +73,7 @@ void main() {
   unit.test("decodeHeaderField_1f", () async {
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     hetima.EasyParser parser = new hetima.EasyParser(builder);
-    Future<hetima.HetiHttpResponseHeaderField> ret = hetima.HetiHttpResponse.decodeHeaderField(parser);
+    Future<hetima.HttpResponseHeaderField> ret = hetima.HetiHttpResponse.decodeHeaderField(parser);
     builder.appendString("test:   aaa\r\n");
     builder.fin();
     unit.expect((await ret).fieldName, "test");
@@ -84,7 +84,7 @@ void main() {
     try {
       hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
       hetima.EasyParser parser = new hetima.EasyParser(builder);
-      Future<hetima.HetiHttpResponseHeaderField> ret = hetima.HetiHttpResponse.decodeHeaderField(parser);
+      Future<hetima.HttpResponseHeaderField> ret = hetima.HetiHttpResponse.decodeHeaderField(parser);
       builder.appendString("test   aaa\r\n");
       builder.fin();
       unit.fail("${await ret}");
@@ -96,7 +96,7 @@ void main() {
   unit.test("decodeHeaderFields_1f", () async {
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     hetima.EasyParser parser = new hetima.EasyParser(builder);
-    Future<List<hetima.HetiHttpResponseHeaderField>> ret = hetima.HetiHttpResponse.decodeHeaderFields(parser);
+    Future<List<hetima.HttpResponseHeaderField>> ret = hetima.HetiHttpResponse.decodeHeaderFields(parser);
     builder.appendString("test1:   aaa\r\n");
     builder.appendString("test2:   bbb\r\n\r\n");
     builder.fin();

@@ -8,18 +8,18 @@ class HetiHttpResponse {
   static Future<HttpClientResponseInfo> decodeHttpMessage(EasyParser parser) async {
     HttpClientResponseInfo result = new HttpClientResponseInfo();
     HetiHttpResponseStatusLine line = await decodeStatusline(parser);
-    List<HetiHttpResponseHeaderField> httpfields = await decodeHeaderFields(parser);
+    List<HttpResponseHeaderField> httpfields = await decodeHeaderFields(parser);
     result.line = line;
     result.headerField = httpfields;
     result.index = parser.index;
     return result;
   }
 
-  static Future<List<HetiHttpResponseHeaderField>> decodeHeaderFields(EasyParser parser) async {
-    List<HetiHttpResponseHeaderField> result = new List();
+  static Future<List<HttpResponseHeaderField>> decodeHeaderFields(EasyParser parser) async {
+    List<HttpResponseHeaderField> result = new List();
     while (true) {
       try {
-        HetiHttpResponseHeaderField v = await decodeHeaderField(parser);
+        HttpResponseHeaderField v = await decodeHeaderField(parser);
         result.add(v);
       } catch (e) {
         break;
@@ -29,8 +29,8 @@ class HetiHttpResponse {
     return result;
   }
 
-  static Future<HetiHttpResponseHeaderField> decodeHeaderField(EasyParser parser) async {
-    HetiHttpResponseHeaderField result = new HetiHttpResponseHeaderField();
+  static Future<HttpResponseHeaderField> decodeHeaderField(EasyParser parser) async {
+    HttpResponseHeaderField result = new HttpResponseHeaderField();
     result.fieldName = await decodeFieldName(parser);
     await parser.nextString(":");
     await decodeOWS(parser);
@@ -245,7 +245,7 @@ class HetiHttpResponseStatusLine {
   String statusPhrase = "";
 }
 
-class HetiHttpResponseHeaderField {
+class HttpResponseHeaderField {
   String fieldName = "";
   String fieldValue = "";
 }
@@ -259,10 +259,10 @@ class HetiRequestLine {
 class HetiHttpRequestMessageWithoutBody {
   int index = 0;
   HetiRequestLine line = new HetiRequestLine();
-  List<HetiHttpResponseHeaderField> headerField = new List();
+  List<HttpResponseHeaderField> headerField = new List();
 
-  HetiHttpResponseHeaderField find(String fieldName) {
-    for (HetiHttpResponseHeaderField field in headerField) {
+  HttpResponseHeaderField find(String fieldName) {
+    for (HttpResponseHeaderField field in headerField) {
       //  print(""+field.fieldName.toLowerCase() +"== "+fieldName.toLowerCase());
       if (field != null && field.fieldName.toLowerCase() == fieldName.toLowerCase()) {
         return field;
@@ -279,10 +279,10 @@ class HetiHttpRequestMessageWithoutBody {
 class HttpClientResponseInfo {
   int index = 0;
   HetiHttpResponseStatusLine line = new HetiHttpResponseStatusLine();
-  List<HetiHttpResponseHeaderField> headerField = new List();
+  List<HttpResponseHeaderField> headerField = new List();
 
-  HetiHttpResponseHeaderField find(String fieldName) {
-    for (HetiHttpResponseHeaderField field in headerField) {
+  HttpResponseHeaderField find(String fieldName) {
+    for (HttpResponseHeaderField field in headerField) {
       //  print(""+field.fieldName.toLowerCase() +"== "+fieldName.toLowerCase());
       if (field != null && field.fieldName.toLowerCase() == fieldName.toLowerCase()) {
         return field;
@@ -292,7 +292,7 @@ class HttpClientResponseInfo {
   }
 
   int get contentLength {
-    HetiHttpResponseHeaderField field = find(RfcTable.HEADER_FIELD_CONTENT_LENGTH);
+    HttpResponseHeaderField field = find(RfcTable.HEADER_FIELD_CONTENT_LENGTH);
     if (field == null) {
       return -1;
     }
