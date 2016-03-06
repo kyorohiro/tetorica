@@ -129,8 +129,17 @@ class HetiHttpResponse {
     }
     String nn = convert.UTF8.decode(n);
     int v = int.parse(nn, radix: 16);
+    await HetiHttpResponse.decodeChunkExtension(parser);
     await HetiHttpResponse.decodeCrlf(parser);
     return v;
+  }
+
+  static decodeChunkExtension(EasyParser parser) async {
+    if (await parser.checkString(";")) {
+      while (false == await parser.checkString("\r\n")) {
+        parser.jumpBuffer(1);
+      }
+    }
   }
 
   //  request-line   = method SP request-target SP HTTP-version CRLF

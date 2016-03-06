@@ -68,4 +68,22 @@ void main() {
     String s = conv.UTF8.decode(await r);
     unit.expect("abc1234567890", s);
   });
+
+
+  unit.test("ChunkedBuilderAdapter_g", () async {
+    hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
+    hetima.ChunkedBuilderAdapter a = new hetima.ChunkedBuilderAdapter(builder);
+    Future r = a.getBytes(0, 13);
+    new Future.delayed(new Duration(milliseconds: 500), () {
+      builder.appendString("3;xxxxxx\r\nabc\r\n");
+    });
+    new Future.delayed(new Duration(milliseconds: 1000), () {
+      builder.appendString("a;xxxxxxasdfasdf\r\n12345678");
+    });
+    new Future.delayed(new Duration(milliseconds: 1300), () {
+      builder.appendString("90\r\n0\r\n");
+    });
+    String s = conv.UTF8.decode(await r);
+    unit.expect("abc1234567890", s);
+  });
 }
