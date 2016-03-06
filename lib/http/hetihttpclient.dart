@@ -57,7 +57,7 @@ class HttpClient {
   }
 
   Future<HttpClientResponse> head(String path, {Map<String, String> header}) async {
-     return base("HEAD", path, null, header:header);
+     return base("HEAD", path, null, header:header, isLoadBody:false);
   }
 
 
@@ -68,7 +68,7 @@ class HttpClient {
     return base("M-POST", path, body, header:header);
   }
 
-  Future<HttpClientResponse> base(String action, String path, List<int> body, {Map<String, String> header}) async {
+  Future<HttpClientResponse> base(String action, String path, List<int> body, {Map<String, String> header, isLoadBody:true}) async {
     Map<String, String> headerTmp = {};
     headerTmp["Host"] = host + ":" + port.toString();
     headerTmp["Connection"] = "Close";
@@ -94,15 +94,20 @@ class HttpClient {
     socket.onReceive.listen((HetimaReceiveInfo info) {});
     socket.send(builder.toList()).then((HetimaSendInfo info) {});
 
-    return handleResponse();
+    return handleResponse(isLoadBody:isLoadBody);
   }
 
 
-  Future<HttpClientResponse> handleResponse() async {
+  Future<HttpClientResponse> handleResponse({isLoadBody:true}) async {
     EasyParser parser = new EasyParser(socket.buffer);
     HttpClientResponseInfo message = await HetiHttpResponse.decodeHttpMessage(parser);
     HttpClientResponse result = new HttpClientResponse();
     result.message = message;
+    if(isLoadBody == false) {
+      result.body = new TetReaderAdapter(socket.buffer, message.index);
+      result.body.immutable = true;
+      return result;
+    }
 
     HetiHttpResponseHeaderField transferEncodingField = message.find("Transfer-Encoding");
 
