@@ -9,13 +9,13 @@ class HetimaSocketDartIo extends TetSocket {
   bool _isSecure = false;
   bool get isSecure => _isSecure;
 
-  HetimaSocketDartIo({verbose: false, int mode:TetSocketBuilder.BUFFER_NOTIFY, bool isSecure:false}) {
+  HetimaSocketDartIo({verbose: false, int mode: TetSocketBuilder.BUFFER_NOTIFY, bool isSecure: false}) {
     _verbose = verbose;
     _mode = mode;
     _isSecure = isSecure;
   }
 
-  HetimaSocketDartIo.fromSocket(Socket socket, {verbose: false, int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
+  HetimaSocketDartIo.fromSocket(Socket socket, {verbose: false, int mode: TetSocketBuilder.BUFFER_NOTIFY}) {
     _verbose = verbose;
     _socket = socket;
     _mode = mode;
@@ -46,8 +46,11 @@ class HetimaSocketDartIo extends TetSocket {
     }
     try {
       _nowConnecting = true;
-      if(isSecure == true) {
-        _socket = await SecureSocket.connect(peerAddress, peerPort);
+      if (isSecure == true) {
+        _socket = await SecureSocket.connect(peerAddress, peerPort, onBadCertificate: (X509Certificate c) {
+          print("Certificate WARNING: ${c.issuer}:${c.subject}");
+          return true;
+        });
       } else {
         _socket = await Socket.connect(peerAddress, peerPort);
       }
@@ -55,8 +58,8 @@ class HetimaSocketDartIo extends TetSocket {
       _socket.listen((List<int> data) {
         log('<<<lis>>> '); //${data.length} ${UTF8.decode(data)}');
         this.buffer.appendIntList(data, 0, data.length);
-        List<int> b= [];
-        if(_mode == TetSocketBuilder.BUFFER_NOTIFY) {
+        List<int> b = [];
+        if (_mode == TetSocketBuilder.BUFFER_NOTIFY) {
           b = data;
         }
         _receiveStream.add(new HetimaReceiveInfo(b));

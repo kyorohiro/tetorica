@@ -21,10 +21,10 @@ class HttpClient {
   }
 
 //  Future<HttpClientConnectResult>
-  Future connect(String _host, int _port) async {
+  Future connect(String _host, int _port ,{bool useSecure:false}) async {
     host = _host;
     port = _port;
-    socket = _socketBuilder.createClient();
+    socket = (useSecure?_socketBuilder.createSecureClient():_socketBuilder.createClient());
     if (socket == null) {
       throw {};
     }
@@ -64,7 +64,7 @@ class HttpClient {
   //
   // mpost for upnp protocol
   //
-  Future<HttpClientResponse> mpost(String path, List<int> body, [Map<String, String> header]) async {
+  Future<HttpClientResponse> mpost(String path, List<int> body, {Map<String, String> header}) async {
     return base("M-POST", path, body, header:header);
   }
 
