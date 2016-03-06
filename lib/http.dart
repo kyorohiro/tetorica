@@ -9,7 +9,8 @@ import 'net/tmp/rfctable.dart';
 
 part 'http/httpclient.dart';
 part 'http/httpclient_helper.dart';
-part 'http/hetihttpserver.dart';
-part 'http/hetihttpresponse.dart';
-part 'http/hetihttpserverplus.dart';
+part 'http/httpresponse.dart';
 part 'http/chunkedbuilderadapter.dart';
+
+part 'http/hetihttpserver.dart';
+part 'http/hetihttpserverplus.dart';
