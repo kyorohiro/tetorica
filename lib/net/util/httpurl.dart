@@ -10,6 +10,7 @@ class HttpUrl {
   static HttpUrl decode() {
     return null;
   }
+
 }
 
 class HttpUrlDecoder {

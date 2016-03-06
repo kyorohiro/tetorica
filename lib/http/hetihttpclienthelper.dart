@@ -1,29 +1,36 @@
 part of hetimanet_http;
 
-
-
-
-class HetiHttpClientHelper {
-  String _address;
-  int _port;
-  TetSocketBuilder _socketBuilder;
-  //HetimaDataBuilder _fileBuilder;
-  String get address => _address;
-  int get port => _port;
-
-  HetiHttpClientHelper(String address, int port, TetSocketBuilder socketBuilder, HetimaDataBuilder fileBuilder) {
-    this._address = address;
-    this._port = port;
-    this._socketBuilder = socketBuilder;
-  //  this._fileBuilder = fileBuilder;
+class HttpClientHelper {
+  TetSocketBuilder socketBuilder;
+  HttpClientHelper(this.socketBuilder){}
+  Future<HttpClientResponse> get(String address, int port, String pathAndOption,
+    {List<int> redirectStatusCode: const [301, 302, 303, 304, 305, 307, 308],
+       Map<String, String> header, int redirect: 5,
+       bool reuseQuery: true}) async {
+      return await base(address, port, "GET", pathAndOption, null,
+      redirectStatusCode: redirectStatusCode, header: header, redirect: redirect, reuseQuery: reuseQuery);
   }
 
-  Future<HetimaData> get(String pathAndOption) {
-    HttpClient client  = new HttpClient(_socketBuilder);
-    client.connect(_address, _port).then((_){
-      return client.get(pathAndOption);
-    }).then((HttpClientResponse res) {
-      ;
-    });
+  Future<HttpClientResponse> base(String address, int port, String action, String pathAndOption, List<int> data, {List<int> redirectStatusCode: const [301, 302, 303, 304, 305, 307, 308], Map<String, String> header, int redirect: 5, bool reuseQuery: true}) async {
+    print("${pathAndOption}");
+    HttpClient client = new HttpClient(socketBuilder);
+    await client.connect(address, port);
+    HttpClientResponse res = await client.get(pathAndOption,header:header);
+    client.close();
+    //
+    if (redirectStatusCode.contains(res.message.line.statusCode)) {
+      HetiHttpResponseHeaderField locationField = res.message.find("Location");
+      HttpUrl hurl = HttpUrlDecoder.decodeUrl(locationField.fieldValue, "http://${address}:${port}");
+      int optionIndex = pathAndOption.indexOf("?");
+      String option = "";
+      if(optionIndex > 0) {
+        option = pathAndOption.substring(optionIndex);
+      }
+      pathAndOption = "${hurl.path}${option}";
+      return base(address, port, action, pathAndOption, data,
+        redirectStatusCode: redirectStatusCode, header: header, redirect: (redirect - 1), reuseQuery: reuseQuery);
+    } else {
+      return res;
+    }
   }
 }

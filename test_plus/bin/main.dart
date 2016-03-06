@@ -45,4 +45,37 @@ testA(TetSocketBuilder builder) async {
     test.expect("nano", (ret["headers"] as Map)["Nono"]);
     test.expect("hello!!", (ret["json"] as Map)["message"]);
   });
+  ///redirect-to?url=foo
+  ///
+  test.test("helper get", () async {
+    http.HttpClientHelper client = new http.HttpClientHelper(builder);
+    http.HttpClientResponse postResult = await client.get("httpbin.org", 80,"/get",header: {"nono": "nano", "Content-Type": "application/json"});
+    print("## ${postResult.message.contentLength}");
+    print("## ${await postResult.body.getString()}");
+    Map<String, Object> ret = conv.JSON.decode(await postResult.body.getString());
+    test.expect("application/json", (ret["headers"] as Map)["Content-Type"]);
+    test.expect("nano", (ret["headers"] as Map)["Nono"]);
+  });
+  ///redirect-to?url=foo
+  ///
+  test.test("helper get relative-redirect 3", () async {
+    http.HttpClientHelper client = new http.HttpClientHelper(builder);
+    http.HttpClientResponse postResult = await client.get("httpbin.org", 80,"/relative-redirect/3",header: {"nono": "nano", "Content-Type": "application/json"});
+    print("## ${postResult.message.contentLength}");
+    print("## ${await postResult.body.getString()}");
+    Map<String, Object> ret = conv.JSON.decode(await postResult.body.getString());
+    test.expect("application/json", (ret["headers"] as Map)["Content-Type"]);
+    test.expect("nano", (ret["headers"] as Map)["Nono"]);
+  });
+
+  test.test("helper get absolute-redirect 3", () async {
+    http.HttpClientHelper client = new http.HttpClientHelper(builder);
+    http.HttpClientResponse postResult =
+    await client.get("httpbin.org", 80,"/absolute-redirect/3?asdf=aas",header: {"nono": "nano", "Content-Type": "application/json"});
+    print("## ${postResult.message.contentLength}");
+    print("## ${await postResult.body.getString()}");
+    Map<String, Object> ret = conv.JSON.decode(await postResult.body.getString());
+    test.expect("application/json", (ret["headers"] as Map)["Content-Type"]);
+    test.expect("nano", (ret["headers"] as Map)["Nono"]);
+  });
 }
