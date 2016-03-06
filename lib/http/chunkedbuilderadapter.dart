@@ -23,17 +23,15 @@ class ChunkedBuilderAdapter extends TetReader {
   }
 
   Future _decodeChunked(EasyParser parser) async {
-    Completer complter = new Completer();
-    int size = await HetiHttpResponse.decodeChunkedSize(parser);
-    List<int> v = await parser.buffer.getBytes(parser.index, size);
-    _buffer.appendIntList(v, 0, v.length);
-    parser.index += v.length;
-    if (v.length == 0) {
-      return true;
-    } else {
+    while (true) {
+      int size = await HetiHttpResponse.decodeChunkedSize(parser);
+      List<int> v = await parser.buffer.getBytes(parser.index, size);
+      _buffer.appendIntList(v, 0, v.length);
+      parser.index += v.length;
+      if (v.length == 0) {
+        break;
+      }
       await HetiHttpResponse.decodeCrlf(parser);
-      await _decodeChunked(parser);
-      return true;
     }
   }
 
