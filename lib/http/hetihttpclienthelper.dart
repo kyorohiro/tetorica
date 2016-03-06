@@ -6,23 +6,34 @@ class HttpClientHelper {
   Future<HttpClientResponse> get(String address, int port, String pathAndOption,
     {List<int> redirectStatusCode: const [301, 302, 303, 304, 305, 307, 308],
        Map<String, String> header, int redirect: 5,
-       bool reuseQuery: true}) async {
+       bool reuseQuery: true, bool useSecure:false}) async {
       return await base(address, port, "GET", pathAndOption, null,
-      redirectStatusCode: redirectStatusCode, header: header, redirect: redirect, reuseQuery: reuseQuery);
+      redirectStatusCode: redirectStatusCode,
+      header: header, redirect: redirect,
+      reuseQuery: reuseQuery,
+      useSecure:useSecure);
   }
 
   Future<HttpClientResponse> post(String address, int port, String pathAndOption, List<int> data,
     {List<int> redirectStatusCode: const [301, 302, 303, 304, 305, 307, 308],
        Map<String, String> header, int redirect: 5,
-       bool reuseQuery: true}) async {
+       bool reuseQuery: true, bool useSecure:false}) async {
       return await base(address, port, "POST", pathAndOption, data,
-      redirectStatusCode: redirectStatusCode, header: header, redirect: redirect, reuseQuery: reuseQuery);
+      redirectStatusCode: redirectStatusCode,
+      header: header, redirect: redirect,
+      reuseQuery: reuseQuery,
+      useSecure:useSecure);
   }
 
-  Future<HttpClientResponse> base(String address, int port, String action, String pathAndOption, List<int> data, {List<int> redirectStatusCode: const [301, 302, 303, 304, 305, 307, 308], Map<String, String> header, int redirect: 5, bool reuseQuery: true}) async {
+  Future<HttpClientResponse> base(String address, int port, String action, String pathAndOption,
+     List<int> data,
+    {
+      List<int> redirectStatusCode: const [301, 302, 303, 304, 305, 307, 308],
+      Map<String, String> header, int redirect: 5, bool reuseQuery: true,
+      bool useSecure:false}) async {
     print("${pathAndOption}");
     HttpClient client = new HttpClient(socketBuilder);
-    await client.connect(address, port);
+    await client.connect(address, port, useSecure:useSecure);
     HttpClientResponse res = await client.base(action,pathAndOption, data, header:header);
     client.close();
     //
@@ -36,7 +47,9 @@ class HttpClientHelper {
       }
       pathAndOption = "${hurl.path}${option}";
       return base(address, port, action, pathAndOption, data,
-        redirectStatusCode: redirectStatusCode, header: header, redirect: (redirect - 1), reuseQuery: reuseQuery);
+        redirectStatusCode: redirectStatusCode, header: header,
+        redirect: (redirect - 1),
+        reuseQuery: reuseQuery,useSecure:useSecure);
     } else {
       return res;
     }
