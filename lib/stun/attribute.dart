@@ -18,6 +18,28 @@ abstract class StunMessageAttribute {
 //  List<int> get value; //...
 }
 
+class StunChangeRequest extends StunMessageAttribute {
+  int type; //2byte
+  int get length => 4; //32bit 4byte
+  bool changeIP;
+  bool changePort;
+
+  Uint8List encode() {
+    List<int> buffer = [];
+    buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
+    buffer.addAll(core.ByteOrder.parseShortByte(length, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
+    int v = 0;
+    v |= (changePort == true?(0x01<<1):0);
+    v |= (changeIP == true?(0x01<<2):0);
+    buffer.addAll(core.ByteOrder.parseIntByte(v, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
+    return new Uint8List.fromList(buffer);
+  }
+
+  StunChangeRequest(this.changeIP, this.changePort) {
+    type = StunMessageAttribute.changeRequest;
+  }
+}
+
 class StunAddressAttribute extends StunMessageAttribute {
   static const int familyIPv4 = 0x0001;
   static const int familyIPv6 = 0x0002;
@@ -31,7 +53,13 @@ class StunAddressAttribute extends StunMessageAttribute {
 
   StunAddressAttribute(this.type, this.family, this.port, this.address) {}
 
-  static StunAddressAttribute decode(List<int> buffer, int start, {List<int> expectType: const [StunMessageAttribute.mappedAddress, StunMessageAttribute.responseAddress, StunMessageAttribute.changedAddress]}) {
+  static StunAddressAttribute decode(List<int> buffer, int start, {
+    List<int> expectType: const [
+      StunMessageAttribute.mappedAddress,
+      StunMessageAttribute.responseAddress,
+      StunMessageAttribute.changedAddress,
+      StunMessageAttribute.sourceAddress
+    ]}) {
     int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
     if (false == expectType.contains(type)) {
       throw {"mes": ""};
