@@ -21,9 +21,10 @@ abstract class StunMessageAttribute {
 class StunAddressAttribute extends StunMessageAttribute {
   static const int familyIPv4 = 0x0001;
   static const int familyIPv6 = 0x0002;
+  static int _length(family) => (family == familyIPv4 ? (2 + 2 + 4) : (2 + 2 + 16));
 
   int type;
-  int get length => (family == familyIPv4 ? (2 + 2 + 4) : (2 + 2 + 8));
+  int get length => _length(family);
   int family;
   int port;
   String address;
@@ -37,12 +38,16 @@ class StunAddressAttribute extends StunMessageAttribute {
     }
     int tlength = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
     int family = core.ByteOrder.parseShort(buffer, start + 4, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
-    if (tlength != (family == familyIPv4 ? (2 + 2 + 4) : (2 + 2 + 8))) {
+    if (tlength != _length(family)) {
       throw {"mes": ""};
     }
     int port = core.ByteOrder.parseShort(buffer, start + 6, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
-    String address = net.HetiIP.toIPString(buffer, start: start + 8);
-
+    String address = null;
+    if(family == familyIPv4) {
+      address = net.HetiIP.toIPv4String(buffer, start: start + 8);
+    } else {
+      address = net.HetiIP.toIPv6String(buffer, start: start + 8);
+    }
     return new StunAddressAttribute(type, family, port, address);
   }
 
