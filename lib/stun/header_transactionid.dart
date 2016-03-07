@@ -1,4 +1,4 @@
-part of hetimanet_turn;
+part of hetimanet_stun;
 
 class StunMessageHeaderTransactionID {
   List<int> value;

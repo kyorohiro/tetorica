@@ -1,4 +1,4 @@
-part of hetimanet_turn;
+part of hetimanet_stun;
 
 class StunMessageHeader {
   static const int bindingRequest = 0x0001;

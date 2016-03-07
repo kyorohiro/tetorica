@@ -1,4 +1,4 @@
-part of hetimanet_turn;
+part of hetimanet_stun;
 
 abstract class StunAttribute {
   static const int mappedAddress = 0x0001; //

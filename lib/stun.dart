@@ -1,4 +1,4 @@
-library hetimanet_turn;
+library hetimanet_stun;
 
 import 'dart:math' as math;
 import 'dart:typed_data';

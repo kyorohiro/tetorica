@@ -1,4 +1,4 @@
-part of hetimanet_turn;
+part of hetimanet_stun;
 
 class StunAddressAttribute extends StunAttribute {
   static const int familyIPv4 = 0x0001;
