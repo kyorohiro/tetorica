@@ -10,6 +10,7 @@ part 'stun/attribute.dart';
 part 'stun/attribute_address.dart';
 part 'stun/attribute_changerequest.dart';
 part 'stun/attribute_basic.dart';
+part 'stun/attribute_errorcode.dart';
 part 'stun/header.dart';
 part 'stun/header_transactionid.dart';
 

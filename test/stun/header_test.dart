@@ -20,5 +20,6 @@ void main() {
     unit.expect(headerA.attributes[0], headerB.attributes[0]);
     unit.expect(headerA.attributes[1], headerB.attributes[1]);
     unit.expect(headerA.attributes[2], headerB.attributes[2]);
+    unit.expect(headerA.attributes[3], headerB.attributes[3]);
   });
 }
