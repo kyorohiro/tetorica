@@ -106,7 +106,13 @@ class StunAddressAttribute extends StunMessageAttribute {
   StunAddressAttribute(this.type, this.family, this.port, this.address) {}
 
   static StunAddressAttribute decode(List<int> buffer, int start,
-    {List<int> expectType: const [StunMessageAttribute.mappedAddress, StunMessageAttribute.responseAddress, StunMessageAttribute.changedAddress, StunMessageAttribute.sourceAddress]}) {
+    {List<int> expectType:
+      const [
+        StunMessageAttribute.mappedAddress,
+        StunMessageAttribute.responseAddress,
+        StunMessageAttribute.changedAddress,
+        StunMessageAttribute.sourceAddress,
+        StunMessageAttribute.reflectedFrom]}) {
     int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
     if (false == expectType.contains(type)) {
       throw {"mes": ""};
