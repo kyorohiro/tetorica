@@ -7,12 +7,32 @@ class StunMessageHeader {
   static const int sharedSecretRequest = 0x0002;
   static const int sharedSecretResponse = 0x0102;
   static const int sharedSecretErrorResponse = 0x0112;
+
   int type;
-  int get messageLength => message.length;
+
   StunMessageHeaderTransactionID transactionID;
-  List<int> message;
-  Uint8List toBytes() {
-    Uint8List ret = new Uint8List(20 + messageLength);
+  List<StunMessageAttribute> attributes = [];
+
+  StunMessageHeader(this.type, {this.transactionID:null}) {
+    if(transactionID == null) {
+      transactionID = new StunMessageHeaderTransactionID.random();
+    }
+  }
+
+  // header bytes length is +20
+  int get messageLength {
+    int ret = 0;
+    for (StunMessageAttribute a in attributes) {
+      ret += a.length;
+    }
     return ret;
+  }
+
+  Uint8List encode() {
+    List<int> buffer = [];
+    buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
+    buffer.addAll(core.ByteOrder.parseShortByte(messageLength, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
+
+    return new Uint8List.fromList(buffer);
   }
 }

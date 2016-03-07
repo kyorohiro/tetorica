@@ -8,6 +8,8 @@ import 'net.dart' as net;
 
 part 'stun/attribute.dart';
 part 'stun/header.dart';
+part 'stun/header_transactionid.dart';
+
 class TurnClient {}
 
 // stun.l.google.com:19302
@@ -27,15 +29,7 @@ class StunClient {}
 
 
 
-class StunMessageHeaderTransactionID {
-  List<int> value;
-  static math.Random _random = new math.Random();
-  StunMessageHeaderTransactionID.random() {
-    for (int i = 0; i < 16; i++) {
-      value.add(_random.nextInt(0xFF));
-    }
-  }
-}
+
 
 
 
