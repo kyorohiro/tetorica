@@ -35,4 +35,13 @@ void main() {
     unit.expect(attrA.port, attrB.port);
     unit.expect(attrA.length, attrB.length);
   });
+  unit.test("ArrayBuilderBuffer: change request", () {
+    turn.StunChangeRequest attrA = new turn.StunChangeRequest(true, false);
+    turn.StunChangeRequest attrB = turn.StunChangeRequest.decode(attrA.encode(), 0);
+    //
+    //
+    unit.expect(attrA.type, attrB.type);
+    unit.expect(attrA.changeIP, attrB.changeIP);
+    unit.expect(attrA.changePort, attrB.changePort);
+  });
 }
