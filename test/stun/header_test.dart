@@ -19,8 +19,8 @@ void main() {
     turn.StunMessageHeader headerB = turn.StunMessageHeader.decode(headerA.encode(), 0);
     unit.expect(headerA.type, headerB.type);
     unit.expect(headerA.attributes.length, headerB.attributes.length);
+    unit.expect(headerA.attributes[0], headerB.attributes[0]);
     /*
-    unit.expect(attrA.address, attrB.address);
     unit.expect(attrA.family, attrB.family);
     unit.expect(attrA.port, attrB.port);
     unit.expect(attrA.length, attrB.length);
