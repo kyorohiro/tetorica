@@ -1,7 +1,5 @@
 import 'package:test/test.dart' as unit;
-import 'package:tetorica/core.dart' as hetima;
 import 'package:tetorica/stun.dart' as turn;
-import 'dart:async';
 
 void main() {
   unit.test("ArrayBuilderBuffer: mapped v4", () {
@@ -21,5 +19,6 @@ void main() {
     unit.expect(headerA.attributes.length, headerB.attributes.length);
     unit.expect(headerA.attributes[0], headerB.attributes[0]);
     unit.expect(headerA.attributes[1], headerB.attributes[1]);
+    unit.expect(headerA.attributes[2], headerB.attributes[2]);
   });
 }
