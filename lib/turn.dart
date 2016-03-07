@@ -2,6 +2,7 @@ library hetimanet_turn;
 
 import 'dart:math' as math;
 import 'dart:typed_data';
+import 'dart:convert' as conv;
 import 'core.dart' as core;
 import 'net.dart' as net;
 
@@ -54,7 +55,7 @@ class StunMessageIntegrity {}
 
 class StunFingerPrint {}
 
-class StunErrorCode {}
+//class StunErrorCode {}
 
 class StunXorMappedAddress {
   var xxxx; //1byte

@@ -74,4 +74,14 @@ void main() {
     unit.expect(attrA.type, attrB.type);
     unit.expect(attrA.value, attrB.value);
   });
+
+  unit.test("ArrayBuilderBuffer: errorcode", () {
+    turn.StunErrorCode attrA = new turn.StunErrorCode(400, "abcdefghijklmn");
+    turn.StunErrorCode attrB = turn.StunErrorCode.decode(attrA.encode(), 0);
+    //
+    //
+    unit.expect(attrA.type, attrB.type);
+    unit.expect(attrA.code, attrB.code);
+    unit.expect(attrA.pharse, attrB.pharse);
+  });
 }
