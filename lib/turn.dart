@@ -48,7 +48,7 @@ class StunMappedAddress {
   var address; //4byte or 8byte
 }
 
-class StunUserName {}
+//class StunUserName {}
 
 class StunMessageIntegrity {}
 

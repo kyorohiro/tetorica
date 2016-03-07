@@ -18,6 +18,42 @@ abstract class StunMessageAttribute {
 //  List<int> get value; //...
 }
 
+class StunBasicMessage extends StunMessageAttribute {
+  int type; //2byte
+  int get length => value.length; //32bit 4byte
+  List<int> value = [];
+
+  StunBasicMessage(this.type, List<int> v) {
+    value.addAll(v);
+  }
+
+  Uint8List encode() {
+    List<int> buffer = [];
+    buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
+    buffer.addAll(core.ByteOrder.parseShortByte(value.length, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
+    buffer.addAll(value);
+    return new Uint8List.fromList(buffer);
+  }
+
+  static StunBasicMessage decode(List<int> buffer, int start) {
+    int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
+    int tlength = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
+
+    if(type == StunMessageAttribute.userName|| type == StunMessageAttribute.password) {
+      if((tlength % 4) != 0) {
+        throw {"mes":""};
+      }
+    }
+    if(type == StunMessageAttribute.messageIntegrity) {
+      if(tlength != 64) {
+        throw {"mes":""};
+      }
+    }
+
+    return new StunBasicMessage(type, buffer.sublist(start + 4, start + 4 + tlength));
+  }
+}
+
 class StunChangeRequest extends StunMessageAttribute {
   int type; //2byte
   int get length => 4; //32bit 4byte
@@ -29,8 +65,8 @@ class StunChangeRequest extends StunMessageAttribute {
     buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
     buffer.addAll(core.ByteOrder.parseShortByte(length, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
     int v = 0;
-    v |= (changePort == true?(0x01<<1):0);
-    v |= (changeIP == true?(0x01<<2):0);
+    v |= (changePort == true ? (0x01 << 1) : 0);
+    v |= (changeIP == true ? (0x01 << 2) : 0);
     buffer.addAll(core.ByteOrder.parseIntByte(v, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
     return new Uint8List.fromList(buffer);
   }
@@ -45,8 +81,8 @@ class StunChangeRequest extends StunMessageAttribute {
       throw {"mes": ""};
     }
     int v = core.ByteOrder.parseInt(buffer, start + 4, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
-    bool changePort = (v & (0x01<<1) != 0);
-    bool changeIP = (v & (0x01<<2) != 0);
+    bool changePort = (v & (0x01 << 1) != 0);
+    bool changeIP = (v & (0x01 << 2) != 0);
 
     return new StunChangeRequest(changeIP, changePort);
   }
@@ -69,13 +105,8 @@ class StunAddressAttribute extends StunMessageAttribute {
 
   StunAddressAttribute(this.type, this.family, this.port, this.address) {}
 
-  static StunAddressAttribute decode(List<int> buffer, int start, {
-    List<int> expectType: const [
-      StunMessageAttribute.mappedAddress,
-      StunMessageAttribute.responseAddress,
-      StunMessageAttribute.changedAddress,
-      StunMessageAttribute.sourceAddress
-    ]}) {
+  static StunAddressAttribute decode(List<int> buffer, int start,
+    {List<int> expectType: const [StunMessageAttribute.mappedAddress, StunMessageAttribute.responseAddress, StunMessageAttribute.changedAddress, StunMessageAttribute.sourceAddress]}) {
     int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
     if (false == expectType.contains(type)) {
       throw {"mes": ""};
@@ -87,7 +118,7 @@ class StunAddressAttribute extends StunMessageAttribute {
     }
     int port = core.ByteOrder.parseShort(buffer, start + 6, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
     String address = null;
-    if(family == familyIPv4) {
+    if (family == familyIPv4) {
       address = net.HetiIP.toIPv4String(buffer, start: start + 8);
     } else {
       address = net.HetiIP.toIPv6String(buffer, start: start + 8);
