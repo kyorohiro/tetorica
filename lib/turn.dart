@@ -7,6 +7,7 @@ import 'core.dart' as core;
 import 'net.dart' as net;
 
 part 'stun/attribute.dart';
+part 'stun/attribute_address.dart';
 part 'stun/header.dart';
 part 'stun/header_transactionid.dart';
 
@@ -30,7 +31,7 @@ class StunClient {}
 
 
 
-
+/*
 
 
 
@@ -79,3 +80,4 @@ class StunMessage {
   var coolieFixedValue = [0x21, 0x12, 0xA4, 0x42]; //network byte order (big)127.0.0.1-->  0x7f000001;
 
 }
+*/

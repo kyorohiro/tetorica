@@ -11,7 +11,7 @@ class StunMessageHeader {
   int type;
 
   StunMessageHeaderTransactionID transactionID;
-  List<StunMessageAttribute> attributes = [];
+  List<StunAttribute> attributes = [];
 
   StunMessageHeader(this.type, {this.transactionID: null}) {
     if (transactionID == null) {
@@ -22,7 +22,7 @@ class StunMessageHeader {
   // header bytes length is +20
   int get messageLength {
     int ret = 0;
-    for (StunMessageAttribute a in attributes) {
+    for (StunAttribute a in attributes) {
       ret += a.length + 4;
     }
     return ret;
@@ -33,7 +33,7 @@ class StunMessageHeader {
     buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
     buffer.addAll(core.ByteOrder.parseShortByte(messageLength, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
     buffer.addAll(transactionID.value);
-    for (StunMessageAttribute a in attributes) {
+    for (StunAttribute a in attributes) {
       buffer.addAll(a.encode());
     }
     return new Uint8List.fromList(buffer);
@@ -47,7 +47,7 @@ class StunMessageHeader {
 
     int length = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
     header.transactionID = StunMessageHeaderTransactionID.decode(buffer, start+4);
-    header.attributes.addAll(StunMessageAttribute.decode(buffer,start:(start+20),end:(start+20+length)));
+    header.attributes.addAll(StunAttribute.decode(buffer,start:(start+20),end:(start+20+length)));
     return header;
   }
 }

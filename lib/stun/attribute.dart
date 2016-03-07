@@ -1,6 +1,6 @@
 part of hetimanet_turn;
 
-abstract class StunMessageAttribute {
+abstract class StunAttribute {
   static const int mappedAddress = 0x0001; //
   static const int responseAddress = 0x0002; //
   static const int changeRequest = 0x0003; ////
@@ -16,33 +16,33 @@ abstract class StunMessageAttribute {
   int get length; //2byte
   Uint8List encode();
 
-  static List<StunMessageAttribute> decode(List<int> buffer, {int start: 0, int end: null}) {
+  static List<StunAttribute> decode(List<int> buffer, {int start: 0, int end: null}) {
     if (end == null) {
       end = buffer.length;
     }
-    List<StunMessageAttribute> ret = [];
+    List<StunAttribute> ret = [];
 
     while (start < buffer.length) {
-      StunMessageAttribute a = null;
+      StunAttribute a = null;
       int t = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
       switch (t) {
-        case StunMessageAttribute.mappedAddress:
-        case StunMessageAttribute.responseAddress:
-        case StunMessageAttribute.changedAddress:
-        case StunMessageAttribute.sourceAddress:
-        case StunMessageAttribute.reflectedFrom:
+        case StunAttribute.mappedAddress:
+        case StunAttribute.responseAddress:
+        case StunAttribute.changedAddress:
+        case StunAttribute.sourceAddress:
+        case StunAttribute.reflectedFrom:
           a = StunAddressAttribute.decode(buffer, start);
           break;
-        case StunMessageAttribute.changeRequest:
+        case StunAttribute.changeRequest:
           a = StunChangeRequest.decode(buffer, start);
           break;
-        case StunMessageAttribute.errorCode:
+        case StunAttribute.errorCode:
           a = StunErrorCode.decode(buffer, start);
           break;
-        case StunMessageAttribute.userName:
-        case StunMessageAttribute.password:
-        case StunMessageAttribute.userName:
-        case StunMessageAttribute.messageIntegrity:
+        case StunAttribute.userName:
+        case StunAttribute.password:
+        case StunAttribute.userName:
+        case StunAttribute.messageIntegrity:
         default:
           a = StunBasicMessage.decode(buffer, start);
           break;
@@ -54,7 +54,7 @@ abstract class StunMessageAttribute {
   }
 }
 
-class StunErrorCode extends StunMessageAttribute {
+class StunErrorCode extends StunAttribute {
   static const int code400BadRequest = 400;
   static const int code401Unauthorized = 401;
   static const int code420UnknownAttribute = 420;
@@ -71,7 +71,7 @@ class StunErrorCode extends StunMessageAttribute {
   int code;
   String pharse;
   StunErrorCode(this.code, this.pharse) {
-    type = StunMessageAttribute.errorCode;
+    type = StunAttribute.errorCode;
   }
 
   Uint8List encode() {
@@ -89,7 +89,7 @@ class StunErrorCode extends StunMessageAttribute {
 
   static StunErrorCode decode(List<int> buffer, int start) {
     int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
-    if (type != StunMessageAttribute.errorCode) {
+    if (type != StunAttribute.errorCode) {
       throw {"mes": ""};
     }
     int tlength = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
@@ -102,7 +102,7 @@ class StunErrorCode extends StunMessageAttribute {
   }
 }
 
-class StunBasicMessage extends StunMessageAttribute {
+class StunBasicMessage extends StunAttribute {
   int type; //2byte
   int get length => value.length; //32bit 4byte
   List<int> value = [];
@@ -123,12 +123,12 @@ class StunBasicMessage extends StunMessageAttribute {
     int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
     int tlength = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
 
-    if (type == StunMessageAttribute.userName || type == StunMessageAttribute.password) {
+    if (type == StunAttribute.userName || type == StunAttribute.password) {
       if ((tlength % 4) != 0) {
         throw {"mes": ""};
       }
     }
-    if (type == StunMessageAttribute.messageIntegrity) {
+    if (type == StunAttribute.messageIntegrity) {
       if (tlength != 64) {
         throw {"mes": ""};
       }
@@ -138,7 +138,7 @@ class StunBasicMessage extends StunMessageAttribute {
   }
 }
 
-class StunChangeRequest extends StunMessageAttribute {
+class StunChangeRequest extends StunAttribute {
   int type; //2byte
   int get length => 4; //32bit 4byte
   bool changeIP;
@@ -157,7 +157,7 @@ class StunChangeRequest extends StunMessageAttribute {
 
   static StunChangeRequest decode(List<int> buffer, int start) {
     int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
-    if (StunMessageAttribute.changeRequest != type) {
+    if (StunAttribute.changeRequest != type) {
       throw {"mes": ""};
     }
     int tlength = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
@@ -172,50 +172,6 @@ class StunChangeRequest extends StunMessageAttribute {
   }
 
   StunChangeRequest(this.changeIP, this.changePort) {
-    type = StunMessageAttribute.changeRequest;
-  }
-}
-
-class StunAddressAttribute extends StunMessageAttribute {
-  static const int familyIPv4 = 0x0001;
-  static const int familyIPv6 = 0x0002;
-  static int _length(family) => (family == familyIPv4 ? (2 + 2 + 4) : (2 + 2 + 16));
-
-  int type;
-  int get length => _length(family);
-  int family;
-  int port;
-  String address;
-
-  StunAddressAttribute(this.type, this.family, this.port, this.address) {}
-
-  static StunAddressAttribute decode(List<int> buffer, int start, {List<int> expectType: const [StunMessageAttribute.mappedAddress, StunMessageAttribute.responseAddress, StunMessageAttribute.changedAddress, StunMessageAttribute.sourceAddress, StunMessageAttribute.reflectedFrom]}) {
-    int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
-    if (false == expectType.contains(type)) {
-      throw {"mes": ""};
-    }
-    int tlength = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
-    int family = core.ByteOrder.parseShort(buffer, start + 4, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
-    if (tlength != _length(family)) {
-      throw {"mes": ""};
-    }
-    int port = core.ByteOrder.parseShort(buffer, start + 6, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
-    String address = null;
-    if (family == familyIPv4) {
-      address = net.HetiIP.toIPv4String(buffer, start: start + 8);
-    } else {
-      address = net.HetiIP.toIPv6String(buffer, start: start + 8);
-    }
-    return new StunAddressAttribute(type, family, port, address);
-  }
-
-  Uint8List encode() {
-    List<int> buffer = [];
-    buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
-    buffer.addAll(core.ByteOrder.parseShortByte(_length(family), core.ByteOrder.BYTEORDER_BIG_ENDIAN));
-    buffer.addAll(core.ByteOrder.parseShortByte(family, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
-    buffer.addAll(core.ByteOrder.parseShortByte(port, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
-    buffer.addAll(net.HetiIP.toRawIP(this.address));
-    return new Uint8List.fromList(buffer);
+    type = StunAttribute.changeRequest;
   }
 }

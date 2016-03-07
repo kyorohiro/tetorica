@@ -8,11 +8,11 @@ void main() {
     turn.StunMessageHeader headerA = new turn.StunMessageHeader(turn.StunMessageHeader.bindingResponse);
     headerA.attributes.add(
       new turn.StunAddressAttribute(
-        turn.StunMessageAttribute.mappedAddress, turn.StunAddressAttribute.familyIPv4, 6881, "127.0.0.1"));
+        turn.StunAttribute.mappedAddress, turn.StunAddressAttribute.familyIPv4, 6881, "127.0.0.1"));
     headerA.attributes.add(
       new turn.StunChangeRequest(true, false));
     headerA.attributes.add(
-      new turn.StunBasicMessage(turn.StunMessageAttribute.userName, [1,2,3,4,5,6,7,8]));
+      new turn.StunBasicMessage(turn.StunAttribute.userName, [1,2,3,4,5,6,7,8]));
     headerA.attributes.add(
       new turn.StunErrorCode(400, "abcdefghijklmn"));
 
