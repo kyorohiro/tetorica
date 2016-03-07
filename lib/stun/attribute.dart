@@ -53,6 +53,9 @@ class StunErrorCode extends StunMessageAttribute {
 
   static StunErrorCode decode(List<int> buffer, int start) {
     int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
+    if(type != StunMessageAttribute.errorCode) {
+      throw {"mes":""};
+    }
     int tlength = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
     int v = core.ByteOrder.parseInt(buffer, start + 4, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
     int clazz = (v >> 8) & 0x07;
