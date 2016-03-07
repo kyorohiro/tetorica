@@ -66,7 +66,7 @@ class StunErrorCode extends StunMessageAttribute {
   static const int code600GlobalFailure = 600;
 
   int type; //2byte
-  int length; //2byte
+  int get length => 4+conv.UTF8.encode(pharse).length; //2byte
 
   int code;
   String pharse;

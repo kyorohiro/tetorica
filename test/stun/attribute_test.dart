@@ -14,7 +14,9 @@ void main() {
     unit.expect(attrA.family, attrB.family);
     unit.expect(attrA.port, attrB.port);
     unit.expect(attrA.length, attrB.length);
+    unit.expect(attrA.encode().length, attrA.length+4);
   });
+
   unit.test("ArrayBuilderBuffer: mapped v6", () {
     turn.StunAddressAttribute attrA = new turn.StunAddressAttribute(turn.StunMessageAttribute.mappedAddress, turn.StunAddressAttribute.familyIPv6, 6881, "2001:db8:0:0:0:0:0:9abc"); //"2001:db8::9abc");
     turn.StunAddressAttribute attrB = turn.StunAddressAttribute.decode(attrA.encode(), 0);
@@ -25,7 +27,9 @@ void main() {
     unit.expect(attrA.family, attrB.family);
     unit.expect(attrA.port, attrB.port);
     unit.expect(attrA.length, attrB.length);
+    unit.expect(attrA.encode().length, attrA.length+4);
   });
+
   unit.test("ArrayBuilderBuffer: change request true false", () {
     turn.StunChangeRequest attrA = new turn.StunChangeRequest(true, false);
     turn.StunChangeRequest attrB = turn.StunChangeRequest.decode(attrA.encode(), 0);
@@ -34,6 +38,7 @@ void main() {
     unit.expect(attrA.type, attrB.type);
     unit.expect(attrA.changeIP, attrB.changeIP);
     unit.expect(attrA.changePort, attrB.changePort);
+    unit.expect(attrA.encode().length, attrA.length+4);
   });
 
   unit.test("ArrayBuilderBuffer: change request false true", () {
@@ -44,6 +49,7 @@ void main() {
     unit.expect(attrA.type, attrB.type);
     unit.expect(attrA.changeIP, attrB.changeIP);
     unit.expect(attrA.changePort, attrB.changePort);
+    unit.expect(attrA.encode().length, attrA.length+4);
   });
 
   unit.test("ArrayBuilderBuffer: basic message userName", () {
@@ -53,6 +59,7 @@ void main() {
     //
     unit.expect(attrA.type, attrB.type);
     unit.expect(attrA.value, attrB.value);
+    unit.expect(attrA.encode().length, attrA.length+4);
   });
 
   unit.test("ArrayBuilderBuffer: basic message password", () {
@@ -62,6 +69,7 @@ void main() {
     //
     unit.expect(attrA.type, attrB.type);
     unit.expect(attrA.value, attrB.value);
+    unit.expect(attrA.encode().length, attrA.length+4);
   });
 
   unit.test("ArrayBuilderBuffer: basic message integrity", () {
@@ -72,6 +80,7 @@ void main() {
     //
     unit.expect(attrA.type, attrB.type);
     unit.expect(attrA.value, attrB.value);
+    unit.expect(attrA.encode().length, attrA.length+4);
   });
 
   unit.test("ArrayBuilderBuffer: errorcode", () {
@@ -82,5 +91,6 @@ void main() {
     unit.expect(attrA.type, attrB.type);
     unit.expect(attrA.code, attrB.code);
     unit.expect(attrA.pharse, attrB.pharse);
+    unit.expect(attrA.encode().length, attrA.length+4);
   });
 }
