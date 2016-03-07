@@ -47,25 +47,22 @@ class HetiIP {
   }
 
 
-  static String toIPString(List<int> rawIP) {
+  static String toIPString(List<int> rawIP,{int start:0}) {
     if (rawIP.length == 4) {
-      return "${rawIP[0].toUnsigned(8)}.${rawIP[1].toUnsigned(8)}.${rawIP[2].toUnsigned(8)}.${rawIP[3].toUnsigned(8)}";
+      return
+          "${rawIP[start+0].toUnsigned(8)}"+
+          "."+"${rawIP[start+1].toUnsigned(8)}"+
+          "."+"${rawIP[start+2].toUnsigned(8)}"+
+          "."+"${rawIP[start+3].toUnsigned(8)}";
     } else if (rawIP.length == 16) {
-      return "${_toIP6Part(rawIP[0],rawIP[1])}" +
-          ":" +
-          "${_toIP6Part(rawIP[2],rawIP[3])}" +
-          ":" +
-          "${_toIP6Part(rawIP[4],rawIP[5])}" +
-          ":" +
-          "${_toIP6Part(rawIP[6],rawIP[7])}" +
-          ":" +
-          "${_toIP6Part(rawIP[8],rawIP[9])}" +
-          ":" +
-          "${_toIP6Part(rawIP[10],rawIP[11])}" +
-          ":" +
-          "${_toIP6Part(rawIP[12],rawIP[13])}" +
-          ":" +
-          "${_toIP6Part(rawIP[14],rawIP[15])}";
+      return "${_toIP6Part(rawIP[start+0],rawIP[start+1])}" + ":" +
+          "${_toIP6Part(rawIP[start+2],rawIP[start+3])}" + ":" +
+          "${_toIP6Part(rawIP[start+4],rawIP[start+5])}" + ":" +
+          "${_toIP6Part(rawIP[start+6],rawIP[start+7])}" + ":" +
+          "${_toIP6Part(rawIP[start+8],rawIP[start+9])}" + ":" +
+          "${_toIP6Part(rawIP[start+10],rawIP[start+11])}" + ":" +
+          "${_toIP6Part(rawIP[start+12],rawIP[start+13])}" + ":" +
+          "${_toIP6Part(rawIP[start+14],rawIP[start+15])}";
     } else {
       throw new Exception();
     }
