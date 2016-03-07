@@ -19,4 +19,20 @@ void main() {
     unit.expect(attrA.port, attrB.port);
     unit.expect(attrA.length, attrB.length);
   });
+
+  unit.test("ArrayBuilderBuffer: mapped v6", () {
+    turn.StunAddressAttribute attrA = new turn.StunAddressAttribute(
+      turn.StunMessageAttribute.mappedAddress,
+      turn.StunAddressAttribute.familyIPv6,
+      6881,
+      "2001:db8:0:0:0:0:0:9abc");//"2001:db8::9abc");
+    turn.StunAddressAttribute attrB = turn.StunAddressAttribute.decode(attrA.encode(), 0);
+    //
+    //
+    unit.expect(attrA.type, attrB.type);
+    unit.expect(attrA.address, attrB.address);
+    unit.expect(attrA.family, attrB.family);
+    unit.expect(attrA.port, attrB.port);
+    unit.expect(attrA.length, attrB.length);
+  });
 }

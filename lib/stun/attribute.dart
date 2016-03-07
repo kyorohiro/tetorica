@@ -54,7 +54,7 @@ class StunAddressAttribute extends StunMessageAttribute {
   Uint8List encode() {
     List<int> buffer = [];
     buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
-    buffer.addAll(core.ByteOrder.parseShortByte((family == familyIPv4 ? (2 + 2 + 4) : (2 + 2 + 8)), core.ByteOrder.BYTEORDER_BIG_ENDIAN));
+    buffer.addAll(core.ByteOrder.parseShortByte(_length(family), core.ByteOrder.BYTEORDER_BIG_ENDIAN));
     buffer.addAll(core.ByteOrder.parseShortByte(family, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
     buffer.addAll(core.ByteOrder.parseShortByte(port, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
     buffer.addAll(net.HetiIP.toRawIP(this.address));
