@@ -1,21 +1,57 @@
 part of hetimanet_turn;
 
 abstract class StunMessageAttribute {
-  static const int mappedAddress = 0x0001;
-  static const int responseAddress = 0x0002;
-  static const int changeRequest = 0x0003;
-  static const int sourceAddress = 0x0004;
-  static const int changedAddress = 0x0005;
-  static const int userName = 0x0006;
-  static const int password = 0x0007;
+  static const int mappedAddress = 0x0001; //
+  static const int responseAddress = 0x0002; //
+  static const int changeRequest = 0x0003; ////
+  static const int sourceAddress = 0x0004; //
+  static const int changedAddress = 0x0005; //
+  static const int userName = 0x0006; ////
+  static const int password = 0x0007; ////
   static const int messageIntegrity = 0x0008;
   static const int errorCode = 0x0009;
   static const int unknownAttribute = 0x000a;
-  static const int reflectedFrom = 0x000b;
+  static const int reflectedFrom = 0x000b; //
   int get type; //2byte
   int get length; //2byte
   Uint8List encode();
-//  List<int> get value; //...
+
+  static List<StunMessageAttribute> decode(List<int> buffer, {int start: 0, int end: null}) {
+    if (end == null) {
+      end = buffer.length;
+    }
+    List<StunMessageAttribute> ret = [];
+
+    while (start < buffer.length) {
+      StunMessageAttribute a = null;
+      int t = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
+      switch (t) {
+        case StunMessageAttribute.mappedAddress:
+        case StunMessageAttribute.responseAddress:
+        case StunMessageAttribute.changedAddress:
+        case StunMessageAttribute.sourceAddress:
+        case StunMessageAttribute.reflectedFrom:
+          a = StunAddressAttribute.decode(buffer, start);
+          break;
+        case StunMessageAttribute.changeRequest:
+          a = StunChangeRequest.decode(buffer, start);
+          break;
+        case StunMessageAttribute.errorCode:
+          a = StunErrorCode.decode(buffer, start);
+          break;
+        case StunMessageAttribute.userName:
+        case StunMessageAttribute.password:
+        case StunMessageAttribute.userName:
+        case StunMessageAttribute.messageIntegrity:
+        default:
+          a = StunBasicMessage.decode(buffer, start);
+          break;
+      }
+      start += a.length + 4;
+      ret.add(a);
+    }
+    return ret;
+  }
 }
 
 class StunErrorCode extends StunMessageAttribute {
@@ -53,8 +89,8 @@ class StunErrorCode extends StunMessageAttribute {
 
   static StunErrorCode decode(List<int> buffer, int start) {
     int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
-    if(type != StunMessageAttribute.errorCode) {
-      throw {"mes":""};
+    if (type != StunMessageAttribute.errorCode) {
+      throw {"mes": ""};
     }
     int tlength = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
     int v = core.ByteOrder.parseInt(buffer, start + 4, core.ByteOrder.BYTEORDER_BIG_ENDIAN);

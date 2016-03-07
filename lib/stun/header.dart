@@ -13,8 +13,8 @@ class StunMessageHeader {
   StunMessageHeaderTransactionID transactionID;
   List<StunMessageAttribute> attributes = [];
 
-  StunMessageHeader(this.type, {this.transactionID:null}) {
-    if(transactionID == null) {
+  StunMessageHeader(this.type, {this.transactionID: null}) {
+    if (transactionID == null) {
       transactionID = new StunMessageHeaderTransactionID.random();
     }
   }
@@ -23,7 +23,7 @@ class StunMessageHeader {
   int get messageLength {
     int ret = 0;
     for (StunMessageAttribute a in attributes) {
-      ret += a.length;
+      ret += a.length + 4;
     }
     return ret;
   }
@@ -32,7 +32,22 @@ class StunMessageHeader {
     List<int> buffer = [];
     buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
     buffer.addAll(core.ByteOrder.parseShortByte(messageLength, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
-
+    buffer.addAll(transactionID.value);
+    for (StunMessageAttribute a in attributes) {
+      buffer.addAll(a.encode());
+    }
     return new Uint8List.fromList(buffer);
+  }
+
+  //
+  //
+  static StunMessageHeader decode(List<int> buffer, int start) {
+    int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
+    StunMessageHeader header = new StunMessageHeader(type);
+
+    int length = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
+    header.transactionID = StunMessageHeaderTransactionID.decode(buffer, start+4);
+    header.attributes.addAll(StunMessageAttribute.decode(buffer,start:(start+20),end:(start+20+length)));
+    return header;
   }
 }
