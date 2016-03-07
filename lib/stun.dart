@@ -8,6 +8,7 @@ import 'net.dart' as net;
 
 part 'stun/attribute.dart';
 part 'stun/attribute_address.dart';
+part 'stun/attribute_changerequest.dart';
 part 'stun/header.dart';
 part 'stun/header_transactionid.dart';
 

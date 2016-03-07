@@ -20,11 +20,6 @@ void main() {
     unit.expect(headerA.type, headerB.type);
     unit.expect(headerA.attributes.length, headerB.attributes.length);
     unit.expect(headerA.attributes[0], headerB.attributes[0]);
-    /*
-    unit.expect(attrA.family, attrB.family);
-    unit.expect(attrA.port, attrB.port);
-    unit.expect(attrA.length, attrB.length);
-    unit.expect(attrA.encode().length, attrA.length+4);
-    */
+    unit.expect(headerA.attributes[1], headerB.attributes[1]);
   });
 }
