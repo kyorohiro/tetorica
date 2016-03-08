@@ -16,7 +16,7 @@ class IPAddr {
   }
   IPAddr.fromBytes(this.rawvalue) {}
 
-  String toStrng() {
+  String toString() {
     return IPConv.toIPString(rawvalue);
   }
 
@@ -43,6 +43,10 @@ class IPAddr {
 
 class IPConv {
   static List<int> toRawIP(String ip, {List<int> output}) {
+    int e = ip.indexOf("%");
+    if(e > 0) {
+      ip = ip.substring(0,e);
+    }
     List rawIP = null;
     if (ip.contains(".")) {
       // ip v4
