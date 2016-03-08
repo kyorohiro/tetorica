@@ -1,6 +1,6 @@
 part of hetimanet_dartio;
 
-class HetimaUdpSocketDartIo extends HetimaUdpSocket {
+class HetimaUdpSocketDartIo extends TetUdpSocket {
   static Random _random = new Random(new DateTime.now().millisecond);
   bool _verbose = false;
   bool get verbose => _verbose;

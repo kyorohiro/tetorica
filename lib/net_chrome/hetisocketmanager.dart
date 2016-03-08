@@ -13,7 +13,7 @@ class HetimaSocketBuilderChrome extends TetSocketBuilder {
     return null;
   }
 
-  HetimaUdpSocket createUdpClient() {
+  TetUdpSocket createUdpClient() {
     return new HetimaUdpSocketChrome.empty();
   }
 
@@ -34,7 +34,7 @@ class HetimaSocketBuilderChrome extends TetSocketBuilder {
 class HetimaChromeSocketManager {
   Map<int, TetServerSocket> _serverList = new Map();
   Map<int, TetSocket> _clientList = new Map();
-  Map<int, HetimaUdpSocket> _udpList = new Map();
+  Map<int, TetUdpSocket> _udpList = new Map();
   static final HetimaChromeSocketManager _instance = new HetimaChromeSocketManager._internal();
   factory HetimaChromeSocketManager() {
     return _instance;
@@ -105,7 +105,7 @@ class HetimaChromeSocketManager {
     _clientList.remove(socketId);
   }
 
-  void addUdp(int socketId, HetimaUdpSocket socket) {
+  void addUdp(int socketId, TetUdpSocket socket) {
     _udpList[socketId] = socket;
   }
 

@@ -5,7 +5,7 @@ class HetiSocketBuilderSimu extends TetSocketBuilder {
   TetSocket createClient({int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
     return null;
   }
-  HetimaUdpSocket createUdpClient() {
+  TetUdpSocket createUdpClient() {
     return new HetiUdpSocketSimu();
   }
   TetSocket createSecureClient({int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
@@ -27,7 +27,7 @@ class HetiUdpSocketSimuMane {
   Map<String, HetiUdpSocketSimu> nodes = {};
 }
 
-class HetiUdpSocketSimu extends HetimaUdpSocket {
+class HetiUdpSocketSimu extends TetUdpSocket {
   String _ip = "";
   int _port;
 

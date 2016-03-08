@@ -6,7 +6,7 @@ abstract class TetSocketBuilder {
   static const int BUFFER_ONLY = 1;
   TetSocket createClient({int mode:BUFFER_NOTIFY});
   TetSocket createSecureClient({int mode:BUFFER_NOTIFY});
-  HetimaUdpSocket createUdpClient();
+  TetUdpSocket createUdpClient();
   Future<TetServerSocket> startServer(String address, int port, {int mode:BUFFER_NOTIFY}) ;
   Future<List<TetNetworkInterface>> getNetworkInterfaces();
 }
@@ -41,7 +41,7 @@ abstract class TetSocket {
   }
 }
 
-abstract class HetimaUdpSocket {
+abstract class TetUdpSocket {
   ///
   /// The result code returned from the underlying network call. A
   /// negative value indicates an error.

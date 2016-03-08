@@ -36,8 +36,8 @@ class UpnpDeviceSearcher {
   }
 
   TetSocketBuilder _socketBuilder = null;
-  HetimaUdpSocket _socket = null;
-  HetimaUdpSocket get rawsocket => _socket;
+  TetUdpSocket _socket = null;
+  TetUdpSocket get rawsocket => _socket;
   StreamController<UpnpDeviceInfo> _streamer = new StreamController.broadcast();
   Stream<UpnpDeviceInfo> get onReceive => _streamer.stream;
   List<UpnpDeviceInfo> deviceInfoList = new List();

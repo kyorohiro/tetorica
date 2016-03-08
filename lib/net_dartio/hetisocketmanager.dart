@@ -20,7 +20,7 @@ class TetSocketBuilderDartIO extends TetSocketBuilder {
     return HetimaServerSocketDartIo.startServer(address, port, verbose: _verbose, mode:mode);
   }
 
-  HetimaUdpSocket createUdpClient() {
+  TetUdpSocket createUdpClient() {
     return new HetimaUdpSocketDartIo(verbose: _verbose);
   }
 

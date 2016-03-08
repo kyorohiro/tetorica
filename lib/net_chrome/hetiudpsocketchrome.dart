@@ -1,6 +1,6 @@
 part of hetimanet_chrome;
 
-class HetimaUdpSocketChrome extends HetimaUdpSocket {
+class HetimaUdpSocketChrome extends TetUdpSocket {
   chrome.CreateInfo _info = null;
   StreamController<HetimaReceiveUdpInfo> _receiveStream = new StreamController();
   HetimaUdpSocketChrome.empty() {}
