@@ -1,5 +1,37 @@
 part of hetimanet;
 
+class IPAddr {
+  List<int> value;
+  IPAddr.fromString(String ip) {
+    value = IPConv.toRawIP(ip);
+  }
+  IPAddr.fromBytes(this.value) {}
+
+  String toStrng() {
+    return IPConv.toIPString(value);
+  }
+
+  bool isLocalHost() {
+    return IPConv.isLocalHost(value);
+  }
+
+  bool isLinkLocal() {
+    return IPConv.isLinkLocal(value);
+  }
+
+  bool isPrivate() {
+    return IPConv.isPrivate(value);
+  }
+
+  bool isMulticast() {
+    return IPConv.isMulticast(value);
+  }
+
+  bool isBroadcast() {
+    return IPConv.isBroadcast(value);
+  }
+}
+
 class IPConv {
   static List<int> toRawIP(String ip, {List<int> output}) {
     List rawIP = null;
@@ -93,6 +125,67 @@ class IPConv {
       }
     } else {
       if (ip[0] == 0xfe && ip[1] == 0x80) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  static bool isLocalHost(List<int> ip) {
+    if (ip.length == 4) {
+      return (ip[0] == 127);
+    } else {
+      //::1
+      if(0xff&ip[15]==1) {
+        for(int i=0;i<15;i++) {
+          if(0xff&ip[i] != 0) {
+            return false;
+          }
+        }
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  static bool isLinkLocal(List<int> ip) {
+    if (ip.length == 4) {
+      return (0xff & ip[0] == 0xff & 169) && (0xff & ip[1] == 0xff & 254);
+    } else {
+      return (0xff & ip[0] == 0xfe) && (0xC0 & ip[1] == 0x80);
+    }
+  }
+
+  static bool isPrivate(List<int> ip) {
+    if (ip.length == 4) {
+      return (0xff & ip[0] == 10) || ((0xff & ip[0] == 172) && (0xf0 & ip[1] == 16)) || ((0xff & ip[0] == 192) && (0xf0 & ip[1] == 168));
+    } else {
+      //fec0::/10
+      return (0xff & ip[0] == 0xfe) && (0xC0 & ip[1] == 0xc0);
+    }
+  }
+
+  static bool isMulticast(List<int> ip) {
+    if (ip.length == 4) {
+      return (0xf0 & ip[0] == 224);
+    } else {
+      return (0xff & ip[0] == 0xff);
+    }
+  }
+
+  static bool isBroadcast(List<int> ip) {
+    if (ip.length == 4) {
+      return (0xff & ip[0] == 255) && (0xff & ip[1] == 255) && (0xff & ip[2] == 255) && (0xff & ip[3] == 255);
+    } else {
+      //ff02::1
+      if(0xff&ip[0] == 0xff && 0xff&ip[1] == 0x02 && 0xff&ip[15]==1) {
+        for(int i=2;i<15;i++) {
+          if(0xff&ip[i] != 0) {
+            return false;
+          }
+        }
         return true;
       } else {
         return false;

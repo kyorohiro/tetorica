@@ -5,7 +5,7 @@ import 'package:tetorica/http.dart' as http;
 import 'dart:convert' as conv;
 import 'package:test/test.dart' as test;
 
-testHttp(TetSocketBuilder builder) async {
+doTest(TetSocketBuilder builder) async {
 
   test.test("put", () async {
     http.HttpClient client = new http.HttpClient(builder);

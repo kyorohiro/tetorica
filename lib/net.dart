@@ -1,8 +1,9 @@
 library hetimanet;
 
 import 'dart:async';
-import 'package:tetorica/core.dart' as heti;
 import 'dart:convert' as convert;
+import 'package:tetorica/core.dart' as heti;
+
 
 //part 'net/http/hetihttp.dart';
 import 'net/tmp/rfctable.dart';

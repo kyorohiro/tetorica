@@ -33,6 +33,9 @@ class TetSocketBuilderDartIO extends TetSocketBuilder {
         if (a.rawAddress.length > 4) {
           prefixLength = 64;
         }
+        //a.isLoopback;
+        //a.isMulticast;
+        //a.isLinkLocal;
         ret.add(new TetNetworkInterface()
           ..address = a.address
           ..name = i.name

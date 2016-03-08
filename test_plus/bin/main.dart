@@ -5,6 +5,6 @@ import 'package:test_plus/networkinterface.dart' as networkinterface;
 
 main() async {
   TetSocketBuilderDartIO builder = new TetSocketBuilderDartIO();
-  http.doTest(builder);
+//  http.doTest(builder);
   networkinterface.doTest(builder);
 }
