@@ -2,6 +2,7 @@ part of hetimanet;
 
 class IPAddr {
   List<int> rawvalue;
+  String linkOption;
 
   bool isV4() {
     return IPConv.isIpV4(rawvalue);
@@ -12,12 +13,19 @@ class IPAddr {
   }
 
   IPAddr.fromString(String ip) {
+    int e = ip.indexOf("%");
+    if(e > 0) {
+      linkOption = ip.substring(e+1);
+      ip = ip.substring(0, e);
+    }
     rawvalue = IPConv.toRawIP(ip);
   }
-  IPAddr.fromBytes(this.rawvalue) {}
+
+  IPAddr.fromBytes(this.rawvalue, {this.linkOption:""}) {}
 
   String toString() {
-    return IPConv.toIPString(rawvalue);
+    String opt = (linkOption.length == 0?"":"%${linkOption}");
+    return "${IPConv.toIPString(rawvalue)}${opt}";
   }
 
   bool isLocalHost() {

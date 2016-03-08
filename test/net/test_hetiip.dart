@@ -6,7 +6,7 @@ void main() {
 
     unit.test("localhost", () {
       IPAddr addrV6 = new IPAddr.fromString("fe80::10dd:b1ff:fe1d:2c64%bridge100");
-      unit.expect("fe80:0:0:0:10dd:b1ff:fe1d:2c64", addrV6.toString());
+      unit.expect("fe80:0:0:0:10dd:b1ff:fe1d:2c64%bridge100", addrV6.toString());
     });
     unit.test("localhost", () {
       IPAddr addrV4 = new IPAddr.fromString("127.0.0.1");
