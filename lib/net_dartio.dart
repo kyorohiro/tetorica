@@ -4,9 +4,9 @@ import 'net.dart';
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-import 'net.dart';
+//import 'net.dart';
 
-part 'net/net/dartio/hetisocketmanager.dart';
-part 'net/net/dartio/udp.dart';
-part 'net/net/dartio/socket.dart';
-part 'net/net/dartio/server.dart';
+part 'net_dartio/hetisocketmanager.dart';
+part 'net_dartio/udp.dart';
+part 'net_dartio/socket.dart';
+part 'net_dartio/server.dart';

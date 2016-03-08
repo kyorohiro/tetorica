@@ -156,7 +156,7 @@ packages:
   xml:
     description: xml
     source: hosted
-    version: "2.4.1"
+    version: "2.4.2"
   yaml:
     description: yaml
     source: hosted

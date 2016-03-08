@@ -1,7 +1,7 @@
 import 'package:test/test.dart' as unit;
-import 'package:tetorica/core.dart' as hetima;
+//import 'package:tetorica/core.dart' as hetima;
 import 'package:tetorica/stun.dart' as turn;
-import 'dart:async';
+//import 'dart:async';
 
 void main() {
   unit.test("ArrayBuilderBuffer: mapped v4", () {

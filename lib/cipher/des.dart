@@ -1,6 +1,6 @@
 library des_cipher;
 
-import 'dart:typed_data' as data;
+//import 'dart:typed_data' as data;
 
 //
 // http://csrc.nist.gov/publications/fips/fips46-3/fips46-3.pdf
