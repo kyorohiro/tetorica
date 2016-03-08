@@ -1,34 +1,34 @@
 part of hetimanet;
 
 class IPAddr {
-  List<int> value;
+  List<int> rawvalue;
   IPAddr.fromString(String ip) {
-    value = IPConv.toRawIP(ip);
+    rawvalue = IPConv.toRawIP(ip);
   }
-  IPAddr.fromBytes(this.value) {}
+  IPAddr.fromBytes(this.rawvalue) {}
 
   String toStrng() {
-    return IPConv.toIPString(value);
+    return IPConv.toIPString(rawvalue);
   }
 
   bool isLocalHost() {
-    return IPConv.isLocalHost(value);
+    return IPConv.isLocalHost(rawvalue);
   }
 
   bool isLinkLocal() {
-    return IPConv.isLinkLocal(value);
+    return IPConv.isLinkLocal(rawvalue);
   }
 
   bool isPrivate() {
-    return IPConv.isPrivate(value);
+    return IPConv.isPrivate(rawvalue);
   }
 
   bool isMulticast() {
-    return IPConv.isMulticast(value);
+    return IPConv.isMulticast(rawvalue);
   }
 
   bool isBroadcast() {
-    return IPConv.isBroadcast(value);
+    return IPConv.isBroadcast(rawvalue);
   }
 }
 
