@@ -1,11 +1,4 @@
-library hetimacore_dartio.blob;
-
-import 'dart:async';
-import 'dart:core';
-import 'dart:typed_data' as data;
-import 'dart:io';
-
-import '../../core.dart';
+part of hetimacore_dartio;
 
 class HetimaDataDartIO extends HetimaData {
   RandomAccessFile _randomFile = null;
