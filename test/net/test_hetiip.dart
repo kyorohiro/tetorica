@@ -3,13 +3,19 @@ import 'package:tetorica/net.dart';
 
 void main() {
   unit.group("ipaddr", () {
-    unit.test("127.0.", () {
+    unit.test("localhost", () {
       IPAddr addrV4 = new IPAddr.fromString("127.0.0.1");
       IPAddr addrV4b = new IPAddr.fromString("127.255.255.255");
       IPAddr addrV6 = new IPAddr.fromString(":1");
       unit.expect(true, addrV4.isLocalHost());
       unit.expect(true, addrV4b.isLocalHost());
       unit.expect(true, addrV6.isLocalHost());
+    });
+    unit.test("localhost", () {
+      IPAddr addrV4 = new IPAddr.fromString("255.255.255.255");
+      IPAddr addrV6 = new IPAddr.fromString("ff02::1");
+      unit.expect(true, addrV4.isBroadcast());
+      unit.expect(true, addrV6.isBroadcast());
     });
   });
 
