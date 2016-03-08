@@ -1,7 +1,6 @@
 library test_plus.networkinterface;
 
 
-import 'dart:convert' as conv;
 import 'package:test/test.dart' as test;
 import 'package:tetorica/net.dart' as net;
 
