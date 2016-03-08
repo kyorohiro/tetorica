@@ -58,11 +58,12 @@ class IPConv {
         rawIP = output;
       }
       int i = 0;
-      List<String> vv = ip.split(":");
+      List<String> vv = ip.split(new RegExp(":"));
       for (String v in vv) {
+        //print(" ${v} ${i} ## ip ${vv}");
         if (v.length == 0) {
           int r = 8 - vv.length + 1;
-          for (int o = 0; o < r; o++) {
+          for (int o = 0; o < r && i<16; o++) {
             rawIP[i++] = 0;
             rawIP[i++] = 0;
           }
@@ -160,10 +161,13 @@ class IPConv {
 
   static bool isPrivate(List<int> ip) {
     if (ip.length == 4) {
-      return (0xff & ip[0] == 10) || ((0xff & ip[0] == 172) && (0xf0 & ip[1] == 16)) || ((0xff & ip[0] == 192) && (0xf0 & ip[1] == 168));
+      return
+       (0xff & ip[0] == 10) ||
+      ((0xff & ip[0] == 172) && (0xf0 & ip[1] == 16)) ||
+      ((0xff & ip[0] == 192) && (0xff & ip[1] == 168));
     } else {
       //fec0::/10
-      return (0xff & ip[0] == 0xfe) && (0xC0 & ip[1] == 0xc0);
+      return (0xff & ip[0] == 0xfe) && (0xC0 & ip[1] == 0xC0);
     }
   }
 

@@ -11,11 +11,41 @@ void main() {
       unit.expect(true, addrV4b.isLocalHost());
       unit.expect(true, addrV6.isLocalHost());
     });
-    unit.test("localhost", () {
+    unit.test("broadcast", () {
       IPAddr addrV4 = new IPAddr.fromString("255.255.255.255");
       IPAddr addrV6 = new IPAddr.fromString("ff02::1");
       unit.expect(true, addrV4.isBroadcast());
       unit.expect(true, addrV6.isBroadcast());
+    });
+    unit.test("linklocal", () {
+      IPAddr addrV4 = new IPAddr.fromString("169.254.0.0");
+      IPAddr addrV4b = new IPAddr.fromString("169.254.255.255");
+      IPAddr addrV6 = new IPAddr.fromString("fe80::");
+      IPAddr addrV6b = new IPAddr.fromString("febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff");
+      unit.expect(true, addrV4.isLinkLocal());
+      unit.expect(true, addrV4b.isLinkLocal());
+      unit.expect(true, addrV6.isLinkLocal());
+      unit.expect(true, addrV6b.isLinkLocal());
+    });
+
+    unit.test("linklocal", () {
+      IPAddr addrV4a = new IPAddr.fromString("10.0.0.0");
+      IPAddr addrV4b = new IPAddr.fromString("10.255.255.255");
+      IPAddr addrV4c = new IPAddr.fromString("172.16.0.0");
+      IPAddr addrV4d = new IPAddr.fromString("172.31.255.255");
+      IPAddr addrV4e = new IPAddr.fromString("192.168.0.0");
+      IPAddr addrV4f = new IPAddr.fromString("192.168.255.255");
+      //
+      IPAddr addrV6 = new IPAddr.fromString("fec0::");
+      IPAddr addrV6b = new IPAddr.fromString("feff:ffff:ffff:ffff:ffff:ffff:ffff:ffff");
+      unit.expect(true, addrV4a.isPrivate());
+      unit.expect(true, addrV4b.isPrivate());
+      unit.expect(true, addrV4c.isPrivate());
+      unit.expect(true, addrV4d.isPrivate());
+      unit.expect(true, addrV4e.isPrivate());
+      unit.expect(true, addrV4f.isPrivate());
+      unit.expect(true, addrV6.isPrivate());
+      unit.expect(true, addrV6b.isPrivate());
     });
   });
 
@@ -33,9 +63,7 @@ void main() {
       try {
         unit.expect(IPConv.toRawIP("www.a.exsample.com"), [0, 0, 255, 1]);
         unit.expect(true, false);
-      } catch(e) {
-
-      }
+      } catch (e) {}
     });
   });
 
