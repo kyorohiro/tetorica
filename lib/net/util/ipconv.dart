@@ -2,6 +2,15 @@ part of hetimanet;
 
 class IPAddr {
   List<int> rawvalue;
+
+  bool isV4() {
+    return IPConv.isIpV4(rawvalue);
+  }
+
+  bool isV6() {
+    return !IPConv.isIpV4(rawvalue);
+  }
+
   IPAddr.fromString(String ip) {
     rawvalue = IPConv.toRawIP(ip);
   }
