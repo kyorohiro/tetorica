@@ -28,7 +28,7 @@ void main() {
       unit.expect(true, addrV6b.isLinkLocal());
     });
 
-    unit.test("linklocal", () {
+    unit.test("private", () {
       IPAddr addrV4a = new IPAddr.fromString("10.0.0.0");
       IPAddr addrV4b = new IPAddr.fromString("10.255.255.255");
       IPAddr addrV4c = new IPAddr.fromString("172.16.0.0");
@@ -46,6 +46,17 @@ void main() {
       unit.expect(true, addrV4f.isPrivate());
       unit.expect(true, addrV6.isPrivate());
       unit.expect(true, addrV6b.isPrivate());
+    });
+
+    unit.test("multicast", () {
+      IPAddr addrV4 = new IPAddr.fromString("224.0.0.0");
+      IPAddr addrV4b = new IPAddr.fromString("239.255.255.255");
+      IPAddr addrV6 = new IPAddr.fromString("ff00::");
+      IPAddr addrV6b = new IPAddr.fromString("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff");
+      unit.expect(true, addrV4.isMulticast());
+      unit.expect(true, addrV4b.isMulticast());
+      unit.expect(true, addrV6.isMulticast());
+      unit.expect(true, addrV6b.isMulticast());
     });
   });
 
