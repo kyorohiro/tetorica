@@ -2,18 +2,18 @@ part of hetimanet_chrome;
 
 class HetimaSocketChrome extends TetSocket {
   bool _isClose = false;
-  int _mode = TetSocketBuilder.BUFFER_NOTIFY;
-  int get mode => _mode;
+  TetSocketMode _mode = TetSocketMode.bufferAndNotify;
+  TetSocketMode get mode => _mode;
   int clientSocketId;
 
   StreamController<TetReceiveInfo> _controllerReceive = new StreamController.broadcast();
   StreamController<TetCloseInfo> _controllerClose = new StreamController.broadcast();
 
-  HetimaSocketChrome.empty({int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
+  HetimaSocketChrome.empty({TetSocketMode mode: TetSocketMode.bufferAndNotify}) {
     _mode = mode;
   }
 
-  HetimaSocketChrome(int _clientSocketId,{int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
+  HetimaSocketChrome(int _clientSocketId, {TetSocketMode mode: TetSocketMode.bufferAndNotify}) {
     HetimaChromeSocketManager.getInstance().addClient(_clientSocketId, this);
     chrome.sockets.tcp.setPaused(_clientSocketId, false);
     clientSocketId = _clientSocketId;
@@ -24,13 +24,13 @@ class HetimaSocketChrome extends TetSocket {
 
   void onReceiveInternal(chrome.ReceiveInfo info) {
     updateTime();
-    List<int> tmp = info.data.getBytes();
-    buffer.appendIntList(tmp, 0, tmp.length);
-    List<int> b= [];
-    if(_mode == TetSocketBuilder.BUFFER_NOTIFY) {
-      b = info.data.getBytes();
+    if (_mode != TetSocketMode.notifyOnly) {
+      List<int> tmp = info.data.getBytes();
+      buffer.appendIntList(tmp, 0, tmp.length);
     }
-    _controllerReceive.add(new TetReceiveInfo(b));
+    if (_mode != TetSocketMode.bufferOnly) {
+      _controllerReceive.add(new TetReceiveInfo(info.data.getBytes()));
+    }
   }
 
   Future<TetSendInfo> send(List<int> data) async {
@@ -38,7 +38,7 @@ class HetimaSocketChrome extends TetSocket {
     chrome.ArrayBuffer buffer = new chrome.ArrayBuffer.fromBytes(data);
     chrome.SendInfo info = await chrome.sockets.tcp.send(clientSocketId, buffer);
     updateTime();
-    if(info.resultCode < 0) {
+    if (info.resultCode < 0) {
       throw info.resultCode;
     }
     return new TetSendInfo(info.resultCode);

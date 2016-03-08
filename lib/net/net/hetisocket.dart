@@ -1,13 +1,17 @@
 part of hetimanet;
 
 
+enum TetSocketMode {
+  bufferAndNotify,
+  bufferOnly,
+  notifyOnly
+}
+
 abstract class TetSocketBuilder {
-  static const int BUFFER_NOTIFY = 0;
-  static const int BUFFER_ONLY = 1;
-  TetSocket createClient({int mode:BUFFER_NOTIFY});
-  TetSocket createSecureClient({int mode:BUFFER_NOTIFY});
+  TetSocket createClient({TetSocketMode mode:TetSocketMode.bufferAndNotify});
+  TetSocket createSecureClient({TetSocketMode mode:TetSocketMode.bufferAndNotify});
   TetUdpSocket createUdpClient();
-  Future<TetServerSocket> startServer(String address, int port, {int mode:BUFFER_NOTIFY}) ;
+  Future<TetServerSocket> startServer(String address, int port, {TetSocketMode mode:TetSocketMode.bufferAndNotify}) ;
   Future<List<TetNetworkInterface>> getNetworkInterfaces();
 }
 

@@ -5,17 +5,17 @@ class HetimaSocketDartIo extends TetSocket {
   bool _verbose = false;
   bool get verbose => _verbose;
   Socket _socket = null;
-  int _mode = 0;
+  TetSocketMode _mode = TetSocketMode.bufferAndNotify;
   bool _isSecure = false;
   bool get isSecure => _isSecure;
 
-  HetimaSocketDartIo({verbose: false, int mode: TetSocketBuilder.BUFFER_NOTIFY, bool isSecure: false}) {
+  HetimaSocketDartIo({verbose: false, TetSocketMode mode:TetSocketMode.bufferAndNotify, bool isSecure: false}) {
     _verbose = verbose;
     _mode = mode;
     _isSecure = isSecure;
   }
 
-  HetimaSocketDartIo.fromSocket(Socket socket, {verbose: false, int mode: TetSocketBuilder.BUFFER_NOTIFY}) {
+  HetimaSocketDartIo.fromSocket(Socket socket, {verbose: false, TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
     _verbose = verbose;
     _socket = socket;
     _mode = mode;
@@ -56,13 +56,13 @@ class HetimaSocketDartIo extends TetSocket {
       }
 
       _socket.listen((List<int> data) {
-        log('<<<lis>>> '); //${data.length} ${UTF8.decode(data)}');
-        this.buffer.appendIntList(data, 0, data.length);
-        List<int> b = [];
-        if (_mode == TetSocketBuilder.BUFFER_NOTIFY) {
-          b = data;
+        log('<<<lis>>> ');
+        if(_mode != TetSocketMode.notifyOnly) {
+          this.buffer.appendIntList(data, 0, data.length);
         }
-        _receiveStream.add(new TetReceiveInfo(b));
+        if (_mode != TetSocketMode.bufferOnly) {
+          _receiveStream.add(new TetReceiveInfo(data));
+        }
       }, onDone: () {
         log('<<<Done>>>');
         _socket.close();

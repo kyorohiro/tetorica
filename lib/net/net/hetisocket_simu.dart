@@ -2,16 +2,16 @@ part of hetimanet;
 
 
 class HetiSocketBuilderSimu extends TetSocketBuilder {
-  TetSocket createClient({int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
+  TetSocket createClient({TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
     return null;
   }
   TetUdpSocket createUdpClient() {
     return new HetiUdpSocketSimu();
   }
-  TetSocket createSecureClient({int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
+  TetSocket createSecureClient({TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
     return null;
   }
-  Future<TetServerSocket> startServer(String address, int port, {int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
+  Future<TetServerSocket> startServer(String address, int port, {TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
     return null;
   }
   Future<List<TetNetworkInterface>> getNetworkInterfaces() {

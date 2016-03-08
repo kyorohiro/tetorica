@@ -1,15 +1,15 @@
 part of hetimanet_chrome;
 
 class HetimaSocketBuilderChrome extends TetSocketBuilder {
-  TetSocket createClient({int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
+  TetSocket createClient({TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
     return new HetimaSocketChrome.empty(mode:mode);
   }
 
-  Future<TetServerSocket> startServer(String address, int port, {int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
+  Future<TetServerSocket> startServer(String address, int port, {TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
     return HetimaServerSocketChrome.startServer(address, port, mode:mode);
   }
 
-  TetSocket createSecureClient({int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
+  TetSocket createSecureClient({TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
     return null;
   }
 

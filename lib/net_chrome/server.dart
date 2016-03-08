@@ -3,9 +3,9 @@ part of hetimanet_chrome;
 class HetimaServerSocketChrome extends TetServerSocket {
   StreamController<TetSocket> _controller = new StreamController();
   chrome.CreateInfo _mInfo = null;
-  int _mode = 0;
+  TetSocketMode _mode = TetSocketMode.bufferAndNotify;
 
-  HetimaServerSocketChrome._internal(chrome.CreateInfo info, {int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
+  HetimaServerSocketChrome._internal(chrome.CreateInfo info, {TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
     _mInfo = info;
     _mode = mode;
   }
@@ -21,7 +21,7 @@ class HetimaServerSocketChrome extends TetServerSocket {
     HetimaChromeSocketManager.getInstance().removeServer(_mInfo);
   }
 
-  static Future<TetServerSocket> startServer(String address, int port, {int mode:TetSocketBuilder.BUFFER_NOTIFY}) async {
+  static Future<TetServerSocket> startServer(String address, int port, {TetSocketMode mode:TetSocketMode.bufferAndNotify}) async {
     chrome.CreateInfo info = await chrome.sockets.tcpServer.create(new chrome.SocketProperties());
     HetimaChromeSocketManager.getInstance();
     try {

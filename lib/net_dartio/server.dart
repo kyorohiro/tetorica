@@ -6,9 +6,9 @@ class HetimaServerSocketDartIo extends TetServerSocket {
 
   ServerSocket _server = null;
   StreamController<TetSocket> _acceptStream = new StreamController.broadcast();
-  int _mode = 0;
+  TetSocketMode _mode = TetSocketMode.bufferAndNotify;
 
-  HetimaServerSocketDartIo(ServerSocket server, {verbose: false, int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
+  HetimaServerSocketDartIo(ServerSocket server, {verbose: false, TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
     _verbose = verbose;
     _server = server;
     _mode = mode;
@@ -18,7 +18,7 @@ class HetimaServerSocketDartIo extends TetServerSocket {
   }
 
   static Future<TetServerSocket> startServer(String address, int port,
-      {verbose: false,int mode:TetSocketBuilder.BUFFER_NOTIFY}) async {
+      {verbose: false,TetSocketMode mode:TetSocketMode.bufferAndNotify}) async {
     ServerSocket server = await ServerSocket.bind(address, port);
     return new HetimaServerSocketDartIo(server, verbose: verbose, mode:mode);
   }
