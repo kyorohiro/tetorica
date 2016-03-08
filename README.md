@@ -8,7 +8,7 @@ P2P framework now creating!!
 + upnp port map
 + dht table kademlia
 + chrome & dart:io socket
-+ stun client & stun server
++ stun client & stun server
 + tetorica protocol for data share
 + tetorica protocol for distribution data management.
 + tetorica protocol for authentication & certification
