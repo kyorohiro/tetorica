@@ -16,14 +16,6 @@ abstract class TetServerSocket {
   void close();
 }
 
-class HetimaServerSocketError {
-  static const ID_NONE = 0;
-  static const ID_START = 1;
-  static const REASON_NONE = 0;
-  int id = 0;
-  int reason = 0;
-}
-
 abstract class TetSocket {
   int lastUpdateTime = 0;
   heti.ArrayBuilder _buffer = new heti.ArrayBuilder();

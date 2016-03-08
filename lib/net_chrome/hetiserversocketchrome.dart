@@ -30,7 +30,7 @@ class HetimaServerSocketChrome extends TetServerSocket {
       HetimaChromeSocketManager.getInstance().addServer(info, server);
       return server;
     } catch (e) {
-      throw new HetimaServerSocketError()..id = HetimaServerSocketError.ID_START;
+      throw {};
     }
   }
 }
