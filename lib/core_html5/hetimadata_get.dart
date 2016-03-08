@@ -1,8 +1,5 @@
-library hetimacore_cl.get;
-import 'dart:async' as async;
-import 'dart:core';
-import 'dart:html' as html;
-import '../../core.dart';
+part of hetimacore_cl;
+
 
 class HetimaDataGet extends HetimaData {
 
@@ -16,12 +13,12 @@ class HetimaDataGet extends HetimaData {
     _mPath = path;
   }
 
-  async.Future<WriteResult> write(Object buffer, int start, [int length=null]) {
-    return new async.Completer<WriteResult>().future;
+  Future<WriteResult> write(Object buffer, int start, [int length=null]) {
+    return new Completer<WriteResult>().future;
   }
 
-  async.Future<html.Blob> getBlob() {
-    async.Completer<html.Blob> ret = new async.Completer();
+  Future<html.Blob> getBlob() {
+    Completer<html.Blob> ret = new Completer();
     html.HttpRequest request = new html.HttpRequest();
     request.responseType = "blob";
     request.open("GET", _mPath);
@@ -33,8 +30,8 @@ class HetimaDataGet extends HetimaData {
     return ret.future;
   }
 
-  async.Future<int> getLength() {
-    async.Completer<int> ret = new async.Completer();
+  Future<int> getLength() {
+    Completer<int> ret = new Completer();
     if (_mBlob == null) {
       getBlob().then((html.Blob b) {
           ret.complete(b.size);
@@ -45,8 +42,8 @@ class HetimaDataGet extends HetimaData {
     return ret.future;
   }
 
-  async.Future<ReadResult> read(int offset, int length, {List<int> tmp:null}){
-    async.Completer<ReadResult> ret = new async.Completer<ReadResult>();
+  Future<ReadResult> read(int offset, int length, {List<int> tmp:null}){
+    Completer<ReadResult> ret = new Completer<ReadResult>();
     if (_mBlob != null) {
         return readBase(ret, offset, length);
     } else {
@@ -57,7 +54,7 @@ class HetimaDataGet extends HetimaData {
     }
   }
 
-  async.Future<ReadResult> readBase(async.Completer<ReadResult> ret, int start, int end) {
+  Future<ReadResult> readBase(Completer<ReadResult> ret, int start, int end) {
     html.FileReader reader = new html.FileReader();
     reader.onLoad.listen((html.ProgressEvent e) {
       ret.complete(new ReadResult(reader.result));

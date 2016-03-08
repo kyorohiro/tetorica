@@ -1,9 +1,4 @@
-library hetimacore_cl.blob;
-import 'dart:async' as async;
-import 'dart:core';
-import 'dart:html' as html;
-import '../../core.dart';
-
+part of hetimacore_cl;
 
 
 class HetimaDataBlob extends HetimaData {
@@ -18,22 +13,22 @@ class HetimaDataBlob extends HetimaData {
     _mWriter = writer;
   }
 
-  async.Future<int> getLength() {
-    async.Completer<int> ret = new async.Completer();
+  Future<int> getLength() {
+    Completer<int> ret = new Completer();
     ret.complete(_mBlob.size);
     return ret.future;
   }
 
-  async.Future<WriteResult> write(Object o, int start,[int length=null]) {
+  Future<WriteResult> write(Object o, int start,[int length=null]) {
     return _mWriter.write(o, start, length);
   }
 
 
-  async.Future<ReadResult> read(int offset, int length, {List<int> tmp:null}) {
-    async.Completer<ReadResult> ret = new async.Completer<ReadResult>();
-    async.StreamSubscription a = null;
-    async.StreamSubscription b = null;
-    async.StreamSubscription c = null;
+  Future<ReadResult> read(int offset, int length, {List<int> tmp:null}) {
+    Completer<ReadResult> ret = new Completer<ReadResult>();
+    StreamSubscription a = null;
+    StreamSubscription b = null;
+    StreamSubscription c = null;
     html.FileReader reader = new html.FileReader();
     a = reader.onLoadEnd.listen((html.ProgressEvent e) {
       ret.complete(new ReadResult(reader.result));

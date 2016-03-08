@@ -1,10 +1,5 @@
-library hetimacore_cl.impl;
+part of hetimacore_cl;
 
-import 'dart:typed_data' as data;
-import 'dart:async';
-import 'dart:core';
-import 'dart:html' as html;
-import '../../core.dart';
 
 class HetimaDataFSBuilder extends HetimaDataBuilder {
   Future<HetimaData> createHetimaData(String path) async {
@@ -59,8 +54,8 @@ class HetimaDataFS extends HetimaData {
   }
 
   Future<WriteResult> write(Object buffer, int start, [int length=null]) async {
-    if (buffer is List<int> && !(buffer is data.Uint8List)) {
-      buffer = new data.Uint8List.fromList(buffer);
+    if (buffer is List<int> && !(buffer is Uint8List)) {
+      buffer = new Uint8List.fromList(buffer);
     }
 
     Completer<WriteResult> completer = new Completer();
@@ -76,8 +71,8 @@ class HetimaDataFS extends HetimaData {
     });
     int len = await getLength();
     if (len < start) {
-      data.Uint8List dummy = null;
-      dummy = new data.Uint8List.fromList(new List.filled(start - len, 0));
+      Uint8List dummy = null;
+      dummy = new Uint8List.fromList(new List.filled(start - len, 0));
       writer.seek(len);
       writer.write(new html.Blob([dummy, buffer]).slice(0, length+dummy.length));
     } else {

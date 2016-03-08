@@ -1,4 +1,11 @@
 library hetimacore_cl;
-export  'core/data/hetimadata_fs.dart';
-export  'core/data/hetimadata_blob.dart';
-export  'core/data/hetimadata_get.dart';
+
+import 'dart:async';
+import 'dart:core';
+import 'dart:html' as html;
+import 'core.dart';
+import 'dart:typed_data';
+
+part  'core_html5/hetimadata_fs.dart';
+part  'core_html5/hetimadata_blob.dart';
+part  'core_html5/hetimadata_get.dart';
