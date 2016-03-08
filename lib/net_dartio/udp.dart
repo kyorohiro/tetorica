@@ -10,10 +10,10 @@ class HetimaUdpSocketDartIo extends TetUdpSocket {
   }
 
   bool _isBindingNow = false;
-  StreamController<HetimaReceiveUdpInfo> _receiveStream = new StreamController.broadcast();
+  StreamController<TetReceiveUdpInfo> _receiveStream = new StreamController.broadcast();
 
   @override
-  Future<HetimaBindResult> bind(String address, int port, {bool multicast: false}) async {
+  Future<TetBindResult> bind(String address, int port, {bool multicast: false}) async {
     if (_isBindingNow != false) {
       throw "now binding";
     }
@@ -27,14 +27,14 @@ class HetimaUdpSocketDartIo extends TetUdpSocket {
           Datagram dg = socket.receive();
           if (dg != null) {
             log("read ${dg.address}:${dg.port} ${dg.data.length}");
-            _receiveStream.add(new HetimaReceiveUdpInfo(dg.data, dg.address.address, dg.port));
+            _receiveStream.add(new TetReceiveUdpInfo(dg.data, dg.address.address, dg.port));
           }
         }
       });
     } finally {
       _isBindingNow = false;
     }
-    return new HetimaBindResult();
+    return new TetBindResult();
   }
 
   @override
@@ -44,10 +44,10 @@ class HetimaUdpSocketDartIo extends TetUdpSocket {
   }
 
   @override
-  Stream<HetimaReceiveUdpInfo> get onReceive => _receiveStream.stream;
+  Stream<TetReceiveUdpInfo> get onReceive => _receiveStream.stream;
 
   @override
-  Future<HetimaUdpSendInfo> send(List<int> buffer, String address, int port) async {
+  Future<TetUdpSendInfo> send(List<int> buffer, String address, int port) async {
     try {
       try {
         IPConv.toRawIP(address);
@@ -63,7 +63,7 @@ class HetimaUdpSocketDartIo extends TetUdpSocket {
         address = hosts[n].address;
       }
       _udpSocket.send(buffer, new InternetAddress(address), port);
-      return await new HetimaUdpSendInfo(0);
+      return await new TetUdpSendInfo(0);
     } catch (e) {
       throw e;
     }

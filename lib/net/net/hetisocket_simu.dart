@@ -34,7 +34,7 @@ class HetiUdpSocketSimu extends TetUdpSocket {
   String get ip => _ip;
   int get port => _port;
 
-  Future<HetimaBindResult> bind(String ip, int port,{bool multicast:false}) {
+  Future<TetBindResult> bind(String ip, int port,{bool multicast:false}) {
     this._ip = ip;
     this._port = port;
     return new Future(() {
@@ -51,7 +51,7 @@ class HetiUdpSocketSimu extends TetUdpSocket {
     });
   }
 
-  Future<HetimaUdpSendInfo> send(List<int> buffer, String ip, int port) {
+  Future<TetUdpSendInfo> send(List<int> buffer, String ip, int port) {
     return new Future(() {
       if (!HetiUdpSocketSimuMane.instance.nodes.containsKey("${ip}:${port}")) {
         throw {"": "not found"};
@@ -61,11 +61,11 @@ class HetiUdpSocketSimu extends TetUdpSocket {
   }
 
   StreamController _receiveMessage = new StreamController.broadcast();
-  Stream<HetimaReceiveUdpInfo> get onReceive => _receiveMessage.stream;
+  Stream<TetReceiveUdpInfo> get onReceive => _receiveMessage.stream;
 
   Future receive(List<int> bytes, String ip, int port) {
     return new Future(() {
-      _receiveMessage.add(new HetimaReceiveUdpInfo(bytes, ip, port));
+      _receiveMessage.add(new TetReceiveUdpInfo(bytes, ip, port));
     });
   }
 }

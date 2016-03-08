@@ -91,8 +91,8 @@ class HttpClient {
       builder.appendIntList(body, 0, body.length);
     }
     //
-    socket.onReceive.listen((HetimaReceiveInfo info) {});
-    socket.send(builder.toList()).then((HetimaSendInfo info) {});
+    socket.onReceive.listen((TetReceiveInfo info) {});
+    socket.send(builder.toList()).then((TetSendInfo info) {});
 
     return handleResponse(isLoadBody:isLoadBody);
   }

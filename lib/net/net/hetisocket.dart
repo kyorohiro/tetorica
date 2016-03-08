@@ -21,10 +21,10 @@ abstract class TetSocket {
   heti.ArrayBuilder _buffer = new heti.ArrayBuilder();
   heti.ArrayBuilder get buffer => _buffer;
   Future<TetSocket> connect(String peerAddress, int peerPort) ;
-  Future<HetimaSendInfo> send(List<int> data);
-  Future<HetimaSocketInfo> getSocketInfo();
-  Stream<HetimaReceiveInfo> onReceive;
-  Stream<HetimaCloseInfo> onClose;
+  Future<TetSendInfo> send(List<int> data);
+  Future<TetSocketInfo> getSocketInfo();
+  Stream<TetReceiveInfo> onReceive;
+  Stream<TetCloseInfo> onClose;
   bool isClosed = false;
   void close() {
     _buffer.immutable = true;
@@ -46,13 +46,13 @@ abstract class TetUdpSocket {
   /// The result code returned from the underlying network call. A
   /// negative value indicates an error.
   ///
-  Future<HetimaBindResult> bind(String address, int port, {bool multicast:false});
-  Future<HetimaUdpSendInfo> send(List<int> buffer, String address, int port);
-  Stream<HetimaReceiveUdpInfo> onReceive;
+  Future<TetBindResult> bind(String address, int port, {bool multicast:false});
+  Future<TetUdpSendInfo> send(List<int> buffer, String address, int port);
+  Stream<TetReceiveUdpInfo> onReceive;
   Future<dynamic> close();
 }
 
-class HetimaBindResult {
+class TetBindResult {
 
 }
 
@@ -63,28 +63,28 @@ class TetNetworkInterface
   String name;
 }
 
-class HetimaSocketInfo {
+class TetSocketInfo {
   String peerAddress = "";
   int peerPort = 0;
   String localAddress = "";
   int localPort = 0;
 }
 
-class HetimaSendInfo {
+class TetSendInfo {
   int resultCode = 0;
-  HetimaSendInfo(int _resultCode) {
+  TetSendInfo(int _resultCode) {
     resultCode = _resultCode;
   }
 }
 
-class HetimaReceiveInfo {
+class TetReceiveInfo {
   List<int> data;
-  HetimaReceiveInfo(List<int> _data) {
+  TetReceiveInfo(List<int> _data) {
     data = _data;
   }
 }
 
-class HetimaCloseInfo {
+class TetCloseInfo {
 
 }
 
@@ -92,20 +92,20 @@ class HetimaCloseInfo {
 // print("a:"+s["remoteAddress"]);
 // print("p:"+s["remotePort"]
 //
-class HetimaReceiveUdpInfo {
+class TetReceiveUdpInfo {
   List<int> data;
   String remoteAddress;
   int remotePort;
-  HetimaReceiveUdpInfo(List<int> adata, String aremoteAddress, int aport) {
+  TetReceiveUdpInfo(List<int> adata, String aremoteAddress, int aport) {
     data = adata;
     remoteAddress = aremoteAddress;
     remotePort = aport;
   }
 }
 
-class HetimaUdpSendInfo {
+class TetUdpSendInfo {
   int resultCode = 0;
-  HetimaUdpSendInfo(int _resultCode) {
+  TetUdpSendInfo(int _resultCode) {
     resultCode = _resultCode;
   }
 }

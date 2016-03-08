@@ -91,9 +91,9 @@ class UpnpDeviceSearcher {
     }
   }
 
-  Future<HetimaBindResult> _initialize(String address) {
+  Future<TetBindResult> _initialize(String address) {
     _socket = _socketBuilder.createUdpClient();
-    _socket.onReceive.listen((HetimaReceiveUdpInfo info) {
+    _socket.onReceive.listen((TetReceiveUdpInfo info) {
       log("<udp f=onReceive>" + convert.UTF8.decode(info.data) + "</udp>");
       extractDeviceInfoFromUdpResponse(info.data);
     });

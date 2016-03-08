@@ -22,8 +22,8 @@ class HetimaSocketDartIo extends TetSocket {
   }
 
   bool _nowConnecting = false;
-  StreamController<HetimaCloseInfo> _closeStream = new StreamController.broadcast();
-  StreamController<HetimaReceiveInfo> _receiveStream = new StreamController.broadcast();
+  StreamController<TetCloseInfo> _closeStream = new StreamController.broadcast();
+  StreamController<TetReceiveInfo> _receiveStream = new StreamController.broadcast();
 
   @override
   Future<TetSocket> connect(String peerAddress, int peerPort) async {
@@ -62,15 +62,15 @@ class HetimaSocketDartIo extends TetSocket {
         if (_mode == TetSocketBuilder.BUFFER_NOTIFY) {
           b = data;
         }
-        _receiveStream.add(new HetimaReceiveInfo(b));
+        _receiveStream.add(new TetReceiveInfo(b));
       }, onDone: () {
         log('<<<Done>>>');
         _socket.close();
-        _closeStream.add(new HetimaCloseInfo());
+        _closeStream.add(new TetCloseInfo());
       }, onError: (e) {
         log('<<<Got error>>> $e');
         _socket.close();
-        _closeStream.add(new HetimaCloseInfo());
+        _closeStream.add(new TetCloseInfo());
       });
       return this;
     } finally {
@@ -79,8 +79,8 @@ class HetimaSocketDartIo extends TetSocket {
   }
 
   @override
-  Future<HetimaSocketInfo> getSocketInfo() async {
-    HetimaSocketInfo info = new HetimaSocketInfo();
+  Future<TetSocketInfo> getSocketInfo() async {
+    TetSocketInfo info = new TetSocketInfo();
     info.localAddress = _socket.address.address;
     info.localPort = _socket.port;
     info.peerAddress = _socket.remoteAddress.address;
@@ -96,15 +96,15 @@ class HetimaSocketDartIo extends TetSocket {
   }
 
   @override
-  Stream<HetimaCloseInfo> get onClose => _closeStream.stream;
+  Stream<TetCloseInfo> get onClose => _closeStream.stream;
 
   @override
-  Stream<HetimaReceiveInfo> get onReceive => _receiveStream.stream;
+  Stream<TetReceiveInfo> get onReceive => _receiveStream.stream;
 
   @override
-  Future<HetimaSendInfo> send(List<int> data) async {
+  Future<TetSendInfo> send(List<int> data) async {
     await _socket.add(data);
-    return new HetimaSendInfo(0);
+    return new TetSendInfo(0);
   }
 
   log(String message) {

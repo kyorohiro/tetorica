@@ -13,7 +13,7 @@ void main() {
       HetiUdpSocketSimu simuB = new HetiUdpSocketSimu();
       simuB.bind("127.0.0.2", 8082);
       Completer c = new Completer();
-      simuB.onReceive.listen((HetimaReceiveUdpInfo i) {
+      simuB.onReceive.listen((TetReceiveUdpInfo i) {
         unit.expect(i.remoteAddress,"127.0.0.1");
         unit.expect(i.remotePort, 8081);
         unit.expect(convert.UTF8.decode(i.data),"test");

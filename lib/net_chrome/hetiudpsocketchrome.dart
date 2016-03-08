@@ -2,10 +2,10 @@ part of hetimanet_chrome;
 
 class HetimaUdpSocketChrome extends TetUdpSocket {
   chrome.CreateInfo _info = null;
-  StreamController<HetimaReceiveUdpInfo> _receiveStream = new StreamController();
+  StreamController<TetReceiveUdpInfo> _receiveStream = new StreamController();
   HetimaUdpSocketChrome.empty() {}
 
-  Future<HetimaBindResult> bind(String address, int port, {bool multicast: false}) async {
+  Future<TetBindResult> bind(String address, int port, {bool multicast: false}) async {
     chrome.SocketProperties properties = new chrome.SocketProperties();
     chrome.CreateInfo info = _info = await chrome.sockets.udp.create(properties);
 
@@ -15,7 +15,7 @@ class HetimaUdpSocketChrome extends TetUdpSocket {
     if (v < 0) {
       throw {"resultCode": v};
     }
-    return new HetimaBindResult();
+    return new TetBindResult();
   }
 
   void onReceiveInternal(chrome.ReceiveInfo info) {
@@ -25,7 +25,7 @@ class HetimaUdpSocketChrome extends TetUdpSocket {
     js.JsObject s = info.toJs();
     String remoteAddress = s["remoteAddress"];
     int remotePort = s["remotePort"];
-    _receiveStream.add(new HetimaReceiveUdpInfo(info.data.getBytes(), remoteAddress, remotePort));
+    _receiveStream.add(new TetReceiveUdpInfo(info.data.getBytes(), remoteAddress, remotePort));
   }
 
   Future close() {
@@ -33,14 +33,14 @@ class HetimaUdpSocketChrome extends TetUdpSocket {
     return chrome.sockets.udp.close(_info.socketId);
   }
 
-  Stream<HetimaReceiveUdpInfo> get onReceive => _receiveStream.stream;
+  Stream<TetReceiveUdpInfo> get onReceive => _receiveStream.stream;
 
-  Future<HetimaUdpSendInfo> send(List<int> buffer, String address, int port) async {
+  Future<TetUdpSendInfo> send(List<int> buffer, String address, int port) async {
     chrome.SendInfo info = await chrome.sockets.udp.send(_info.socketId, new chrome.ArrayBuffer.fromBytes(buffer), address, port);
     if (info.resultCode < 0) {
       throw {"resultCode": info.resultCode};
     }
-    return new HetimaUdpSendInfo(info.resultCode);
+    return new TetUdpSendInfo(info.resultCode);
   }
 
 }

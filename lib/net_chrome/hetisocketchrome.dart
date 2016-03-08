@@ -6,8 +6,8 @@ class HetimaSocketChrome extends TetSocket {
   int get mode => _mode;
   int clientSocketId;
 
-  StreamController<HetimaReceiveInfo> _controllerReceive = new StreamController.broadcast();
-  StreamController<HetimaCloseInfo> _controllerClose = new StreamController.broadcast();
+  StreamController<TetReceiveInfo> _controllerReceive = new StreamController.broadcast();
+  StreamController<TetCloseInfo> _controllerClose = new StreamController.broadcast();
 
   HetimaSocketChrome.empty({int mode:TetSocketBuilder.BUFFER_NOTIFY}) {
     _mode = mode;
@@ -20,7 +20,7 @@ class HetimaSocketChrome extends TetSocket {
     _mode = mode;
   }
 
-  Stream<HetimaReceiveInfo> get onReceive => _controllerReceive.stream;
+  Stream<TetReceiveInfo> get onReceive => _controllerReceive.stream;
 
   void onReceiveInternal(chrome.ReceiveInfo info) {
     updateTime();
@@ -30,10 +30,10 @@ class HetimaSocketChrome extends TetSocket {
     if(_mode == TetSocketBuilder.BUFFER_NOTIFY) {
       b = info.data.getBytes();
     }
-    _controllerReceive.add(new HetimaReceiveInfo(b));
+    _controllerReceive.add(new TetReceiveInfo(b));
   }
 
-  Future<HetimaSendInfo> send(List<int> data) async {
+  Future<TetSendInfo> send(List<int> data) async {
     updateTime();
     chrome.ArrayBuffer buffer = new chrome.ArrayBuffer.fromBytes(data);
     chrome.SendInfo info = await chrome.sockets.tcp.send(clientSocketId, buffer);
@@ -41,12 +41,12 @@ class HetimaSocketChrome extends TetSocket {
     if(info.resultCode < 0) {
       throw info.resultCode;
     }
-    return new HetimaSendInfo(info.resultCode);
+    return new TetSendInfo(info.resultCode);
   }
 
-  Future<HetimaSocketInfo> getSocketInfo() async {
+  Future<TetSocketInfo> getSocketInfo() async {
     chrome.SocketInfo info = await chrome.sockets.tcp.getInfo(clientSocketId);
-    HetimaSocketInfo ret = new HetimaSocketInfo()
+    TetSocketInfo ret = new TetSocketInfo()
       ..localAddress = info.localAddress
       ..localPort = info.localPort
       ..peerAddress = info.peerAddress
@@ -73,10 +73,10 @@ class HetimaSocketChrome extends TetSocket {
     chrome.sockets.tcp.close(clientSocketId).then((d) {
       //print("##closed()");
     });
-    _controllerClose.add(new HetimaCloseInfo());
+    _controllerClose.add(new TetCloseInfo());
     HetimaChromeSocketManager.getInstance().removeClient(clientSocketId);
     _isClose = true;
   }
 
-  Stream<HetimaCloseInfo> get onClose => _controllerClose.stream;
+  Stream<TetCloseInfo> get onClose => _controllerClose.stream;
 }
