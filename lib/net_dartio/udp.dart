@@ -50,7 +50,7 @@ class HetimaUdpSocketDartIo extends HetimaUdpSocket {
   Future<HetimaUdpSendInfo> send(List<int> buffer, String address, int port) async {
     try {
       try {
-        HetiIP.toRawIP(address);
+        IPConv.toRawIP(address);
       } catch (e) {
         List<InternetAddress> hosts = await InternetAddress.lookup(address);
         if (hosts == null || hosts.length == 0) {

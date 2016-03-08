@@ -1,6 +1,6 @@
 part of hetimanet;
 
-class HetiIP {
+class IPConv {
   static List<int> toRawIP(String ip, {List<int> output}) {
     List rawIP = null;
     if (ip.contains(".")) {

@@ -26,9 +26,9 @@ class StunAddressAttribute extends StunAttribute {
     int port = core.ByteOrder.parseShort(buffer, start + 6, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
     String address = null;
     if (family == familyIPv4) {
-      address = net.HetiIP.toIPv4String(buffer, start: start + 8);
+      address = net.IPConv.toIPv4String(buffer, start: start + 8);
     } else {
-      address = net.HetiIP.toIPv6String(buffer, start: start + 8);
+      address = net.IPConv.toIPv6String(buffer, start: start + 8);
     }
     return new StunAddressAttribute(type, family, port, address);
   }
@@ -39,7 +39,7 @@ class StunAddressAttribute extends StunAttribute {
     buffer.addAll(core.ByteOrder.parseShortByte(_length(family), core.ByteOrder.BYTEORDER_BIG_ENDIAN));
     buffer.addAll(core.ByteOrder.parseShortByte(family, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
     buffer.addAll(core.ByteOrder.parseShortByte(port, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
-    buffer.addAll(net.HetiIP.toRawIP(this.address));
+    buffer.addAll(net.IPConv.toRawIP(this.address));
     return new Uint8List.fromList(buffer);
   }
 

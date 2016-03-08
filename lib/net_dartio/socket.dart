@@ -32,7 +32,7 @@ class HetimaSocketDartIo extends TetSocket {
     }
 
     try {
-      HetiIP.toRawIP(peerAddress);
+      IPConv.toRawIP(peerAddress);
     } catch (e) {
       List<InternetAddress> hosts = await InternetAddress.lookup(peerAddress);
       if (hosts == null || hosts.length == 0) {

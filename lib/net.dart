@@ -9,5 +9,5 @@ import 'net/tmp/rfctable.dart';
 
 part 'net/net/hetisocket.dart';
 part 'net/net/hetisocket_simu.dart';
-part 'net/util/hetiip.dart';
+part 'net/util/ipconv.dart';
 part 'net/util/httpurl.dart';
