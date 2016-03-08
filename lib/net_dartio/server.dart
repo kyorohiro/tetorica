@@ -1,6 +1,6 @@
 part of hetimanet_dartio;
 
-class HetimaServerSocketDartIo extends TetServerSocket {
+class TetServerSocketDartIo extends TetServerSocket {
   bool _verbose = false;
   bool get verbose => _verbose;
 
@@ -8,19 +8,19 @@ class HetimaServerSocketDartIo extends TetServerSocket {
   StreamController<TetSocket> _acceptStream = new StreamController.broadcast();
   TetSocketMode _mode = TetSocketMode.bufferAndNotify;
 
-  HetimaServerSocketDartIo(ServerSocket server, {verbose: false, TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
+  TetServerSocketDartIo(ServerSocket server, {verbose: false, TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
     _verbose = verbose;
     _server = server;
     _mode = mode;
     _server.listen((Socket socket) {
-      _acceptStream.add(new HetimaSocketDartIo.fromSocket(socket, verbose: _verbose, mode:mode));
+      _acceptStream.add(new TetSocketDartIo.fromSocket(socket, verbose: _verbose, mode:mode));
     });
   }
 
   static Future<TetServerSocket> startServer(String address, int port,
       {verbose: false,TetSocketMode mode:TetSocketMode.bufferAndNotify}) async {
     ServerSocket server = await ServerSocket.bind(address, port);
-    return new HetimaServerSocketDartIo(server, verbose: verbose, mode:mode);
+    return new TetServerSocketDartIo(server, verbose: verbose, mode:mode);
   }
 
   @override

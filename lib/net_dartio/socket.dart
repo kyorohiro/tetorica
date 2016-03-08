@@ -1,6 +1,6 @@
 part of hetimanet_dartio;
 
-class HetimaSocketDartIo extends TetSocket {
+class TetSocketDartIo extends TetSocket {
   static Random _random = new Random(new DateTime.now().millisecond);
   bool _verbose = false;
   bool get verbose => _verbose;
@@ -9,13 +9,13 @@ class HetimaSocketDartIo extends TetSocket {
   bool _isSecure = false;
   bool get isSecure => _isSecure;
 
-  HetimaSocketDartIo({verbose: false, TetSocketMode mode:TetSocketMode.bufferAndNotify, bool isSecure: false}) {
+  TetSocketDartIo({verbose: false, TetSocketMode mode:TetSocketMode.bufferAndNotify, bool isSecure: false}) {
     _verbose = verbose;
     _mode = mode;
     _isSecure = isSecure;
   }
 
-  HetimaSocketDartIo.fromSocket(Socket socket, {verbose: false, TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
+  TetSocketDartIo.fromSocket(Socket socket, {verbose: false, TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
     _verbose = verbose;
     _socket = socket;
     _mode = mode;

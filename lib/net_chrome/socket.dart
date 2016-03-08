@@ -1,6 +1,6 @@
 part of hetimanet_chrome;
 
-class HetimaSocketChrome extends TetSocket {
+class TetSocketChrome extends TetSocket {
   bool _isClose = false;
   TetSocketMode _mode = TetSocketMode.bufferAndNotify;
   TetSocketMode get mode => _mode;
@@ -9,12 +9,12 @@ class HetimaSocketChrome extends TetSocket {
   StreamController<TetReceiveInfo> _controllerReceive = new StreamController.broadcast();
   StreamController<TetCloseInfo> _controllerClose = new StreamController.broadcast();
 
-  HetimaSocketChrome.empty({TetSocketMode mode: TetSocketMode.bufferAndNotify}) {
+  TetSocketChrome.empty({TetSocketMode mode: TetSocketMode.bufferAndNotify}) {
     _mode = mode;
   }
 
-  HetimaSocketChrome(int _clientSocketId, {TetSocketMode mode: TetSocketMode.bufferAndNotify}) {
-    HetimaChromeSocketManager.getInstance().addClient(_clientSocketId, this);
+  TetSocketChrome(int _clientSocketId, {TetSocketMode mode: TetSocketMode.bufferAndNotify}) {
+    TetChromeSocketManager.getInstance().addClient(_clientSocketId, this);
     chrome.sockets.tcp.setPaused(_clientSocketId, false);
     clientSocketId = _clientSocketId;
     _mode = mode;
@@ -60,7 +60,7 @@ class HetimaSocketChrome extends TetSocket {
     await chrome.sockets.tcp.connect(info.socketId, peerAddress, peerPort);
     chrome.sockets.tcp.setPaused(info.socketId, false);
     clientSocketId = info.socketId;
-    HetimaChromeSocketManager.getInstance().addClient(info.socketId, this);
+    TetChromeSocketManager.getInstance().addClient(info.socketId, this);
     return this;
   }
 
@@ -74,7 +74,7 @@ class HetimaSocketChrome extends TetSocket {
       //print("##closed()");
     });
     _controllerClose.add(new TetCloseInfo());
-    HetimaChromeSocketManager.getInstance().removeClient(clientSocketId);
+    TetChromeSocketManager.getInstance().removeClient(clientSocketId);
     _isClose = true;
   }
 

@@ -9,19 +9,19 @@ class TetSocketBuilderDartIO extends TetSocketBuilder {
   }
 
   TetSocket createClient({TetSocketMode mode:TetSocketMode.bufferAndNotify, isSecure: false}) {
-    return new HetimaSocketDartIo(verbose: _verbose,mode:mode);
+    return new TetSocketDartIo(verbose: _verbose,mode:mode);
   }
 
   TetSocket createSecureClient({TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
-    return new HetimaSocketDartIo(verbose: _verbose,mode:mode, isSecure: true);
+    return new TetSocketDartIo(verbose: _verbose,mode:mode, isSecure: true);
   }
 
   Future<TetServerSocket> startServer(String address, int port, {TetSocketMode mode:TetSocketMode.bufferAndNotify}) async {
-    return HetimaServerSocketDartIo.startServer(address, port, verbose: _verbose, mode:mode);
+    return TetServerSocketDartIo.startServer(address, port, verbose: _verbose, mode:mode);
   }
 
   TetUdpSocket createUdpClient() {
-    return new HetimaUdpSocketDartIo(verbose: _verbose);
+    return new TetUdpSocketDartIo(verbose: _verbose);
   }
 
   Future<List<TetNetworkInterface>> getNetworkInterfaces() async {

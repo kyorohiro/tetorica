@@ -1,12 +1,12 @@
 part of hetimanet_chrome;
 
-class HetimaSocketBuilderChrome extends TetSocketBuilder {
+class TetSocketBuilderChrome extends TetSocketBuilder {
   TetSocket createClient({TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
-    return new HetimaSocketChrome.empty(mode:mode);
+    return new TetSocketChrome.empty(mode:mode);
   }
 
   Future<TetServerSocket> startServer(String address, int port, {TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
-    return HetimaServerSocketChrome.startServer(address, port, mode:mode);
+    return TetServerSocketChrome.startServer(address, port, mode:mode);
   }
 
   TetSocket createSecureClient({TetSocketMode mode:TetSocketMode.bufferAndNotify}) {
@@ -14,7 +14,7 @@ class HetimaSocketBuilderChrome extends TetSocketBuilder {
   }
 
   TetUdpSocket createUdpClient() {
-    return new HetimaUdpSocketChrome.empty();
+    return new TetUdpSocketChrome.empty();
   }
 
   Future<List<TetNetworkInterface>> getNetworkInterfaces() async {
@@ -31,27 +31,27 @@ class HetimaSocketBuilderChrome extends TetSocketBuilder {
   }
 }
 
-class HetimaChromeSocketManager {
+class TetChromeSocketManager {
   Map<int, TetServerSocket> _serverList = new Map();
   Map<int, TetSocket> _clientList = new Map();
   Map<int, TetUdpSocket> _udpList = new Map();
-  static final HetimaChromeSocketManager _instance = new HetimaChromeSocketManager._internal();
-  factory HetimaChromeSocketManager() {
+  static final TetChromeSocketManager _instance = new TetChromeSocketManager._internal();
+  factory TetChromeSocketManager() {
     return _instance;
   }
 
-  HetimaChromeSocketManager._internal() {
+  TetChromeSocketManager._internal() {
     manageServerSocket();
   }
 
-  static HetimaChromeSocketManager getInstance() {
+  static TetChromeSocketManager getInstance() {
     return _instance;
   }
 
   void manageServerSocket() {
     chrome.sockets.tcpServer.onAccept.listen((chrome.AcceptInfo info) {
       //print("--accept ok " + info.socketId.toString() + "," + info.clientSocketId.toString());
-      HetimaServerSocketChrome server = _serverList[info.socketId];
+      TetServerSocketChrome server = _serverList[info.socketId];
       if (server != null) {
         server.onAcceptInternal(info);
       }
@@ -64,14 +64,14 @@ class HetimaChromeSocketManager {
     bool closeChecking = false;
     chrome.sockets.tcp.onReceive.listen((chrome.ReceiveInfo info) {
       // core.print("--receive " + info.socketId.toString() + "," + info.data.getBytes().length.toString());
-      HetimaSocketChrome socket = _clientList[info.socketId];
+      TetSocketChrome socket = _clientList[info.socketId];
       if (socket != null) {
         socket.onReceiveInternal(info);
       }
     });
     chrome.sockets.tcp.onReceiveError.listen((chrome.ReceiveErrorInfo info) {
       //print("--receive error " + info.socketId.toString() + "," + info.resultCode.toString());
-      HetimaSocketChrome socket = _clientList[info.socketId];
+      TetSocketChrome socket = _clientList[info.socketId];
       if (socket != null) {
         closeChecking = true;
         socket.close();
@@ -79,7 +79,7 @@ class HetimaChromeSocketManager {
     });
 
     chrome.sockets.udp.onReceive.listen((chrome.ReceiveInfo info) {
-      HetimaUdpSocketChrome socket = _udpList[info.socketId];
+      TetUdpSocketChrome socket = _udpList[info.socketId];
       if (socket != null) {
         socket.onReceiveInternal(info);
       }
@@ -89,7 +89,7 @@ class HetimaChromeSocketManager {
     });
   }
 
-  void addServer(chrome.CreateInfo info, HetimaServerSocketChrome socket) {
+  void addServer(chrome.CreateInfo info, TetServerSocketChrome socket) {
     _serverList[info.socketId] = socket;
   }
 
@@ -97,7 +97,7 @@ class HetimaChromeSocketManager {
     _serverList.remove(info.socketId);
   }
 
-  void addClient(int socketId, HetimaSocketChrome socket) {
+  void addClient(int socketId, TetSocketChrome socket) {
     _clientList[socketId] = socket;
   }
 

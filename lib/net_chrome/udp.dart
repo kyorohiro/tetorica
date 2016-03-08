@@ -1,15 +1,15 @@
 part of hetimanet_chrome;
 
-class HetimaUdpSocketChrome extends TetUdpSocket {
+class TetUdpSocketChrome extends TetUdpSocket {
   chrome.CreateInfo _info = null;
   StreamController<TetReceiveUdpInfo> _receiveStream = new StreamController();
-  HetimaUdpSocketChrome.empty() {}
+  TetUdpSocketChrome.empty() {}
 
   Future<TetBindResult> bind(String address, int port, {bool multicast: false}) async {
     chrome.SocketProperties properties = new chrome.SocketProperties();
     chrome.CreateInfo info = _info = await chrome.sockets.udp.create(properties);
 
-    HetimaChromeSocketManager.getInstance().addUdp(info.socketId, this);
+    TetChromeSocketManager.getInstance().addUdp(info.socketId, this);
     await chrome.sockets.udp.setMulticastLoopbackMode(_info.socketId, multicast);
     int v = await chrome.sockets.udp.bind(_info.socketId, address, port);
     if (v < 0) {
@@ -29,7 +29,7 @@ class HetimaUdpSocketChrome extends TetUdpSocket {
   }
 
   Future close() {
-    HetimaChromeSocketManager.getInstance().removeUdp(_info.socketId);
+    TetChromeSocketManager.getInstance().removeUdp(_info.socketId);
     return chrome.sockets.udp.close(_info.socketId);
   }
 
@@ -42,5 +42,4 @@ class HetimaUdpSocketChrome extends TetUdpSocket {
     }
     return new TetUdpSendInfo(info.resultCode);
   }
-
 }
