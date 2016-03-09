@@ -38,6 +38,14 @@ class StunClientSendHeaderResult {
   StunClientSendHeaderResult(this.remoteAddress, this.remotePort, this.header) {}
 }
 
+enum StunNatType {
+  openInternet,
+  blockUdp,
+  symmetricUdp,
+  fullConeNat,
+  symmetricNat,
+  restrictedConeNat
+}
 // https://tools.ietf.org/html/rfc3489
 // 9 Client Behavior
 class StunClient {
@@ -46,6 +54,7 @@ class StunClient {
   int port;
   String stunServer;
   int stunServerPort;
+  Duration _defaultTimeout = new Duration(seconds: 2);
 
   Map<StunTransactionID, Completer<StunClientSendHeaderResult>> cash = {};
   net.TetUdpSocket _udp = null;
@@ -73,7 +82,10 @@ class StunClient {
     });
   }
 
-  Duration _defaultTimeout = new Duration(seconds: 5);
+  Future test() {
+
+  }
+
   Future<StunClientSendHeaderResult> sendHeader(StunHeader header, {Duration timeout}) async {
     if (timeout == null) {
       timeout = _defaultTimeout;
@@ -95,7 +107,6 @@ class StunClient {
   //  CHANGE-REQUEST attribute, and without the RESPONSE-ADDRESS attribute.
   //  This causes the server to send the response back to the address and
   //  port that the request came from.
-  //
   Future<bool> test001() async {
     StunHeader header = new StunHeader(StunHeader.bindingRequest);
     header.attributes.add(new StunChangeRequestAttribute(false, false));
@@ -106,9 +117,6 @@ class StunClient {
     // StunAddressAttribute sourceAddress = response.header.getAttribute([StunAttribute.sourceAddress]);
     StunErrorCodeAttribute errorCode = response.header.getAttribute([StunAttribute.errorCode]);
 
-    // TODO
-    // If the response is a Binding Error Response, the client checks the
-    // response code from the ERROR-CODE attribute of the response.
     if (errorCode != null) {
       print("# error 01 # ${response}");
       return false;
@@ -125,62 +133,62 @@ class StunClient {
     return true;
   }
 
+  //
+  // In test II, the client sends a
+  // Binding Request with both the "change IP" and "change port" flags
+  // from the CHANGE-REQUEST attribute set.
   Future test002() async {
-    ;
+    StunHeader header = new StunHeader(StunHeader.bindingRequest);
+    header.attributes.add(new StunChangeRequestAttribute(true, true));
+
+    StunClientSendHeaderResult response = await sendHeader(header);
+    StunAddressAttribute mappedAddress = response.header.getAttribute([StunAttribute.mappedAddress]);
+    // StunAddressAttribute changedAddress = response.header.getAttribute([StunAttribute.changedAddress]);
+    // StunAddressAttribute sourceAddress = response.header.getAttribute([StunAttribute.sourceAddress]);
+    StunErrorCodeAttribute errorCode = response.header.getAttribute([StunAttribute.errorCode]);
+
+    if (errorCode != null) {
+      print("# error 01 # ${response}");
+      return false;
+    }
+
+    // The RESPONSE-ADDRESS attribute is optional in the Binding Request.
+    if (mappedAddress == null) {
+      // || changedAddress == null) {
+      print("# error 02 # ${response}");
+      return false;
+    }
+
+    print("# ok 03 # ${response.header} ${response.remoteAddress} ${response.remotePort}");
+    return true;
   }
 
+  //
+  // In test III, the client sends
+  // a Binding Request with only the "change port" flag set.
   Future test003() async {
-    ;
+    StunHeader header = new StunHeader(StunHeader.bindingRequest);
+    header.attributes.add(new StunChangeRequestAttribute(false, true));
+
+    StunClientSendHeaderResult response = await sendHeader(header);
+    StunAddressAttribute mappedAddress = response.header.getAttribute([StunAttribute.mappedAddress]);
+    // StunAddressAttribute changedAddress = response.header.getAttribute([StunAttribute.changedAddress]);
+    // StunAddressAttribute sourceAddress = response.header.getAttribute([StunAttribute.sourceAddress]);
+    StunErrorCodeAttribute errorCode = response.header.getAttribute([StunAttribute.errorCode]);
+
+    if (errorCode != null) {
+      print("# error 01 # ${response}");
+      return false;
+    }
+
+    // The RESPONSE-ADDRESS attribute is optional in the Binding Request.
+    if (mappedAddress == null) {
+      // || changedAddress == null) {
+      print("# error 02 # ${response}");
+      return false;
+    }
+
+    print("# ok 03 # ${response.header} ${response.remoteAddress} ${response.remotePort}");
+    return true;
   }
 }
-
-/*
-
-
-
-
-
-class StunMappedAddress {
-  var zeros; //1byte
-  var family; // 0x01:ipv4 0x02:ipv6
-  var port; //
-  var address; //4byte or 8byte
-}
-
-//class StunUserName {}
-
-class StunMessageIntegrity {}
-
-class StunFingerPrint {}
-
-//class StunErrorCode {}
-
-class StunXorMappedAddress {
-  var xxxx; //1byte
-  var family; //
-  var xPort; //
-  var xAddress;
-}
-
-class StunMessage {
-  // 20 byte header
-  var zeroes; // message first 2bits be zero
-  var messageType; // 2
-  var messagelength; // 2
-  var magicCookie; // 4 byte magic value
-  var transactionId; // 96bit uniformaly value 12 byte
-
-  // 2type request / response and 4 message
-  //
-  // M0-M11 and C0-C1
-  var resuest = [0x0b, 0x00];
-  var indication = [0x0b, 0x01];
-  var successResponse = [0x0b, 0x10];
-  var errorResponse = [0x0b, 0x11];
-  //
-  var exBindingRequest = [0x0b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01];
-  //
-  var coolieFixedValue = [0x21, 0x12, 0xA4, 0x42]; //network byte order (big)127.0.0.1-->  0x7f000001;
-
-}
-*/
