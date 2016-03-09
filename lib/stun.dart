@@ -92,13 +92,15 @@ class StunClient {
   }
 
   Future<StunNatType> testBasic() async {
-    StunClientSendHeaderResult result = null;
+    StunClientSendHeaderResult test1Result = null;
     try {
-      await test001();
-      result.passed();
+      test1Result = await test001();
+      test1Result.passed();
     } catch (e) {
       return StunNatType.blockUdp;
     }
+
+    
     return StunNatType.openInternet;
   }
 
