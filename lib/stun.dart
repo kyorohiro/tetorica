@@ -42,7 +42,7 @@ class StunClientSendHeaderResult {
   }
 }
 
-enum StunNatType { openInternet, blockUdp, symmetricUdp, fullConeNat, symmetricNat, restrictedConeNat, stunServerThrowError }
+enum StunNatType { openInternet, blockUdp, symmetricUdp, fullConeNat, symmetricNat, restricted, portRestricted, stunServerThrowError }
 
 // https://tools.ietf.org/html/rfc3489
 // 9 Client Behavior
@@ -94,6 +94,7 @@ class StunClient {
   Future<StunNatType> testBasic(List<net.IPAddr> ipList) async {
     StunClientSendHeaderResult test1Result = null;
     StunClientSendHeaderResult test2Result = null;
+    StunClientSendHeaderResult test3Result = null;
     try {
       test1Result = await test001();
       if (false == test1Result.passed()) {
@@ -110,6 +111,20 @@ class StunClient {
           return StunNatType.openInternet;
         } else {
           return StunNatType.fullConeNat;
+        }
+      }
+    } catch (e) {}
+
+
+// todo
+// retest1
+    try {
+      test3Result = await test003();
+      if (test3Result.passed()) {
+        if (ipList.contains(new net.IPAddr.fromString(test1Result.remoteAddress))) {
+          return StunNatType.restricted;
+        } else {
+          return StunNatType.portRestricted;
         }
       }
     } catch (e) {}
