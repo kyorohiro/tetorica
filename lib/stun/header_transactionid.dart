@@ -20,4 +20,17 @@ class StunTransactionID {
     }
     return ret;
   }
+
+  @override
+  String toString() {
+    StringBuffer b = new StringBuffer();
+    for(int i in value) {
+      String t = i.toRadixString(16);
+      b.write(t);
+      if(t.length == 1) {
+        b.write("0");
+      }
+    }
+    return b.toString();
+  }
 }

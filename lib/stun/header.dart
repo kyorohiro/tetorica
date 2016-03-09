@@ -19,6 +19,14 @@ class StunHeader {
     }
   }
 
+  @override
+  String toString() {
+    Map t = {};
+    t["type"] = toStringFromType(type);
+    t["transactionID"] = transactionID.toString();
+    return "${t}";
+  }
+
   // header bytes length is +20
   int get messageLength {
     int ret = 0;
@@ -46,8 +54,27 @@ class StunHeader {
     StunHeader header = new StunHeader(type);
 
     int length = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrderType.BigEndian);
-    header.transactionID = StunTransactionID.decode(buffer, start+4);
-    header.attributes.addAll(StunAttribute.decode(buffer,start:(start+20),end:(start+20+length)));
+    header.transactionID = StunTransactionID.decode(buffer, start + 4);
+    header.attributes.addAll(StunAttribute.decode(buffer, start: (start + 20), end: (start + 20 + length)));
     return header;
+  }
+
+  static String toStringFromType(int type) {
+    switch (type) {
+      case bindingRequest:
+        return "bindingRequest (${type})";
+      case bindingResponse:
+        return "bindingResponse (${type})";
+      case bindingErrorResponse:
+        return "bindingErrorResponse (${type})";
+      case sharedSecretRequest:
+        return "sharedSecretRequest (${type})";
+      case sharedSecretResponse:
+        return "sharedSecretResponse (${type})";
+      case sharedSecretErrorResponse:
+        return "sharedSecretErrorResponse (${type})";
+      default:
+        return "none (${type})";
+    }
   }
 }
