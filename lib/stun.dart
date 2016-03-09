@@ -3,6 +3,8 @@ library hetimanet_stun;
 import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:convert' as conv;
+import 'dart:async';
+
 import 'core.dart' as core;
 import 'net.dart' as net;
 
@@ -29,10 +31,41 @@ class TurnClient {}
 //Port Restricted Cone
 //Symmetric
 
-class StunClient {}
+class StunClient {
+  net.TetSocketBuilder builder;
+  String address;
+  int port;
+  String stunServer;
+  int stunServerPort;
 
+  StunClient(this.builder, this.stunServer, this.stunServerPort, {this.address: "0.0.0.0", this.port: 0}) {
+    ;
+  }
 
+  Future test001() async {
+    net.TetUdpSocket udp = builder.createUdpClient();
+    await udp.bind(address, port);
+    udp.onReceive.listen((net.TetReceiveUdpInfo info) {
+      print("## --------- receive packet ##");
+      print("## ${info.data}");
+      print("## ${info.remoteAddress}");
+      print("## ${info.remotePort}");
+      print("## --------- ##");
+    });
+    StunMessageHeader header = new StunMessageHeader(StunMessageHeader.bindingRequest);
+    header.attributes.add(new StunChangeRequest(false, false));
+    udp.send(header.encode(), stunServer, stunServerPort);
+    //udp.send(header.encode(), "0.0.0.0", 8081);
+  }
 
+  Future test002() async {
+    ;
+  }
+
+  Future test003() async {
+    ;
+  }
+}
 
 /*
 
