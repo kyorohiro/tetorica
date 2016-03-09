@@ -19,13 +19,22 @@ class StunHeader {
     }
   }
 
+  StunAttribute getAttribute(List<int> types) {
+    for (StunAttribute a in attributes) {
+      if (types.contains(a.type)) {
+        return a;
+      }
+    }
+    return null;
+  }
+
   @override
   String toString() {
     Map t = {};
     t["type"] = toStringFromType(type);
     t["transactionID"] = transactionID.toString();
     List attr = [];
-    for(StunAttribute a in attributes) {
+    for (StunAttribute a in attributes) {
       attr.add(a.toString());
     }
     t["attributes"] = attr;
