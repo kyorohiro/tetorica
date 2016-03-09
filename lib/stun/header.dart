@@ -28,6 +28,24 @@ class StunHeader {
     return null;
   }
 
+  int errorCode() {
+    StunErrorCodeAttribute errorCode = getAttribute([StunAttribute.errorCode]);
+    if (errorCode == null) {
+      return 0;
+    } else {
+      return errorCode.code;
+    }
+  }
+
+  String errorMessage() {
+    StunErrorCodeAttribute errorCode = getAttribute([StunAttribute.errorCode]);
+    if (errorCode == null) {
+      return "";
+    } else {
+      return errorCode.pharse;
+    }
+  }
+
   @override
   String toString() {
     Map t = {};

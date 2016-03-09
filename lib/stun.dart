@@ -46,6 +46,7 @@ enum StunNatType {
   symmetricNat,
   restrictedConeNat
 }
+
 // https://tools.ietf.org/html/rfc3489
 // 9 Client Behavior
 class StunClient {
@@ -64,6 +65,10 @@ class StunClient {
   }
 
   Future prepare() async {
+    if(_udp != null) {
+      return;
+    }
+
     net.TetUdpSocket u = builder.createUdpClient();
     await u.bind(address, port);
     _udp = u;
@@ -82,8 +87,14 @@ class StunClient {
     });
   }
 
-  Future test() {
+  Future close() async {
+    if(_udp != null) {
+      _udp.close();
+      _udp = null;
+    }
+  }
 
+  Future<StunNatType> testBasic() async {
   }
 
   Future<StunClientSendHeaderResult> sendHeader(StunHeader header, {Duration timeout}) async {
