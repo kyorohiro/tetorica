@@ -42,9 +42,7 @@ class StunClientSendHeaderResult {
   }
 }
 
-enum StunNatType {
-  openInternet, blockUdp, symmetricUdp, fullConeNat, symmetricNat, restrictedConeNat,
-  stunServerThrowError}
+enum StunNatType { openInternet, blockUdp, symmetricUdp, fullConeNat, symmetricNat, restrictedConeNat, stunServerThrowError }
 
 // https://tools.ietf.org/html/rfc3489
 // 9 Client Behavior
@@ -93,12 +91,12 @@ class StunClient {
     }
   }
 
-  Future<StunNatType> testBasic() async {
+  Future<StunNatType> testBasic(List<net.IPAddr> ipList) async {
     StunClientSendHeaderResult test1Result = null;
     StunClientSendHeaderResult test2Result = null;
     try {
       test1Result = await test001();
-      if(false == test1Result.passed()) {
+      if (false == test1Result.passed()) {
         return StunNatType.stunServerThrowError;
       }
     } catch (e) {
@@ -107,9 +105,12 @@ class StunClient {
 
     try {
       test2Result = await test002();
-      if(test2Result.passed()) {
-      } else {
-
+      if (test2Result.passed()) {
+        if (ipList.contains(new net.IPAddr.fromString(test1Result.remoteAddress))) {
+          return StunNatType.openInternet;
+        } else {
+          return StunNatType.fullConeNat;
+        }
       }
     } catch (e) {
       return StunNatType.blockUdp;
@@ -154,7 +155,6 @@ class StunClient {
     header.attributes.add(new StunChangeRequestAttribute(true, true));
     return await sendHeader(header);
   }
-
 
   //
   // In test III, the client sends

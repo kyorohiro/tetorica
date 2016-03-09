@@ -28,6 +28,24 @@ class StunHeader {
     return null;
   }
 
+  String mappedAddress() {
+    StunAddressAttribute mappedAddress = getAttribute([StunAttribute.mappedAddress]);
+    if (errorCode == null) {
+      return "";
+    } else {
+      return mappedAddress.address;
+    }
+  }
+
+  int mappedPort() {
+    StunAddressAttribute mappedAddress = getAttribute([StunAttribute.mappedAddress]);
+    if (errorCode == null) {
+      return 0;
+    } else {
+      return mappedAddress.port;
+    }
+  }
+
   bool haveError() {
     StunErrorCodeAttribute errorCode = getAttribute([StunAttribute.errorCode]);
     return (errorCode != null);
