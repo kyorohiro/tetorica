@@ -24,6 +24,12 @@ class StunHeader {
     Map t = {};
     t["type"] = toStringFromType(type);
     t["transactionID"] = transactionID.toString();
+    List attr = [];
+    for(StunAttribute a in attributes) {
+      attr.add(a.toString());
+    }
+    t["attributes"] = attr;
+
     return "${t}";
   }
 

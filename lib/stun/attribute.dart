@@ -15,6 +15,34 @@ abstract class StunAttribute {
   int get type; //2byte
   int get length; //2byte
   Uint8List encode();
+  static String toStringFromType(int type) {
+    switch (type) {
+      case mappedAddress:
+        return "mappedAddress (${type})";
+      case responseAddress:
+        return "responseAddress (${type})";
+      case changeRequest:
+        return "changeRequest (${type})";
+      case sourceAddress:
+        return "sourceAddress (${type})";
+      case changedAddress:
+        return "changedAddress (${type})";
+      case userName:
+        return "userName (${type})";
+      case password:
+        return "password (${type})";
+      case messageIntegrity:
+        return "messageIntegrity (${type})";
+      case errorCode:
+        return "errorCode (${type})";
+      case unknownAttribute:
+        return "unknownAttribute (${type})";
+      case reflectedFrom:
+        return "reflectedFrom (${type})";
+      default:
+        return "none (${type})";
+    }
+  }
 
   static List<StunAttribute> decode(List<int> buffer, {int start: 0, int end: null}) {
     if (end == null) {

@@ -20,6 +20,16 @@ class StunErrorCodeAttribute extends StunAttribute {
     type = StunAttribute.errorCode;
   }
 
+  @override
+  String toString() {
+    Map t = {};
+    t["type"] = StunAttribute.toStringFromType(type);
+    t["length"] = length;
+    t["code"] = code;
+    t["pharse"] = pharse;
+    return "${t}";
+  }
+
   Uint8List encode() {
     List<int> buffer = [];
     List<int> pharseBytes = conv.UTF8.encode(pharse);

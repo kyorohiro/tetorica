@@ -6,6 +6,16 @@ class StunChangeRequestAttribute extends StunAttribute {
   bool changeIP;
   bool changePort;
 
+  @override
+  String toString() {
+    Map t = {};
+    t["type"] = StunAttribute.toStringFromType(type);
+    t["length"] = length;
+    t["changeIP"] = changeIP;
+    t["changePort"] = changePort;
+    return "${t}";
+  }
+
   Uint8List encode() {
     List<int> buffer = [];
     buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrderType.BigEndian));

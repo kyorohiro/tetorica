@@ -9,6 +9,15 @@ class StunBasicAttribute extends StunAttribute {
     value.addAll(v);
   }
 
+  @override
+  String toString() {
+    Map t = {};
+    t["type"] = StunAttribute.toStringFromType(type);
+    t["length"] = length;
+    t["value"] = value.toString();
+    return "${t}";
+  }
+
   Uint8List encode() {
     List<int> buffer = [];
     buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrderType.BigEndian));

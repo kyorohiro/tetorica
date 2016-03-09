@@ -13,6 +13,17 @@ class StunAddressAttribute extends StunAttribute {
 
   StunAddressAttribute(this.type, this.family, this.port, this.address) {}
 
+  @override
+  String toString() {
+    Map t = {};
+    t["type"] = StunAttribute.toStringFromType(type);
+    t["length"] = length;
+    t["family"] = family;
+    t["port"] = port;
+    t["address"] = address;
+    return "${t}";
+  }
+
   static StunAddressAttribute decode(List<int> buffer, int start, {List<int> expectType: const [StunAttribute.mappedAddress, StunAttribute.responseAddress, StunAttribute.changedAddress, StunAttribute.sourceAddress, StunAttribute.reflectedFrom]}) {
     int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrderType.BigEndian);
     if (false == expectType.contains(type)) {
