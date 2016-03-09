@@ -1,6 +1,6 @@
 part of hetimanet_stun;
 
-class StunErrorCode extends StunAttribute {
+class StunErrorCodeAttribute extends StunAttribute {
   static const int code400BadRequest = 400;
   static const int code401Unauthorized = 401;
   static const int code420UnknownAttribute = 420;
@@ -16,7 +16,7 @@ class StunErrorCode extends StunAttribute {
 
   int code;
   String pharse;
-  StunErrorCode(this.code, this.pharse) {
+  StunErrorCodeAttribute(this.code, this.pharse) {
     type = StunAttribute.errorCode;
   }
 
@@ -33,7 +33,7 @@ class StunErrorCode extends StunAttribute {
     return new Uint8List.fromList(buffer);
   }
 
-  static StunErrorCode decode(List<int> buffer, int start) {
+  static StunErrorCodeAttribute decode(List<int> buffer, int start) {
     int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrderType.BigEndian);
     if (type != StunAttribute.errorCode) {
       throw {"mes": ""};
@@ -44,7 +44,7 @@ class StunErrorCode extends StunAttribute {
     int nzzber = v & 0xff;
     String pharse = conv.UTF8.decode(buffer.sublist(start + 8, start + 8 + tlength - 4), allowMalformed: true);
 
-    return new StunErrorCode(clazz * 100 + nzzber, pharse);
+    return new StunErrorCodeAttribute(clazz * 100 + nzzber, pharse);
   }
 
   int get hashCode {
@@ -55,10 +55,10 @@ class StunErrorCode extends StunAttribute {
   }
 
   bool operator ==(o) {
-    if (o == null || false == (o is StunErrorCode)) {
+    if (o == null || false == (o is StunErrorCodeAttribute)) {
       return false;
     }
-    StunErrorCode p = o;
+    StunErrorCodeAttribute p = o;
     return (type == p.type && code == p.code && pharse == p.pharse);
   }
 }

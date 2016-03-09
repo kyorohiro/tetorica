@@ -34,17 +34,17 @@ abstract class StunAttribute {
           a = StunAddressAttribute.decode(buffer, start);
           break;
         case StunAttribute.changeRequest:
-          a = StunChangeRequest.decode(buffer, start);
+          a = StunChangeRequestAttribute.decode(buffer, start);
           break;
         case StunAttribute.errorCode:
-          a = StunErrorCode.decode(buffer, start);
+          a = StunErrorCodeAttribute.decode(buffer, start);
           break;
         case StunAttribute.userName:
         case StunAttribute.password:
         case StunAttribute.userName:
         case StunAttribute.messageIntegrity:
         default:
-          a = StunBasicMessage.decode(buffer, start);
+          a = StunBasicAttribute.decode(buffer, start);
           break;
       }
       start += a.length + 4;

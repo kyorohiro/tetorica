@@ -1,11 +1,11 @@
 part of hetimanet_stun;
 
-class StunBasicMessage extends StunAttribute {
+class StunBasicAttribute extends StunAttribute {
   int type; //2byte
   int get length => value.length; //32bit 4byte
   List<int> value = [];
 
-  StunBasicMessage(this.type, List<int> v) {
+  StunBasicAttribute(this.type, List<int> v) {
     value.addAll(v);
   }
 
@@ -17,7 +17,7 @@ class StunBasicMessage extends StunAttribute {
     return new Uint8List.fromList(buffer);
   }
 
-  static StunBasicMessage decode(List<int> buffer, int start) {
+  static StunBasicAttribute decode(List<int> buffer, int start) {
     int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrderType.BigEndian);
     int tlength = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrderType.BigEndian);
 
@@ -32,7 +32,7 @@ class StunBasicMessage extends StunAttribute {
       }
     }
 
-    return new StunBasicMessage(type, buffer.sublist(start + 4, start + 4 + tlength));
+    return new StunBasicAttribute(type, buffer.sublist(start + 4, start + 4 + tlength));
   }
 
   int get hashCode {
@@ -44,10 +44,10 @@ class StunBasicMessage extends StunAttribute {
   }
 
   bool operator ==(o) {
-    if (o == null || false == (o is StunBasicMessage)) {
+    if (o == null || false == (o is StunBasicAttribute)) {
       return false;
     }
-    StunBasicMessage p = o;
+    StunBasicAttribute p = o;
     if (type != p.type || value.length != p.value.length) {
       return false;
     }

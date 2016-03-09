@@ -1,6 +1,6 @@
 part of hetimanet_stun;
 
-class StunMessageHeader {
+class StunHeader {
   static const int bindingRequest = 0x0001;
   static const int bindingResponse = 0x0101;
   static const int bindingErrorResponse = 0x0111;
@@ -10,12 +10,12 @@ class StunMessageHeader {
 
   int type;
 
-  StunMessageHeaderTransactionID transactionID;
+  StunTransactionID transactionID;
   List<StunAttribute> attributes = [];
 
-  StunMessageHeader(this.type, {this.transactionID: null}) {
+  StunHeader(this.type, {this.transactionID: null}) {
     if (transactionID == null) {
-      transactionID = new StunMessageHeaderTransactionID.random();
+      transactionID = new StunTransactionID.random();
     }
   }
 
@@ -41,12 +41,12 @@ class StunMessageHeader {
 
   //
   //
-  static StunMessageHeader decode(List<int> buffer, int start) {
+  static StunHeader decode(List<int> buffer, int start) {
     int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrderType.BigEndian);
-    StunMessageHeader header = new StunMessageHeader(type);
+    StunHeader header = new StunHeader(type);
 
     int length = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrderType.BigEndian);
-    header.transactionID = StunMessageHeaderTransactionID.decode(buffer, start+4);
+    header.transactionID = StunTransactionID.decode(buffer, start+4);
     header.attributes.addAll(StunAttribute.decode(buffer,start:(start+20),end:(start+20+length)));
     return header;
   }

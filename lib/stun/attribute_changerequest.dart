@@ -1,6 +1,6 @@
 part of hetimanet_stun;
 
-class StunChangeRequest extends StunAttribute {
+class StunChangeRequestAttribute extends StunAttribute {
   int type; //2byte
   int get length => 4; //32bit 4byte
   bool changeIP;
@@ -17,7 +17,7 @@ class StunChangeRequest extends StunAttribute {
     return new Uint8List.fromList(buffer);
   }
 
-  static StunChangeRequest decode(List<int> buffer, int start) {
+  static StunChangeRequestAttribute decode(List<int> buffer, int start) {
     int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrderType.BigEndian);
     if (StunAttribute.changeRequest != type) {
       throw {"mes": ""};
@@ -30,10 +30,10 @@ class StunChangeRequest extends StunAttribute {
     bool changePort = (v & (0x01 << 1) != 0);
     bool changeIP = (v & (0x01 << 2) != 0);
 
-    return new StunChangeRequest(changeIP, changePort);
+    return new StunChangeRequestAttribute(changeIP, changePort);
   }
 
-  StunChangeRequest(this.changeIP, this.changePort) {
+  StunChangeRequestAttribute(this.changeIP, this.changePort) {
     type = StunAttribute.changeRequest;
   }
 
@@ -45,10 +45,10 @@ class StunChangeRequest extends StunAttribute {
   }
 
   bool operator ==(o) {
-    if (o == null || false == (o is StunChangeRequest)) {
+    if (o == null || false == (o is StunChangeRequestAttribute)) {
       return false;
     }
-    StunChangeRequest p = o;
+    StunChangeRequestAttribute p = o;
     return (type == p.type && changeIP == p.changeIP && changePort == p.changePort);
   }
 }

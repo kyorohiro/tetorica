@@ -51,9 +51,12 @@ class StunClient {
       print("## ${info.remoteAddress}");
       print("## ${info.remotePort}");
       print("## --------- ##");
+      StunHeader header = StunHeader.decode(info.data, 0);
+      print("${header.toString()}");
+      print("## --------- ##");
     });
-    StunMessageHeader header = new StunMessageHeader(StunMessageHeader.bindingRequest);
-    header.attributes.add(new StunChangeRequest(false, false));
+    StunHeader header = new StunHeader(StunHeader.bindingRequest);
+    header.attributes.add(new StunChangeRequestAttribute(false, false));
     udp.send(header.encode(), stunServer, stunServerPort);
     //udp.send(header.encode(), "0.0.0.0", 8081);
   }

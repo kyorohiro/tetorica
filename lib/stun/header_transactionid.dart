@@ -1,19 +1,19 @@
 part of hetimanet_stun;
 
-class StunMessageHeaderTransactionID {
+class StunTransactionID {
   List<int> value;
   static math.Random _random = new math.Random();
-  StunMessageHeaderTransactionID.random() {
+  StunTransactionID.random() {
     value = [];
     for (int i = 0; i < 16; i++) {
       value.add(_random.nextInt(0xFF));
     }
   }
 
-  StunMessageHeaderTransactionID._empty() {}
+  StunTransactionID._empty() {}
 
-  static StunMessageHeaderTransactionID decode(List<int> buffer, int start) {
-    StunMessageHeaderTransactionID ret = new StunMessageHeaderTransactionID._empty();
+  static StunTransactionID decode(List<int> buffer, int start) {
+    StunTransactionID ret = new StunTransactionID._empty();
     ret.value = [];
     for (int i = 0; i < 16; i++) {
       ret.value.add(buffer[start + i]);

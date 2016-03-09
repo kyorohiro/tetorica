@@ -31,8 +31,8 @@ void main() {
   });
 
   unit.test("ArrayBuilderBuffer: change request true false", () {
-    turn.StunChangeRequest attrA = new turn.StunChangeRequest(true, false);
-    turn.StunChangeRequest attrB = turn.StunChangeRequest.decode(attrA.encode(), 0);
+    turn.StunChangeRequestAttribute attrA = new turn.StunChangeRequestAttribute(true, false);
+    turn.StunChangeRequestAttribute attrB = turn.StunChangeRequestAttribute.decode(attrA.encode(), 0);
     //
     //
     unit.expect(attrA.type, attrB.type);
@@ -42,8 +42,8 @@ void main() {
   });
 
   unit.test("ArrayBuilderBuffer: change request false true", () {
-    turn.StunChangeRequest attrA = new turn.StunChangeRequest(true, false);
-    turn.StunChangeRequest attrB = turn.StunChangeRequest.decode(attrA.encode(), 0);
+    turn.StunChangeRequestAttribute attrA = new turn.StunChangeRequestAttribute(true, false);
+    turn.StunChangeRequestAttribute attrB = turn.StunChangeRequestAttribute.decode(attrA.encode(), 0);
     //
     //
     unit.expect(attrA.type, attrB.type);
@@ -53,8 +53,8 @@ void main() {
   });
 
   unit.test("ArrayBuilderBuffer: basic message userName", () {
-    turn.StunBasicMessage attrA = new turn.StunBasicMessage(turn.StunAttribute.userName, [1,2,3,4,5,6,7,8]);
-    turn.StunBasicMessage attrB = turn.StunBasicMessage.decode(attrA.encode(), 0);
+    turn.StunBasicAttribute attrA = new turn.StunBasicAttribute(turn.StunAttribute.userName, [1,2,3,4,5,6,7,8]);
+    turn.StunBasicAttribute attrB = turn.StunBasicAttribute.decode(attrA.encode(), 0);
     //
     //
     unit.expect(attrA.type, attrB.type);
@@ -63,8 +63,8 @@ void main() {
   });
 
   unit.test("ArrayBuilderBuffer: basic message password", () {
-    turn.StunBasicMessage attrA = new turn.StunBasicMessage(turn.StunAttribute.password, [1,2,3,4,5,6,7,8]);
-    turn.StunBasicMessage attrB = turn.StunBasicMessage.decode(attrA.encode(), 0);
+    turn.StunBasicAttribute attrA = new turn.StunBasicAttribute(turn.StunAttribute.password, [1,2,3,4,5,6,7,8]);
+    turn.StunBasicAttribute attrB = turn.StunBasicAttribute.decode(attrA.encode(), 0);
     //
     //
     unit.expect(attrA.type, attrB.type);
@@ -73,9 +73,9 @@ void main() {
   });
 
   unit.test("ArrayBuilderBuffer: basic message integrity", () {
-    turn.StunBasicMessage attrA = new turn.StunBasicMessage(
+    turn.StunBasicAttribute attrA = new turn.StunBasicAttribute(
       turn.StunAttribute.messageIntegrity, new List.filled(64, 2));
-    turn.StunBasicMessage attrB = turn.StunBasicMessage.decode(attrA.encode(), 0);
+    turn.StunBasicAttribute attrB = turn.StunBasicAttribute.decode(attrA.encode(), 0);
     //
     //
     unit.expect(attrA.type, attrB.type);
@@ -84,8 +84,8 @@ void main() {
   });
 
   unit.test("ArrayBuilderBuffer: errorcode", () {
-    turn.StunErrorCode attrA = new turn.StunErrorCode(400, "abcdefghijklmn");
-    turn.StunErrorCode attrB = turn.StunErrorCode.decode(attrA.encode(), 0);
+    turn.StunErrorCodeAttribute attrA = new turn.StunErrorCodeAttribute(400, "abcdefghijklmn");
+    turn.StunErrorCodeAttribute attrB = turn.StunErrorCodeAttribute.decode(attrA.encode(), 0);
     //
     //
     unit.expect(attrA.type, attrB.type);
