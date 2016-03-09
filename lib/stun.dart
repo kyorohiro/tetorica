@@ -38,6 +38,8 @@ class StunClientSendHeaderResult {
   StunClientSendHeaderResult(this.remoteAddress, this.remotePort, this.header) {}
 }
 
+// https://tools.ietf.org/html/rfc3489
+// 9 Client Behavior
 class StunClient {
   net.TetSocketBuilder builder;
   String address;
@@ -88,9 +90,28 @@ class StunClient {
   }
 
   Future<bool> test001() async {
+    //9.3  Formulating the Binding Request
+
     StunHeader header = new StunHeader(StunHeader.bindingRequest);
+    // TODO
+    // The RESPONSE-ADDRESS attribute is optional in the Binding Request.
+    //
+
+    // The CHANGE-REQUEST attribute is also optional.
+    //
     header.attributes.add(new StunChangeRequestAttribute(false, false));
+
+    // TODO
+    // The client SHOULD add a MESSAGE-INTEGRITY and USERNAME attribute to
+    // the Binding Request.
+    //
+    // This MESSAGE-INTEGRITY attribute contains an HMAC [13].
+    //
+
     StunClientSendHeaderResult response = await sendHeader(header);
+
+    // 9.4  Processing Binding Responses
+    //
     StunAddressAttribute mappedAddress = response.header.getAttribute([StunAttribute.mappedAddress]);
     StunAddressAttribute changedAddress = response.header.getAttribute([StunAttribute.changedAddress]);
     StunAddressAttribute sourceAddress = response.header.getAttribute([StunAttribute.sourceAddress]);
@@ -101,6 +122,7 @@ class StunClient {
       return false;
     }
 
+    // The RESPONSE-ADDRESS attribute is optional in the Binding Request.
     if (mappedAddress == null) {
       // || changedAddress == null) {
       print("# error 02 # ${response}");
