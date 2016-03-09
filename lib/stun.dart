@@ -37,20 +37,18 @@ class StunClient {
   int port;
   String stunServer;
   int stunServerPort;
-  
+  Duration _defaultTimeout = new Duration(seconds: 5);
+  Map<StunTransactionID, Completer<StunHeader>> cash = {};
+  net.TetUdpSocket _udp = null;
 
   StunClient(this.builder, this.stunServer, this.stunServerPort, {this.address: "0.0.0.0", this.port: 0}) {
     ;
   }
 
-  Future<StunHeader> sendHeader(StunHeader header) async {
-    ;
-  }
-
-  Future test001() async {
-    net.TetUdpSocket udp = builder.createUdpClient();
-    await udp.bind(address, port);
-    udp.onReceive.listen((net.TetReceiveUdpInfo info) {
+  Future prepare() async {
+    net.TetUdpSocket u = builder.createUdpClient();
+    await u.bind(address, port);
+    _udp.onReceive.listen((net.TetReceiveUdpInfo info) {
       print("## --------- receive packet ##");
       print("## ${info.data}");
       print("## ${info.remoteAddress}");
@@ -59,11 +57,29 @@ class StunClient {
       StunHeader header = StunHeader.decode(info.data, 0);
       print("${header.toString()}");
       print("## --------- ##");
+      if (cash.containsKey(header.transactionID)) {
+        cash[header.transactionID].complete(header);
+      }
     });
+    _udp = u;
+  }
+
+  Future<StunHeader> sendHeader(StunHeader header, {Duration timeout}) async {
+    if (timeout == null) {
+      timeout = _defaultTimeout;
+    }
+    if (cash.containsKey(header.transactionID)) {
+      header.transactionID = new StunTransactionID.random();
+    }
+    cash[header.transactionID] = new Completer();
+    _udp.send(header.encode(), stunServer, stunServerPort);
+    return cash[header.transactionID].future;
+  }
+
+  Future test001() async {
     StunHeader header = new StunHeader(StunHeader.bindingRequest);
     header.attributes.add(new StunChangeRequestAttribute(false, false));
-    udp.send(header.encode(), stunServer, stunServerPort);
-    //udp.send(header.encode(), "0.0.0.0", 8081);
+    StunHeader response = await sendHeader(header);
   }
 
   Future test002() async {

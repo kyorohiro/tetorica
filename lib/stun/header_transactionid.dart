@@ -24,13 +24,34 @@ class StunTransactionID {
   @override
   String toString() {
     StringBuffer b = new StringBuffer();
-    for(int i in value) {
+    for (int i in value) {
       String t = i.toRadixString(16);
       b.write(t);
-      if(t.length == 1) {
+      if (t.length == 1) {
         b.write("0");
       }
     }
     return b.toString();
+  }
+
+  int get hashCode {
+    int result = 0;
+    for (int i in value) {
+      result = 37 * result + i.hashCode;
+    }
+    return result;
+  }
+
+  bool operator ==(o) {
+    if (o == null || false == (o is StunTransactionID)) {
+      return false;
+    }
+    StunTransactionID p = o;
+    for (int i = 0; i < value.length; i++) {
+      if (value[i] != p.value[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 }
