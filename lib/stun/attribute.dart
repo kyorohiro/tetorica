@@ -12,6 +12,8 @@ abstract class StunAttribute {
   static const int errorCode = 0x0009;
   static const int unknownAttribute = 0x000a;
   static const int reflectedFrom = 0x000b; //
+  static const int realm = 0x0014; //
+  static const int nonce = 0x0015; //
   static const int xorMappedAddress =0x0020;
   static const int xorMappedAddressB =0x8020;
   static const int software =0x8022;
@@ -44,6 +46,10 @@ abstract class StunAttribute {
         return "unknownAttribute (${type})";
       case reflectedFrom:
         return "reflectedFrom (${type})";
+      case realm:
+        return "realm (${type})";
+      case nonce:
+        return "nonce (${type})";
       case xorMappedAddress:
         return "#xorMappedAddress (${type})";
       case xorMappedAddressB:
