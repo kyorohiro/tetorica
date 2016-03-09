@@ -48,6 +48,7 @@ class StunClient {
   Future prepare() async {
     net.TetUdpSocket u = builder.createUdpClient();
     await u.bind(address, port);
+    _udp = u;
     _udp.onReceive.listen((net.TetReceiveUdpInfo info) {
       print("## --------- receive packet ##");
       print("## ${info.data}");
@@ -61,7 +62,6 @@ class StunClient {
         cash[header.transactionID].complete(header);
       }
     });
-    _udp = u;
   }
 
   Future<StunHeader> sendHeader(StunHeader header, {Duration timeout}) async {
