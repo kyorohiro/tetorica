@@ -100,7 +100,7 @@ class StunClient {
       return StunNatType.blockUdp;
     }
 
-    
+
     return StunNatType.openInternet;
   }
 
@@ -135,31 +135,12 @@ class StunClient {
   // In test II, the client sends a
   // Binding Request with both the "change IP" and "change port" flags
   // from the CHANGE-REQUEST attribute set.
-  Future test002() async {
+  Future<StunClientSendHeaderResult> test002() async {
     StunHeader header = new StunHeader(StunHeader.bindingRequest);
     header.attributes.add(new StunChangeRequestAttribute(true, true));
-
-    StunClientSendHeaderResult response = await sendHeader(header);
-    StunAddressAttribute mappedAddress = response.header.getAttribute([StunAttribute.mappedAddress]);
-    // StunAddressAttribute changedAddress = response.header.getAttribute([StunAttribute.changedAddress]);
-    // StunAddressAttribute sourceAddress = response.header.getAttribute([StunAttribute.sourceAddress]);
-    StunErrorCodeAttribute errorCode = response.header.getAttribute([StunAttribute.errorCode]);
-
-    if (header.haveError()) {
-      print("# error 01 # ${response}");
-      return false;
-    }
-
-    // The RESPONSE-ADDRESS attribute is optional in the Binding Request.
-    if (mappedAddress == null) {
-      // || changedAddress == null) {
-      print("# error 02 # ${response}");
-      return false;
-    }
-
-    print("# ok 03 # ${response.header} ${response.remoteAddress} ${response.remotePort}");
-    return true;
+    return await sendHeader(header);
   }
+
 
   //
   // In test III, the client sends
@@ -167,25 +148,6 @@ class StunClient {
   Future test003() async {
     StunHeader header = new StunHeader(StunHeader.bindingRequest);
     header.attributes.add(new StunChangeRequestAttribute(false, true));
-
-    StunClientSendHeaderResult response = await sendHeader(header);
-    StunAddressAttribute mappedAddress = response.header.getAttribute([StunAttribute.mappedAddress]);
-    // StunAddressAttribute changedAddress = response.header.getAttribute([StunAttribute.changedAddress]);
-    // StunAddressAttribute sourceAddress = response.header.getAttribute([StunAttribute.sourceAddress]);
-
-    if (header.haveError()) {
-      print("# error 01 # ${response}");
-      return false;
-    }
-
-    // The RESPONSE-ADDRESS attribute is optional in the Binding Request.
-    if (mappedAddress == null) {
-      // || changedAddress == null) {
-      print("# error 02 # ${response}");
-      return false;
-    }
-
-    print("# ok 03 # ${response.header} ${response.remoteAddress} ${response.remotePort}");
-    return true;
+    return await sendHeader(header);
   }
 }
