@@ -32,10 +32,10 @@ class TurnClient {}
 //Symmetric
 
 class StunClientSendHeaderResult {
-  String address;
-  int port;
+  String remoteAddress;
+  int remotePort;
   StunHeader header;
-  StunClientSendHeaderResult(this.address, this.port, this.header) {}
+  StunClientSendHeaderResult(this.remoteAddress, this.remotePort, this.header) {}
 }
 
 class StunClient {
@@ -106,7 +106,7 @@ class StunClient {
       print("# error 02 # ${response}");
       return;
     }
-    print("# ok 03 # ${response}");
+    print("# ok 03 # ${response} ${response.remoteAddress} ${response.remotePort}");
     //print("# mapped address # ${mappedAddress.address} ${mappedAddress.port}");
     //print("# changed address # ${changedAddress.address} ${changedAddress.port}");
     //print("# changed address # ${sourceAddress.address} ${sourceAddress.port}");
