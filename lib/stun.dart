@@ -37,8 +37,13 @@ class StunClient {
   int port;
   String stunServer;
   int stunServerPort;
+  
 
   StunClient(this.builder, this.stunServer, this.stunServerPort, {this.address: "0.0.0.0", this.port: 0}) {
+    ;
+  }
+
+  Future<StunHeader> sendHeader(StunHeader header) async {
     ;
   }
 
