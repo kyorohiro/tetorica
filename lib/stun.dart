@@ -90,17 +90,18 @@ class StunClient {
     StunErrorCodeAttribute errorCode = response.getAttribute([StunAttribute.errorCode]);
     //
     if(errorCode != null) {
-      //error
+      print("# error 01 # ${response}");
       return ;
     }
 
-    if(mappedAddress == null || changedAddress == null) {
+    if(mappedAddress == null){// || changedAddress == null) {
+      print("# error 02 # ${response}");
       return;
     }
-
-    print("# mapped address # ${mappedAddress.address} ${mappedAddress.port}");
-    print("# changed address # ${changedAddress.address} ${changedAddress.port}");
-    print("# changed address # ${sourceAddress.address} ${sourceAddress.port}");
+    print("# ok 03 # ${response}");
+    //print("# mapped address # ${mappedAddress.address} ${mappedAddress.port}");
+    //print("# changed address # ${changedAddress.address} ${changedAddress.port}");
+    //print("# changed address # ${sourceAddress.address} ${sourceAddress.port}");
   }
 
   Future test002() async {
