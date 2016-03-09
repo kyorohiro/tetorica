@@ -89,34 +89,26 @@ class StunClient {
     return cash[header.transactionID].future;
   }
 
+  //
+  //  In test I, the client sends a
+  //  STUN Binding Request to a server, without any flags set in the
+  //  CHANGE-REQUEST attribute, and without the RESPONSE-ADDRESS attribute.
+  //  This causes the server to send the response back to the address and
+  //  port that the request came from.
+  //
   Future<bool> test001() async {
-    //9.3  Formulating the Binding Request
-
     StunHeader header = new StunHeader(StunHeader.bindingRequest);
-    // TODO
-    // The RESPONSE-ADDRESS attribute is optional in the Binding Request.
-    //
-
-    // The CHANGE-REQUEST attribute is also optional.
-    //
     header.attributes.add(new StunChangeRequestAttribute(false, false));
 
-    // TODO
-    // The client SHOULD add a MESSAGE-INTEGRITY and USERNAME attribute to
-    // the Binding Request.
-    //
-    // This MESSAGE-INTEGRITY attribute contains an HMAC [13].
-    //
-
     StunClientSendHeaderResult response = await sendHeader(header);
-
-    // 9.4  Processing Binding Responses
-    //
     StunAddressAttribute mappedAddress = response.header.getAttribute([StunAttribute.mappedAddress]);
-    StunAddressAttribute changedAddress = response.header.getAttribute([StunAttribute.changedAddress]);
-    StunAddressAttribute sourceAddress = response.header.getAttribute([StunAttribute.sourceAddress]);
+    // StunAddressAttribute changedAddress = response.header.getAttribute([StunAttribute.changedAddress]);
+    // StunAddressAttribute sourceAddress = response.header.getAttribute([StunAttribute.sourceAddress]);
     StunErrorCodeAttribute errorCode = response.header.getAttribute([StunAttribute.errorCode]);
-    //
+
+    // TODO
+    // If the response is a Binding Error Response, the client checks the
+    // response code from the ERROR-CODE attribute of the response.
     if (errorCode != null) {
       print("# error 01 # ${response}");
       return false;
@@ -128,6 +120,7 @@ class StunClient {
       print("# error 02 # ${response}");
       return false;
     }
+
     print("# ok 03 # ${response.header} ${response.remoteAddress} ${response.remotePort}");
     return true;
   }
