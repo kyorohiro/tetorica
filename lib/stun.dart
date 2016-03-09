@@ -84,11 +84,23 @@ class StunClient {
     StunHeader header = new StunHeader(StunHeader.bindingRequest);
     header.attributes.add(new StunChangeRequestAttribute(false, false));
     StunHeader response = await sendHeader(header);
-    StunAddressAttribute mappedAddres = response.getAttribute([StunAttribute.mappedAddress]);
-    StunAddressAttribute changedAddres = response.getAttribute([StunAttribute.changedAddress]);
-    StunErrorCodeAttribute ec = response.getAttribute([StunAttribute.errorCode]);
+    StunAddressAttribute mappedAddress = response.getAttribute([StunAttribute.mappedAddress]);
+    StunAddressAttribute changedAddress = response.getAttribute([StunAttribute.changedAddress]);
+    StunAddressAttribute sourceAddress = response.getAttribute([StunAttribute.sourceAddress]);
+    StunErrorCodeAttribute errorCode = response.getAttribute([StunAttribute.errorCode]);
     //
-    
+    if(errorCode != null) {
+      //error
+      return ;
+    }
+
+    if(mappedAddress == null || changedAddress == null) {
+      return;
+    }
+
+    print("# mapped address # ${mappedAddress.address} ${mappedAddress.port}");
+    print("# changed address # ${changedAddress.address} ${changedAddress.port}");
+    print("# changed address # ${sourceAddress.address} ${sourceAddress.port}");
   }
 
   Future test002() async {
