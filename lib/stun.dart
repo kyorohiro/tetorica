@@ -1,17 +1,17 @@
 library hetimanet_stun;
 
+import 'dart:async';
+import 'dart:convert' as conv;
 import 'dart:math' as math;
 import 'dart:typed_data';
-import 'dart:convert' as conv;
-import 'dart:async';
 
 import 'core.dart' as core;
 import 'net.dart' as net;
 
 part 'stun/attribute.dart';
 part 'stun/attribute_address.dart';
-part 'stun/attribute_changerequest.dart';
 part 'stun/attribute_basic.dart';
+part 'stun/attribute_changerequest.dart';
 part 'stun/attribute_errorcode.dart';
 part 'stun/header.dart';
 part 'stun/header_transactionid.dart';
@@ -42,7 +42,9 @@ class StunClientSendHeaderResult {
   }
 }
 
-enum StunNatType { openInternet, blockUdp, symmetricUdp, fullConeNat, symmetricNat, restrictedConeNat }
+enum StunNatType {
+  openInternet, blockUdp, symmetricUdp, fullConeNat, symmetricNat, restrictedConeNat,
+  stunServerThrowError}
 
 // https://tools.ietf.org/html/rfc3489
 // 9 Client Behavior
@@ -93,13 +95,25 @@ class StunClient {
 
   Future<StunNatType> testBasic() async {
     StunClientSendHeaderResult test1Result = null;
+    StunClientSendHeaderResult test2Result = null;
     try {
       test1Result = await test001();
-      test1Result.passed();
+      if(false == test1Result.passed()) {
+        return StunNatType.stunServerThrowError;
+      }
     } catch (e) {
       return StunNatType.blockUdp;
     }
 
+    try {
+      test2Result = await test002();
+      if(test2Result.passed()) {
+      } else {
+
+      }
+    } catch (e) {
+      return StunNatType.blockUdp;
+    }
 
     return StunNatType.openInternet;
   }
