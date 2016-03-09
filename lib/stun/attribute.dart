@@ -12,6 +12,11 @@ abstract class StunAttribute {
   static const int errorCode = 0x0009;
   static const int unknownAttribute = 0x000a;
   static const int reflectedFrom = 0x000b; //
+  static const int xorMappedAddress =0x0020;
+  static const int xorMappedAddressB =0x8020;
+  static const int software =0x8022;
+  static const int alternateServer =0x8023;
+  static const int fingerprint =0x8028;
   int get type; //2byte
   int get length; //2byte
   Uint8List encode();
@@ -39,6 +44,16 @@ abstract class StunAttribute {
         return "unknownAttribute (${type})";
       case reflectedFrom:
         return "reflectedFrom (${type})";
+      case xorMappedAddress:
+        return "#xorMappedAddress (${type})";
+      case xorMappedAddressB:
+        return "#xorMappedAddressB (${type})";
+      case software:
+        return "#software (${type})";
+      case alternateServer:
+        return "#alternateServer(${type})";
+      case fingerprint:
+        return "#fingerprint (${type})";
       default:
         return "none (${type})";
     }
