@@ -28,6 +28,11 @@ class StunHeader {
     return null;
   }
 
+  bool haveError() {
+    StunErrorCodeAttribute errorCode = getAttribute([StunAttribute.errorCode]);
+    return (errorCode != null);
+  }
+
   int errorCode() {
     StunErrorCodeAttribute errorCode = getAttribute([StunAttribute.errorCode]);
     if (errorCode == null) {

@@ -124,11 +124,8 @@ class StunClient {
 
     StunClientSendHeaderResult response = await sendHeader(header);
     StunAddressAttribute mappedAddress = response.header.getAttribute([StunAttribute.mappedAddress]);
-    // StunAddressAttribute changedAddress = response.header.getAttribute([StunAttribute.changedAddress]);
-    // StunAddressAttribute sourceAddress = response.header.getAttribute([StunAttribute.sourceAddress]);
-    StunErrorCodeAttribute errorCode = response.header.getAttribute([StunAttribute.errorCode]);
 
-    if (errorCode != null) {
+    if (header.haveError()) {
       print("# error 01 # ${response}");
       return false;
     }
@@ -158,7 +155,7 @@ class StunClient {
     // StunAddressAttribute sourceAddress = response.header.getAttribute([StunAttribute.sourceAddress]);
     StunErrorCodeAttribute errorCode = response.header.getAttribute([StunAttribute.errorCode]);
 
-    if (errorCode != null) {
+    if (header.haveError()) {
       print("# error 01 # ${response}");
       return false;
     }
@@ -187,7 +184,7 @@ class StunClient {
     // StunAddressAttribute sourceAddress = response.header.getAttribute([StunAttribute.sourceAddress]);
     StunErrorCodeAttribute errorCode = response.header.getAttribute([StunAttribute.errorCode]);
 
-    if (errorCode != null) {
+    if (header.haveError()) {
       print("# error 01 # ${response}");
       return false;
     }
