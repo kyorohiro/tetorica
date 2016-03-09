@@ -31,6 +31,13 @@ class TurnClient {}
 //Port Restricted Cone
 //Symmetric
 
+class StunClientSendHeaderResult {
+  String address;
+  int port;
+  StunHeader header;
+  StunClientSendHeaderResult(this.address, this.port, this.header) {}
+}
+
 class StunClient {
   net.TetSocketBuilder builder;
   String address;
@@ -38,7 +45,7 @@ class StunClient {
   String stunServer;
   int stunServerPort;
 
-  Map<StunTransactionID, Completer<StunHeader>> cash = {};
+  Map<StunTransactionID, Completer<StunClientSendHeaderResult>> cash = {};
   net.TetUdpSocket _udp = null;
 
   StunClient(this.builder, this.stunServer, this.stunServerPort, {this.address: "0.0.0.0", this.port: 0}) {
@@ -59,13 +66,13 @@ class StunClient {
       print("${header.toString()}");
       print("## --------- ##");
       if (cash.containsKey(header.transactionID)) {
-        cash.remove(header.transactionID).complete(header);
+        cash.remove(header.transactionID).complete(new StunClientSendHeaderResult(info.remoteAddress, info.remotePort, header));
       }
     });
   }
 
   Duration _defaultTimeout = new Duration(seconds: 5);
-  Future<StunHeader> sendHeader(StunHeader header, {Duration timeout}) async {
+  Future<StunClientSendHeaderResult> sendHeader(StunHeader header, {Duration timeout}) async {
     if (timeout == null) {
       timeout = _defaultTimeout;
     }
@@ -75,7 +82,7 @@ class StunClient {
     cash[header.transactionID] = new Completer();
     _udp.send(header.encode(), stunServer, stunServerPort);
     cash[header.transactionID].future.timeout(timeout, onTimeout: () {
-      cash.remove(header.transactionID).completeError({"mes":"timeout"});
+      cash.remove(header.transactionID).completeError({"mes": "timeout"});
     });
     return cash[header.transactionID].future;
   }
@@ -83,18 +90,19 @@ class StunClient {
   Future test001() async {
     StunHeader header = new StunHeader(StunHeader.bindingRequest);
     header.attributes.add(new StunChangeRequestAttribute(false, false));
-    StunHeader response = await sendHeader(header);
-    StunAddressAttribute mappedAddress = response.getAttribute([StunAttribute.mappedAddress]);
-    StunAddressAttribute changedAddress = response.getAttribute([StunAttribute.changedAddress]);
-    StunAddressAttribute sourceAddress = response.getAttribute([StunAttribute.sourceAddress]);
-    StunErrorCodeAttribute errorCode = response.getAttribute([StunAttribute.errorCode]);
+    StunClientSendHeaderResult response = await sendHeader(header);
+    StunAddressAttribute mappedAddress = response.header.getAttribute([StunAttribute.mappedAddress]);
+    StunAddressAttribute changedAddress = response.header.getAttribute([StunAttribute.changedAddress]);
+    StunAddressAttribute sourceAddress = response.header.getAttribute([StunAttribute.sourceAddress]);
+    StunErrorCodeAttribute errorCode = response.header.getAttribute([StunAttribute.errorCode]);
     //
-    if(errorCode != null) {
+    if (errorCode != null) {
       print("# error 01 # ${response}");
-      return ;
+      return;
     }
 
-    if(mappedAddress == null){// || changedAddress == null) {
+    if (mappedAddress == null) {
+      // || changedAddress == null) {
       print("# error 02 # ${response}");
       return;
     }
