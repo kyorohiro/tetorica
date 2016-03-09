@@ -36,16 +36,13 @@ class StunClientSendHeaderResult {
   int remotePort;
   StunHeader header;
   StunClientSendHeaderResult(this.remoteAddress, this.remotePort, this.header) {}
+
+  bool passed() {
+    return (false == header.haveError() && null != header.getAttribute([StunAttribute.mappedAddress]));
+  }
 }
 
-enum StunNatType {
-  openInternet,
-  blockUdp,
-  symmetricUdp,
-  fullConeNat,
-  symmetricNat,
-  restrictedConeNat
-}
+enum StunNatType { openInternet, blockUdp, symmetricUdp, fullConeNat, symmetricNat, restrictedConeNat }
 
 // https://tools.ietf.org/html/rfc3489
 // 9 Client Behavior
@@ -65,7 +62,7 @@ class StunClient {
   }
 
   Future prepare() async {
-    if(_udp != null) {
+    if (_udp != null) {
       return;
     }
 
@@ -88,13 +85,21 @@ class StunClient {
   }
 
   Future close() async {
-    if(_udp != null) {
+    if (_udp != null) {
       _udp.close();
       _udp = null;
     }
   }
 
   Future<StunNatType> testBasic() async {
+    StunClientSendHeaderResult result = null;
+    try {
+      await test001();
+      result.passed();
+    } catch (e) {
+      return StunNatType.blockUdp;
+    }
+    return StunNatType.openInternet;
   }
 
   Future<StunClientSendHeaderResult> sendHeader(StunHeader header, {Duration timeout}) async {
@@ -118,27 +123,10 @@ class StunClient {
   //  CHANGE-REQUEST attribute, and without the RESPONSE-ADDRESS attribute.
   //  This causes the server to send the response back to the address and
   //  port that the request came from.
-  Future<bool> test001() async {
+  Future<StunClientSendHeaderResult> test001() async {
     StunHeader header = new StunHeader(StunHeader.bindingRequest);
     header.attributes.add(new StunChangeRequestAttribute(false, false));
-
-    StunClientSendHeaderResult response = await sendHeader(header);
-    StunAddressAttribute mappedAddress = response.header.getAttribute([StunAttribute.mappedAddress]);
-
-    if (header.haveError()) {
-      print("# error 01 # ${response}");
-      return false;
-    }
-
-    // The RESPONSE-ADDRESS attribute is optional in the Binding Request.
-    if (mappedAddress == null) {
-      // || changedAddress == null) {
-      print("# error 02 # ${response}");
-      return false;
-    }
-
-    print("# ok 03 # ${response.header} ${response.remoteAddress} ${response.remotePort}");
-    return true;
+    return await sendHeader(header);
   }
 
   //
@@ -182,7 +170,6 @@ class StunClient {
     StunAddressAttribute mappedAddress = response.header.getAttribute([StunAttribute.mappedAddress]);
     // StunAddressAttribute changedAddress = response.header.getAttribute([StunAttribute.changedAddress]);
     // StunAddressAttribute sourceAddress = response.header.getAttribute([StunAttribute.sourceAddress]);
-    StunErrorCodeAttribute errorCode = response.header.getAttribute([StunAttribute.errorCode]);
 
     if (header.haveError()) {
       print("# error 01 # ${response}");
