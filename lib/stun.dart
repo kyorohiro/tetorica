@@ -112,11 +112,9 @@ class StunClient {
           return StunNatType.fullConeNat;
         }
       }
-    } catch (e) {
-      return StunNatType.blockUdp;
-    }
+    } catch (e) {}
 
-    return StunNatType.openInternet;
+    return StunNatType.symmetricNat;
   }
 
   Future<StunClientSendHeaderResult> sendHeader(StunHeader header, {Duration timeout}) async {
