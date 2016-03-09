@@ -11,15 +11,15 @@ class StunBasicMessage extends StunAttribute {
 
   Uint8List encode() {
     List<int> buffer = [];
-    buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
-    buffer.addAll(core.ByteOrder.parseShortByte(value.length, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
+    buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrderType.BYTEORDER_BIG_ENDIAN));
+    buffer.addAll(core.ByteOrder.parseShortByte(value.length, core.ByteOrderType.BYTEORDER_BIG_ENDIAN));
     buffer.addAll(value);
     return new Uint8List.fromList(buffer);
   }
 
   static StunBasicMessage decode(List<int> buffer, int start) {
-    int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
-    int tlength = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
+    int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrderType.BYTEORDER_BIG_ENDIAN);
+    int tlength = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrderType.BYTEORDER_BIG_ENDIAN);
 
     if (type == StunAttribute.userName || type == StunAttribute.password) {
       if ((tlength % 4) != 0) {

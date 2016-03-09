@@ -24,7 +24,7 @@ abstract class StunAttribute {
 
     while (start < buffer.length) {
       StunAttribute a = null;
-      int t = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
+      int t = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrderType.BYTEORDER_BIG_ENDIAN);
       switch (t) {
         case StunAttribute.mappedAddress:
         case StunAttribute.responseAddress:

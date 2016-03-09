@@ -117,7 +117,7 @@ class EasyParser {
     return _utfDecoder.convert(va, 0, length);
   }
 
-  Future<int> readLong(int byteorder) async {
+  Future<int> readLong(ByteOrderType byteorder) async {
     int i = await _buffer.getIndex(index, 8);
     if (i + 8 > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
@@ -126,7 +126,7 @@ class EasyParser {
     return ByteOrder.parseLong(_buffer, 0, byteorder);
   }
 
-  Future<int> readInt(int byteorder) async {
+  Future<int> readInt(ByteOrderType byteorder) async {
     int i = await _buffer.getIndex(index, 4);
     if (i + 4 > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());
@@ -135,7 +135,7 @@ class EasyParser {
     return ByteOrder.parseInt(_buffer, 0, byteorder);
   }
 
-  Future<int> readShort(int byteorder) async {
+  Future<int> readShort(ByteOrderType byteorder) async {
     int i = await _buffer.getIndex(index, 2);
     if (i + 2 > _buffer.currentSize) {
       throw (logon == false ? myException : new Exception());

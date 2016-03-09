@@ -14,16 +14,16 @@ class StunAddressAttribute extends StunAttribute {
   StunAddressAttribute(this.type, this.family, this.port, this.address) {}
 
   static StunAddressAttribute decode(List<int> buffer, int start, {List<int> expectType: const [StunAttribute.mappedAddress, StunAttribute.responseAddress, StunAttribute.changedAddress, StunAttribute.sourceAddress, StunAttribute.reflectedFrom]}) {
-    int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
+    int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrderType.BYTEORDER_BIG_ENDIAN);
     if (false == expectType.contains(type)) {
       throw {"mes": ""};
     }
-    int tlength = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
-    int family = core.ByteOrder.parseShort(buffer, start + 4, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
+    int tlength = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrderType.BYTEORDER_BIG_ENDIAN);
+    int family = core.ByteOrder.parseShort(buffer, start + 4, core.ByteOrderType.BYTEORDER_BIG_ENDIAN);
     if (tlength != _length(family)) {
       throw {"mes": ""};
     }
-    int port = core.ByteOrder.parseShort(buffer, start + 6, core.ByteOrder.BYTEORDER_BIG_ENDIAN);
+    int port = core.ByteOrder.parseShort(buffer, start + 6, core.ByteOrderType.BYTEORDER_BIG_ENDIAN);
     String address = null;
     if (family == familyIPv4) {
       address = net.IPConv.toIPv4String(buffer, start: start + 8);
@@ -35,10 +35,10 @@ class StunAddressAttribute extends StunAttribute {
 
   Uint8List encode() {
     List<int> buffer = [];
-    buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
-    buffer.addAll(core.ByteOrder.parseShortByte(_length(family), core.ByteOrder.BYTEORDER_BIG_ENDIAN));
-    buffer.addAll(core.ByteOrder.parseShortByte(family, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
-    buffer.addAll(core.ByteOrder.parseShortByte(port, core.ByteOrder.BYTEORDER_BIG_ENDIAN));
+    buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrderType.BYTEORDER_BIG_ENDIAN));
+    buffer.addAll(core.ByteOrder.parseShortByte(_length(family), core.ByteOrderType.BYTEORDER_BIG_ENDIAN));
+    buffer.addAll(core.ByteOrder.parseShortByte(family, core.ByteOrderType.BYTEORDER_BIG_ENDIAN));
+    buffer.addAll(core.ByteOrder.parseShortByte(port, core.ByteOrderType.BYTEORDER_BIG_ENDIAN));
     buffer.addAll(net.IPConv.toRawIP(this.address));
     return new Uint8List.fromList(buffer);
   }
