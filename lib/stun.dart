@@ -87,7 +87,7 @@ class StunClient {
     return cash[header.transactionID].future;
   }
 
-  Future test001() async {
+  Future<bool> test001() async {
     StunHeader header = new StunHeader(StunHeader.bindingRequest);
     header.attributes.add(new StunChangeRequestAttribute(false, false));
     StunClientSendHeaderResult response = await sendHeader(header);
@@ -98,18 +98,16 @@ class StunClient {
     //
     if (errorCode != null) {
       print("# error 01 # ${response}");
-      return;
+      return false;
     }
 
     if (mappedAddress == null) {
       // || changedAddress == null) {
       print("# error 02 # ${response}");
-      return;
+      return false;
     }
-    print("# ok 03 # ${response} ${response.remoteAddress} ${response.remotePort}");
-    //print("# mapped address # ${mappedAddress.address} ${mappedAddress.port}");
-    //print("# changed address # ${changedAddress.address} ${changedAddress.port}");
-    //print("# changed address # ${sourceAddress.address} ${sourceAddress.port}");
+    print("# ok 03 # ${response.header} ${response.remoteAddress} ${response.remotePort}");
+    return true;
   }
 
   Future test002() async {
