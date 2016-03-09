@@ -23,23 +23,23 @@ class StunErrorCode extends StunAttribute {
   Uint8List encode() {
     List<int> buffer = [];
     List<int> pharseBytes = conv.UTF8.encode(pharse);
-    buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrderType.BYTEORDER_BIG_ENDIAN));
-    buffer.addAll(core.ByteOrder.parseShortByte(4 + pharseBytes.length, core.ByteOrderType.BYTEORDER_BIG_ENDIAN));
+    buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrderType.BigEndian));
+    buffer.addAll(core.ByteOrder.parseShortByte(4 + pharseBytes.length, core.ByteOrderType.BigEndian));
     int v = 0;
     v |= (code ~/ 100) << 8;
     v |= (code % 100);
-    buffer.addAll(core.ByteOrder.parseIntByte(v, core.ByteOrderType.BYTEORDER_BIG_ENDIAN));
+    buffer.addAll(core.ByteOrder.parseIntByte(v, core.ByteOrderType.BigEndian));
     buffer.addAll(pharseBytes);
     return new Uint8List.fromList(buffer);
   }
 
   static StunErrorCode decode(List<int> buffer, int start) {
-    int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrderType.BYTEORDER_BIG_ENDIAN);
+    int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrderType.BigEndian);
     if (type != StunAttribute.errorCode) {
       throw {"mes": ""};
     }
-    int tlength = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrderType.BYTEORDER_BIG_ENDIAN);
-    int v = core.ByteOrder.parseInt(buffer, start + 4, core.ByteOrderType.BYTEORDER_BIG_ENDIAN);
+    int tlength = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrderType.BigEndian);
+    int v = core.ByteOrder.parseInt(buffer, start + 4, core.ByteOrderType.BigEndian);
     int clazz = (v >> 8) & 0x07;
     int nzzber = v & 0xff;
     String pharse = conv.UTF8.decode(buffer.sublist(start + 8, start + 8 + tlength - 4), allowMalformed: true);

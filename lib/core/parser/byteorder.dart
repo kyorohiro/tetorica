@@ -1,8 +1,8 @@
 part of hetimacore;
 
 enum ByteOrderType {
-  BYTEORDER_BIG_ENDIAN,
-  BYTEORDER_LITTLE_ENDIAN
+  BigEndian,
+  LittleEndian
 }
 
 class ByteOrder {
@@ -10,7 +10,7 @@ class ByteOrder {
 
   static List<int> parseLongByte(int value, ByteOrderType byteorder) {
     List<int> ret = new List(8);
-    if (byteorder == ByteOrderType.BYTEORDER_BIG_ENDIAN) {
+    if (byteorder == ByteOrderType.BigEndian) {
       ret[0] = (value >> 56 & 0xff);
       ret[1] = (value >> 48 & 0xff);
       ret[2] = (value >> 40 & 0xff);
@@ -34,7 +34,7 @@ class ByteOrder {
 
   static List<int> parseIntByte(int value, ByteOrderType byteorder) {
     List<int> ret = new List(4);
-    if (byteorder == ByteOrderType.BYTEORDER_BIG_ENDIAN) {
+    if (byteorder == ByteOrderType.BigEndian) {
       ret[0] = (value >> 24 & 0xff);
       ret[1] = (value >> 16 & 0xff);
       ret[2] = (value >> 8 & 0xff);
@@ -50,7 +50,7 @@ class ByteOrder {
 
   static List<int> parseShortByte(int value, ByteOrderType byteorder) {
     List<int> ret = new List(2);
-    if (byteorder == ByteOrderType.BYTEORDER_BIG_ENDIAN) {
+    if (byteorder == ByteOrderType.BigEndian) {
       ret[0] = (value >> 8 & 0xff);
       ret[1] = (value >> 0 & 0xff);
     } else {
@@ -62,7 +62,7 @@ class ByteOrder {
 
   static int parseShort(var value, int start, ByteOrderType byteorder) {
     int ret = 0;
-    if (byteorder == ByteOrderType.BYTEORDER_BIG_ENDIAN) {
+    if (byteorder == ByteOrderType.BigEndian) {
       ret = ret | ((value[0 + start] & 0xff) << 8);
       ret = ret | ((value[1 + start] & 0xff) << 0);
     } else {
@@ -74,7 +74,7 @@ class ByteOrder {
 
   static int parseInt(var value, int start, ByteOrderType byteorder) {
     int ret = 0;
-    if (byteorder == ByteOrderType.BYTEORDER_BIG_ENDIAN) {
+    if (byteorder == ByteOrderType.BigEndian) {
       ret = ret | ((value[0 + start] & 0xff) << 24);
       ret = ret | ((value[1 + start] & 0xff) << 16);
       ret = ret | ((value[2 + start] & 0xff) << 8);
@@ -89,7 +89,7 @@ class ByteOrder {
   }
   static int parseLong(var value, int start, ByteOrderType byteorder) {
     int ret = 0;
-    if (byteorder == ByteOrderType.BYTEORDER_BIG_ENDIAN) {
+    if (byteorder == ByteOrderType.BigEndian) {
       ret = ret | ((value[0 + start] & 0xff) << 56);
       ret = ret | ((value[1 + start] & 0xff) << 48);
       ret = ret | ((value[2 + start] & 0xff) << 40);

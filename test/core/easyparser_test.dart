@@ -34,9 +34,9 @@ void main() {
   unit.test("readShort", () async {
     {
       ArrayBuilder b = new ArrayBuilder();
-      b.appendIntList(ByteOrder.parseShortByte(10, ByteOrderType.BYTEORDER_BIG_ENDIAN));
+      b.appendIntList(ByteOrder.parseShortByte(10, ByteOrderType.BigEndian));
       EasyParser parser = new EasyParser(b);
-      int bb = await parser.readShort(ByteOrderType.BYTEORDER_BIG_ENDIAN);
+      int bb = await parser.readShort(ByteOrderType.BigEndian);
       unit.expect(bb, 10);
     }
   });
@@ -45,9 +45,9 @@ void main() {
   unit.test("readInt", () async {
     {
       ArrayBuilder b = new ArrayBuilder();
-      b.appendIntList(ByteOrder.parseIntByte(10, ByteOrderType.BYTEORDER_LITTLE_ENDIAN));
+      b.appendIntList(ByteOrder.parseIntByte(10, ByteOrderType.LittleEndian));
       EasyParser parser = new EasyParser(b);
-      int bb = await parser.readInt(ByteOrderType.BYTEORDER_LITTLE_ENDIAN);
+      int bb = await parser.readInt(ByteOrderType.LittleEndian);
       unit.expect(bb, 10);
     }
   });
@@ -55,9 +55,9 @@ void main() {
   unit.test("readLong", () async {
     {
       ArrayBuilder b = new ArrayBuilder();
-      b.appendIntList(ByteOrder.parseLongByte(10, ByteOrderType.BYTEORDER_LITTLE_ENDIAN));
+      b.appendIntList(ByteOrder.parseLongByte(10, ByteOrderType.LittleEndian));
       EasyParser parser = new EasyParser(b);
-      int bb = await parser.readLong(ByteOrderType.BYTEORDER_LITTLE_ENDIAN);
+      int bb = await parser.readLong(ByteOrderType.LittleEndian);
       unit.expect(bb, 10);
     }
   });

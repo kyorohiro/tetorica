@@ -8,25 +8,25 @@ class StunChangeRequest extends StunAttribute {
 
   Uint8List encode() {
     List<int> buffer = [];
-    buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrderType.BYTEORDER_BIG_ENDIAN));
-    buffer.addAll(core.ByteOrder.parseShortByte(length, core.ByteOrderType.BYTEORDER_BIG_ENDIAN));
+    buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrderType.BigEndian));
+    buffer.addAll(core.ByteOrder.parseShortByte(length, core.ByteOrderType.BigEndian));
     int v = 0;
     v |= (changePort == true ? (0x01 << 1) : 0);
     v |= (changeIP == true ? (0x01 << 2) : 0);
-    buffer.addAll(core.ByteOrder.parseIntByte(v, core.ByteOrderType.BYTEORDER_BIG_ENDIAN));
+    buffer.addAll(core.ByteOrder.parseIntByte(v, core.ByteOrderType.BigEndian));
     return new Uint8List.fromList(buffer);
   }
 
   static StunChangeRequest decode(List<int> buffer, int start) {
-    int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrderType.BYTEORDER_BIG_ENDIAN);
+    int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrderType.BigEndian);
     if (StunAttribute.changeRequest != type) {
       throw {"mes": ""};
     }
-    int tlength = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrderType.BYTEORDER_BIG_ENDIAN);
+    int tlength = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrderType.BigEndian);
     if (tlength != 4) {
       throw {"mes": ""};
     }
-    int v = core.ByteOrder.parseInt(buffer, start + 4, core.ByteOrderType.BYTEORDER_BIG_ENDIAN);
+    int v = core.ByteOrder.parseInt(buffer, start + 4, core.ByteOrderType.BigEndian);
     bool changePort = (v & (0x01 << 1) != 0);
     bool changeIP = (v & (0x01 << 2) != 0);
 

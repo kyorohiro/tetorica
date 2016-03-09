@@ -30,8 +30,8 @@ class StunMessageHeader {
 
   Uint8List encode() {
     List<int> buffer = [];
-    buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrderType.BYTEORDER_BIG_ENDIAN));
-    buffer.addAll(core.ByteOrder.parseShortByte(messageLength, core.ByteOrderType.BYTEORDER_BIG_ENDIAN));
+    buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrderType.BigEndian));
+    buffer.addAll(core.ByteOrder.parseShortByte(messageLength, core.ByteOrderType.BigEndian));
     buffer.addAll(transactionID.value);
     for (StunAttribute a in attributes) {
       buffer.addAll(a.encode());
@@ -42,10 +42,10 @@ class StunMessageHeader {
   //
   //
   static StunMessageHeader decode(List<int> buffer, int start) {
-    int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrderType.BYTEORDER_BIG_ENDIAN);
+    int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrderType.BigEndian);
     StunMessageHeader header = new StunMessageHeader(type);
 
-    int length = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrderType.BYTEORDER_BIG_ENDIAN);
+    int length = core.ByteOrder.parseShort(buffer, start + 2, core.ByteOrderType.BigEndian);
     header.transactionID = StunMessageHeaderTransactionID.decode(buffer, start+4);
     header.attributes.addAll(StunAttribute.decode(buffer,start:(start+20),end:(start+20+length)));
     return header;
