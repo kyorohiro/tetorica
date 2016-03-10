@@ -6,8 +6,8 @@ class StunTransactionID {
   static math.Random _random = new math.Random();
 
   StunRfcVersion rfcVersion() {
-    for (int i=0; i < 4; i++) {
-      if(value[i] == rfc5389MagicCookie[i]) {
+    for (int i = 0; i < 4; i++) {
+      if (value[i] != rfc5389MagicCookie[i]) {
         return StunRfcVersion.ref3489;
       }
     }
@@ -77,4 +77,13 @@ class StunTransactionID {
     }
     return true;
   }
+
+  List<int> magicCookie() {
+    List<int> ret = [];
+    for (int i = 0; i < 4; i++) {
+      ret.add(value[i]);
+    }
+    return ret;
+  }
+
 }

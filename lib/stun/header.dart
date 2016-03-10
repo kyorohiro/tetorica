@@ -40,19 +40,23 @@ class StunHeader {
 
   String mappedAddress() {
     StunAddressAttribute mappedAddress = getAttribute([StunAttribute.mappedAddress]);
-    if (errorCode == null) {
-      return "";
+    StunAddressAttribute xorMappedAddress = getAttribute([StunAttribute.xorMappedAddress]);
+
+    if(StunRfcVersion.ref3489 == rfcVersion() || xorMappedAddress == null) {
+      return (mappedAddress == null? "" : mappedAddress.address);
     } else {
-      return mappedAddress.address;
+      return (xorMappedAddress == null? "" : xorMappedAddress.xAddress(transactionID));
     }
   }
 
   int mappedPort() {
     StunAddressAttribute mappedAddress = getAttribute([StunAttribute.mappedAddress]);
-    if (errorCode == null) {
-      return 0;
+    StunAddressAttribute xorMappedAddress = getAttribute([StunAttribute.xorMappedAddress]);
+
+    if(StunRfcVersion.ref3489 == rfcVersion() || xorMappedAddress == null) {
+      return (mappedAddress == null? 0 : mappedAddress.port);
     } else {
-      return mappedAddress.port;
+      return (xorMappedAddress == null? 0 : xorMappedAddress.port);
     }
   }
 

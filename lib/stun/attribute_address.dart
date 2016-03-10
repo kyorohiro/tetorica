@@ -24,17 +24,7 @@ class StunAddressAttribute extends StunAttribute {
     return "${t}";
   }
 
-  static StunAddressAttribute decode(List<int> buffer, int start,
-    {
-      List<int> expectType: const [
-        StunAttribute.mappedAddress,
-        StunAttribute.responseAddress,
-        StunAttribute.changedAddress,
-        StunAttribute.sourceAddress,
-        StunAttribute.reflectedFrom,
-        StunAttribute.xorMappedAddress,
-        StunAttribute.xorMappedAddressB
-      ]}) {
+  static StunAddressAttribute decode(List<int> buffer, int start, {List<int> expectType: const [StunAttribute.mappedAddress, StunAttribute.responseAddress, StunAttribute.changedAddress, StunAttribute.sourceAddress, StunAttribute.reflectedFrom, StunAttribute.xorMappedAddress, StunAttribute.xorMappedAddressB]}) {
     int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrderType.BigEndian);
     if (false == expectType.contains(type)) {
       throw {"mes": ""};
@@ -77,6 +67,23 @@ class StunAddressAttribute extends StunAttribute {
       return false;
     }
     StunAddressAttribute p = o;
-    return (type == p.type && family == p.family &&port == p.port && address == p.address);
+    return (type == p.type && family == p.family && port == p.port && address == p.address);
+  }
+
+  String xAddress(StunTransactionID id) {
+    List<int> a = net.IPConv.toRawIP(address);
+    List<int> b = id.value;
+    List<int> c = [];
+    for(int i=0;i<a.length;i++) {
+      c.add(0xff&(a[i]^b[i]));
+    }
+    return net.IPConv.toIPString(c);
+  }
+
+  int xPort(StunTransactionID id) {
+    List<int> a = core.ByteOrder.parseShortByte(port, core.ByteOrderType.BigEndian);
+    List<int> b = id.magicCookie();
+    List<int> c = [a[0] ^ b[0], a[1] ^ b[1]];
+    return core.ByteOrder.parseShort(c, 0, core.ByteOrderType.BigEndian);
   }
 }

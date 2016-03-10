@@ -7,23 +7,33 @@ import 'package:tetorica/stun.dart' as stun;
 doTest(net.TetSocketBuilder builder) async {
   //  -p sets the primary port and defaults to 3478
   //-o sets the secondary port and defaults to 3479
-  //stun.StunClient client = new stun.StunClient(builder, "183.181.26.146", 3478);
-  stun.StunClient client = new stun.StunClient(builder, "stun.l.google.com", 19302);
+  stun.StunClient client = new stun.StunClient(builder, "183.181.26.146", 3478);
+  //stun.StunClient client = new stun.StunClient(builder, "stun.l.google.com", 19302);
   await client.prepare();
 
   print("################### test001");
-  stun.StunRfcVersion version = stun.StunRfcVersion.ref3489;
+  stun.StunRfcVersion version = stun.StunRfcVersion.ref5389;
+  //stun.StunRfcVersion version = stun.StunRfcVersion.ref3489;
   try {
-    await client.test001(version:version);
-  } catch (e) {}
+    stun.StunClientSendHeaderResult r = await client.test001(version: version);
+    print("-z- ${r.remoteAddress} ${r.remotePort} ${r.header.mappedAddress()} ${r.header.mappedPort()}");
+  } catch (e, t) {
+    print("EE ${e} ${t}");
+  }
   print("################### test002");
   try {
-    await client.test002(version:version);
-  } catch (e) {}
+    stun.StunClientSendHeaderResult r = await client.test002(version: version);
+    print("-z- ${r.remoteAddress} ${r.remotePort} ${r.header.mappedAddress()} ${r.header.mappedPort()}");
+  } catch (e) {
+    print("EE");
+  }
   print("################### test003");
   try {
-    await client.test003(version:version);
-  } catch (e) {}
+    stun.StunClientSendHeaderResult r = await client.test003(version: version);
+    print("-z- ${r.remoteAddress} ${r.remotePort} ${r.header.mappedAddress()} ${r.header.mappedPort()}");
+  } catch (e) {
+    print("EE");
+  }
 
   print("###################");
 }
