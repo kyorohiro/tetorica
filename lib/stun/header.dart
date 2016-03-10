@@ -65,7 +65,7 @@ class StunHeader {
   }
 
   bool haveOriginAddress() {
-    return (originAddress == null ? false : true);
+    return (originAddressAttribute() == null ? false : true);
   }
 
   String originAddress() {
