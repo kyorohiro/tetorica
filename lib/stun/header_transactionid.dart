@@ -4,6 +4,16 @@ class StunTransactionID {
   static const List<int> rfc5389MagicCookie = const [0x21, 0x12, 0xA4, 0x42];
   List<int> value;
   static math.Random _random = new math.Random();
+
+  StunRfcVersion rfcVersion() {
+    for (int i=0; i < 4; i++) {
+      if(value[i] == rfc5389MagicCookie[i]) {
+        return StunRfcVersion.ref3489;
+      }
+    }
+    return StunRfcVersion.ref5389;
+  }
+
   StunTransactionID.random() {
     value = [];
     for (int i = 0; i < 16; i++) {

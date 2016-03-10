@@ -1,9 +1,7 @@
 part of hetimanet_stun;
 
-enum StunHeaderType {
-  ref3489,
-  ref5389
-}
+enum StunRfcVersion { ref3489, ref5389 }
+
 class StunHeader {
   static const int bindingRequest = 0x0001;
   static const int bindingResponse = 0x0101;
@@ -17,14 +15,18 @@ class StunHeader {
   StunTransactionID transactionID;
   List<StunAttribute> attributes = [];
 
-  StunHeader(this.type, {this.transactionID: null,StunHeaderType type:StunHeaderType.ref3489}) {
+  StunHeader(this.type, {this.transactionID: null, StunRfcVersion type: StunRfcVersion.ref3489}) {
     if (transactionID == null) {
-      if(type == StunHeaderType.ref3489) {
+      if (type == StunRfcVersion.ref3489) {
         transactionID = new StunTransactionID.random();
       } else {
         transactionID = new StunTransactionID.randomRFC5389();
       }
     }
+  }
+
+  StunRfcVersion rfcVersion() {
+    return transactionID.rfcVersion();
   }
 
   StunAttribute getAttribute(List<int> types) {
