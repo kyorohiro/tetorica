@@ -53,6 +53,28 @@ class StunHeader {
     return null;
   }
 
+  String originAddress() {
+    StunAddressAttribute sourceAddress = getAttribute([StunAttribute.sourceAddress]);
+    StunAddressAttribute originAddress = getAttribute([StunAttribute.responseOrigin]);
+
+    if (StunRfcVersion.ref3489 == rfcVersion() || originAddress == null) {
+      return (sourceAddress == null ? "" : sourceAddress.address);
+    } else {
+      return (originAddress == null ? "" : originAddress.address);
+    }
+  }
+
+  int originPort() {
+    StunAddressAttribute sourceAddress = getAttribute([StunAttribute.sourceAddress]);
+    StunAddressAttribute originAddress = getAttribute([StunAttribute.responseOrigin]);
+
+    if (StunRfcVersion.ref3489 == rfcVersion() || originAddress == null) {
+      return (sourceAddress == null ? 0 : sourceAddress.port);
+    } else {
+      return (originAddress == null ? 0 : originAddress.port);
+    }
+  }
+
   String otherAddress() {
     StunAddressAttribute changedAddress = getAttribute([StunAttribute.changedAddress]);
     StunAddressAttribute otherAddress = getAttribute([StunAttribute.otherAddress]);
