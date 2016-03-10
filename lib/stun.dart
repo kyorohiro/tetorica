@@ -15,5 +15,6 @@ part 'stun/attribute_changerequest.dart';
 part 'stun/attribute_errorcode.dart';
 part 'stun/header.dart';
 part 'stun/header_transactionid.dart';
+part 'stun/server.dart';
 part 'stun/client.dart';
 part 'stun/client_basictest.dart';
