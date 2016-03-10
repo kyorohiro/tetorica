@@ -78,47 +78,57 @@ class StunHeader {
     return (originAddress == null ? 0 : originAddress.port);
   }
 
-  String otherAddress() {
+  StunAddressAttribute otherAddressAttribute() {
     StunAddressAttribute changedAddress = getAttribute([StunAttribute.changedAddress]);
     StunAddressAttribute otherAddress = getAttribute([StunAttribute.otherAddress]);
 
     if (StunRfcVersion.ref3489 == rfcVersion() || otherAddress == null) {
-      return (changedAddress == null ? "" : changedAddress.address);
+      return changedAddress;
     } else {
-      return (otherAddress == null ? "" : otherAddress.address);
+      return otherAddress;
     }
   }
 
-  int otherPort() {
-    StunAddressAttribute changedAddress = getAttribute([StunAttribute.changedAddress]);
-    StunAddressAttribute otherAddress = getAttribute([StunAttribute.otherAddress]);
+  String otherAddress() {
+    StunAddressAttribute otherAddress = otherAddressAttribute();
+    return (otherAddress == null ? "" : otherAddress.address);
+  }
 
-    if (StunRfcVersion.ref3489 == rfcVersion() || otherAddress == null) {
-      return (changedAddress == null ? 0 : changedAddress.port);
+  int otherPort() {
+    StunAddressAttribute otherAddress = otherAddressAttribute();
+    return (otherAddress == null ? 0 : otherAddress.port);
+  }
+
+  StunAddressAttribute mappedAddressAttribute() {
+    StunAddressAttribute mappedAddress = getAttribute([StunAttribute.mappedAddress]);
+    StunAddressAttribute xorMappedAddress = getAttribute([StunAttribute.xorMappedAddress]);
+
+    if (StunRfcVersion.ref3489 == rfcVersion() || xorMappedAddress == null) {
+      return mappedAddress;
     } else {
-      return (otherAddress == null ? 0 : otherAddress.port);
+      return xorMappedAddress;
     }
   }
 
   String mappedAddress() {
-    StunAddressAttribute mappedAddress = getAttribute([StunAttribute.mappedAddress]);
-    StunAddressAttribute xorMappedAddress = getAttribute([StunAttribute.xorMappedAddress]);
-
-    if (StunRfcVersion.ref3489 == rfcVersion() || xorMappedAddress == null) {
-      return (mappedAddress == null ? "" : mappedAddress.address);
+    StunAddressAttribute mappedAddress = mappedAddressAttribute();
+    if (mappedAddress == null) {
+      return "";
+    } else if (mappedAddress.type == StunAttribute.mappedAddress) {
+      return mappedAddress.address;
     } else {
-      return (xorMappedAddress == null ? "" : xorMappedAddress.xAddress(transactionID));
+      return mappedAddress.xAddress(transactionID);
     }
   }
 
   int mappedPort() {
-    StunAddressAttribute mappedAddress = getAttribute([StunAttribute.mappedAddress]);
-    StunAddressAttribute xorMappedAddress = getAttribute([StunAttribute.xorMappedAddress]);
-
-    if (StunRfcVersion.ref3489 == rfcVersion() || xorMappedAddress == null) {
-      return (mappedAddress == null ? 0 : mappedAddress.port);
+    StunAddressAttribute mappedAddress = mappedAddressAttribute();
+    if (mappedAddress == null) {
+      return 0;
+    } else if (mappedAddress.type == StunAttribute.mappedAddress) {
+      return mappedAddress.port;
     } else {
-      return (xorMappedAddress == null ? 0 : xorMappedAddress.port);
+      return mappedAddress.xPort(transactionID);
     }
   }
 
