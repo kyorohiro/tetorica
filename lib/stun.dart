@@ -155,7 +155,9 @@ class StunClient {
   //  port that the request came from.
   Future<StunClientSendHeaderResult> test001({StunRfcVersion version:StunRfcVersion.ref3489}) async {
     StunHeader header = new StunHeader(StunHeader.bindingRequest, version:version);
-    header.attributes.add(new StunChangeRequestAttribute(false, false));
+    if(version == StunRfcVersion.ref3489) {
+      header.attributes.add(new StunChangeRequestAttribute(false, false));
+    }
     return await sendHeader(header);
   }
 

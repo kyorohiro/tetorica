@@ -2,19 +2,31 @@ part of hetimanet_stun;
 
 abstract class StunAttribute {
   static const int mappedAddress = 0x0001; //
+
+  // rfc3489 only
   static const int responseAddress = 0x0002; //
+
+  // rfc3489 only
   static const int changeRequest = 0x0003; ////
+
+  // rfc3489 only
   static const int sourceAddress = 0x0004; //
+
+  // rfc3489 only
   static const int changedAddress = 0x0005; //
+
   static const int userName = 0x0006; ////
   static const int password = 0x0007; ////
   static const int messageIntegrity = 0x0008;
   static const int errorCode = 0x0009;
   static const int unknownAttribute = 0x000a;
+
+  // rfc3489 only
   static const int reflectedFrom = 0x000b; //
   static const int realm = 0x0014; //
   static const int nonce = 0x0015; //
   static const int xorMappedAddress =0x0020;
+
   static const int xorMappedAddressB =0x8020;
   static const int software =0x8022;
   static const int alternateServer =0x8023;
