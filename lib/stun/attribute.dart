@@ -16,7 +16,8 @@ abstract class StunAttribute {
   static const int changedAddress = 0x0005; //
 
   static const int userName = 0x0006; ////
-  static const int password = 0x0007; ////
+  static const int password = 0x0007; //// rfc 3489
+
   static const int messageIntegrity = 0x0008;
   static const int errorCode = 0x0009;
   static const int unknownAttribute = 0x000a;
@@ -26,11 +27,14 @@ abstract class StunAttribute {
   static const int realm = 0x0014; //
   static const int nonce = 0x0015; //
   static const int xorMappedAddress =0x0020;
-
-  static const int xorMappedAddressB =0x8020;
+  static const int xorMappedAddressOptional =0x8020;
   static const int software =0x8022;
   static const int alternateServer =0x8023;
   static const int fingerprint =0x8028;
+
+  static const int responseOrigin =0x802b;
+  static const int otherAddress =0x802c;
+
   int get type; //2byte
   int get length; //2byte
   Uint8List encode();
@@ -63,15 +67,19 @@ abstract class StunAttribute {
       case nonce:
         return "nonce (${type})";
       case xorMappedAddress:
-        return "#xorMappedAddress (${type})";
-      case xorMappedAddressB:
-        return "#xorMappedAddressB (${type})";
+        return "xorMappedAddress (${type})";
+      case xorMappedAddressOptional:
+        return "xorMappedAddressOptional (${type})";
       case software:
         return "#software (${type})";
       case alternateServer:
         return "#alternateServer(${type})";
       case fingerprint:
         return "#fingerprint (${type})";
+      case responseOrigin:
+        return "#responseOrigin (${type})";
+      case otherAddress:
+        return "#otherAddress (${type})";
       default:
         return "none (${type})";
     }
@@ -93,7 +101,7 @@ abstract class StunAttribute {
         case StunAttribute.sourceAddress:
         case StunAttribute.reflectedFrom:
         case StunAttribute.xorMappedAddress:
-        case StunAttribute.xorMappedAddressB:
+        case StunAttribute.xorMappedAddressOptional:
           a = StunAddressAttribute.decode(buffer, start);
           break;
         case StunAttribute.changeRequest:
