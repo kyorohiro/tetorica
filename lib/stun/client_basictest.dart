@@ -1,5 +1,11 @@
 part of hetimanet_stun;
 
+class StunClientBasicTestResult {
+  List<StunNatType> possibility = [];
+  List<net.IPAddr> addr = [];
+  StunClientBasicTestResult(this.possibility, this.addr) {}
+}
+
 class StunClientBasicTest {
   StunClient client;
   StunClientBasicTest(client) {
@@ -14,49 +20,53 @@ class StunClientBasicTest {
     StunClientSendHeaderResult test1Result = null;
     StunClientSendHeaderResult test2Result = null;
     StunClientSendHeaderResult test3Result = null;
+    //
+    // test 001
     try {
       test1Result = await test001();
       if (false == test1Result.passed()) {
         return [StunNatType.stunServerThrowError];
       }
+      if (false == test1Result.header.haveOtherAddress()) {
+        if (ipList.contains(new net.IPAddr.fromString(test1Result.remoteAddress))) {
+          return [StunNatType.openInternet, StunNatType.symmetricUdpFirewall];
+        } else {
+          return [StunNatType.fullConeNat, StunNatType.symmetricNat, StunNatType.restricted, StunNatType.portRestricted];
+        }
+      }
     } catch (e) {
+      // test1 is no response
       return [StunNatType.blockUdp];
     }
 
+    //
+    // test 002
     try {
       test2Result = await test002();
-      if (test2Result.passed()) {
-        if (ipList.contains(new net.IPAddr.fromString(test1Result.remoteAddress))) {
+      if (ipList.contains(new net.IPAddr.fromString(test1Result.remoteAddress))) {
+        if (test2Result.passed()) {
           return [StunNatType.openInternet];
         } else {
+          return [StunNatType.openInternet, StunNatType.fullConeNat];
+        }
+      } else {
+        if (test2Result.passed()) {
           return [StunNatType.fullConeNat];
-        }
-      }
-    } catch (e) {}
-
-// todo
-// retest1
-    try {
-      test3Result = await test003();
-      if (test3Result.passed()) {
-        if (ipList.contains(new net.IPAddr.fromString(test1Result.remoteAddress))) {
-          return [StunNatType.restricted];
         } else {
-          return [StunNatType.portRestricted];
+          return [StunNatType.fullConeNat, StunNatType.symmetricNat, StunNatType.restricted, StunNatType.portRestricted];
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      if (ipList.contains(new net.IPAddr.fromString(test1Result.remoteAddress))) {
+        return [StunNatType.symmetricUdpFirewall];
+      }
+    }
 
-    return [StunNatType.symmetricNat];
+    //
+    // retest1
+    return [StunNatType.fullConeNat, StunNatType.symmetricNat, StunNatType.restricted, StunNatType.portRestricted];
   }
 
-
-  //
-  //  In test I, the client sends a
-  //  STUN Binding Request to a server, without any flags set in the
-  //  CHANGE-REQUEST attribute, and without the RESPONSE-ADDRESS attribute.
-  //  This causes the server to send the response back to the address and
-  //  port that the request came from.
   Future<StunClientSendHeaderResult> test001({StunRfcVersion version: StunRfcVersion.ref3489}) async {
     StunHeader header = new StunHeader(StunHeader.bindingRequest, version: version);
     if (version == StunRfcVersion.ref3489) {
@@ -65,19 +75,12 @@ class StunClientBasicTest {
     return await client.sendHeader(header);
   }
 
-  //
-  // In test II, the client sends a
-  // Binding Request with both the "change IP" and "change port" flags
-  // from the CHANGE-REQUEST attribute set.
   Future<StunClientSendHeaderResult> test002({StunRfcVersion version: StunRfcVersion.ref3489}) async {
     StunHeader header = new StunHeader(StunHeader.bindingRequest, version: version);
     header.attributes.add(new StunChangeRequestAttribute(true, true));
     return await client.sendHeader(header);
   }
 
-  //
-  // In test III, the client sends
-  // a Binding Request with only the "change port" flag set.
   Future test003({StunRfcVersion version: StunRfcVersion.ref3489}) async {
     StunHeader header = new StunHeader(StunHeader.bindingRequest, version: version);
     header.attributes.add(new StunChangeRequestAttribute(false, true));

@@ -11,7 +11,11 @@ class StunClientSendHeaderResult {
   }
 }
 
-enum StunNatType { openInternet, blockUdp, symmetricUdp, fullConeNat, symmetricNat, restricted, portRestricted, stunServerThrowError }
+enum StunNatType {
+   openInternet,
+   blockUdp,
+   symmetricUdpFirewall,
+   symmetricUdp, fullConeNat, symmetricNat, restricted, portRestricted, stunServerThrowError }
 
 // https://tools.ietf.org/html/rfc3489
 // 9 Client Behavior
