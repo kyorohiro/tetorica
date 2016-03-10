@@ -20,7 +20,6 @@ class StunHeader {
   static const int typeBinding = 0x0001;
   static const int typeInvalid = 0xffff;
 
-
   int type;
 
   StunTransactionID transactionID;
@@ -35,6 +34,11 @@ class StunHeader {
       }
     }
   }
+
+  bool isRequest() => (type & 0x0110) == 0x0000;
+  bool isIndication() => (type & 0x0110) == 0x0010;
+  bool isSuccessResp() => (type & 0x0110) == 0x0100;
+  bool isErrResp() => (type & 0x0110) == 0x0110;
 
   StunRfcVersion rfcVersion() {
     return transactionID.rfcVersion();
@@ -53,10 +57,10 @@ class StunHeader {
     StunAddressAttribute mappedAddress = getAttribute([StunAttribute.mappedAddress]);
     StunAddressAttribute xorMappedAddress = getAttribute([StunAttribute.xorMappedAddress]);
 
-    if(StunRfcVersion.ref3489 == rfcVersion() || xorMappedAddress == null) {
-      return (mappedAddress == null? "" : mappedAddress.address);
+    if (StunRfcVersion.ref3489 == rfcVersion() || xorMappedAddress == null) {
+      return (mappedAddress == null ? "" : mappedAddress.address);
     } else {
-      return (xorMappedAddress == null? "" : xorMappedAddress.xAddress(transactionID));
+      return (xorMappedAddress == null ? "" : xorMappedAddress.xAddress(transactionID));
     }
   }
 
@@ -64,10 +68,10 @@ class StunHeader {
     StunAddressAttribute mappedAddress = getAttribute([StunAttribute.mappedAddress]);
     StunAddressAttribute xorMappedAddress = getAttribute([StunAttribute.xorMappedAddress]);
 
-    if(StunRfcVersion.ref3489 == rfcVersion() || xorMappedAddress == null) {
-      return (mappedAddress == null? 0 : mappedAddress.port);
+    if (StunRfcVersion.ref3489 == rfcVersion() || xorMappedAddress == null) {
+      return (mappedAddress == null ? 0 : mappedAddress.port);
     } else {
-      return (xorMappedAddress == null? 0 : xorMappedAddress.port);
+      return (xorMappedAddress == null ? 0 : xorMappedAddress.port);
     }
   }
 
