@@ -11,6 +11,8 @@ doTest(net.TetSocketBuilder builder) async {
   stun.StunClientBasicTest client = new stun.StunClientBasicTest(clientSrc);
   await client.prepare();
 
+  print("#### \n ${await client.testBasic([])} \n####");
+
   print("################### test001");
   stun.StunRfcVersion version = stun.StunRfcVersion.ref5389;
   //stun.StunRfcVersion version = stun.StunRfcVersion.ref3489;

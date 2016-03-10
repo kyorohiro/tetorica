@@ -8,7 +8,7 @@ class StunClientBasicTestResult {
 
 class StunClientBasicTest {
   StunClient client;
-  StunClientBasicTest(client) {
+  StunClientBasicTest(this.client) {
     ;
   }
 
@@ -64,7 +64,7 @@ class StunClientBasicTest {
 
     //
     // retest1
-    return [StunNatType.fullConeNat, StunNatType.symmetricNat, StunNatType.restricted, StunNatType.portRestricted];
+    return [StunNatType.restricted, StunNatType.portRestricted];
   }
 
   Future<StunClientSendHeaderResult> test001({StunRfcVersion version: StunRfcVersion.ref3489}) async {
