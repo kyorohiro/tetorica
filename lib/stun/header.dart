@@ -53,6 +53,28 @@ class StunHeader {
     return null;
   }
 
+  String otherAddress() {
+    StunAddressAttribute changedAddress = getAttribute([StunAttribute.changedAddress]);
+    StunAddressAttribute otherAddress = getAttribute([StunAttribute.otherAddress]);
+
+    if (StunRfcVersion.ref3489 == rfcVersion() || otherAddress == null) {
+      return (changedAddress == null ? "" : changedAddress.address);
+    } else {
+      return (otherAddress == null ? "" : otherAddress.address);
+    }
+  }
+
+  int otherPort() {
+    StunAddressAttribute changedAddress = getAttribute([StunAttribute.changedAddress]);
+    StunAddressAttribute otherAddress = getAttribute([StunAttribute.otherAddress]);
+
+    if (StunRfcVersion.ref3489 == rfcVersion() || otherAddress == null) {
+      return (changedAddress == null ? 0 : changedAddress.port);
+    } else {
+      return (otherAddress == null ? 0 : otherAddress.port);
+    }
+  }
+
   String mappedAddress() {
     StunAddressAttribute mappedAddress = getAttribute([StunAttribute.mappedAddress]);
     StunAddressAttribute xorMappedAddress = getAttribute([StunAttribute.xorMappedAddress]);
