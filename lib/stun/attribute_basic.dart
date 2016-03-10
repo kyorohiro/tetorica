@@ -18,6 +18,10 @@ class StunBasicAttribute extends StunAttribute {
     return "${t}";
   }
 
+  String toUTF8() {
+    return conv.UTF8.decode(value, allowMalformed: true);
+  }
+
   Uint8List encode() {
     List<int> buffer = [];
     buffer.addAll(core.ByteOrder.parseShortByte(type, core.ByteOrderType.BigEndian));
