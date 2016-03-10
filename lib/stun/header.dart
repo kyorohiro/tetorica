@@ -10,6 +10,17 @@ class StunHeader {
   static const int sharedSecretResponse = 0x0102;
   static const int sharedSecretErrorResponse = 0x0112;
 
+  // rfc 5xxx  classs
+  static const int classRequest = 0x00;
+  static const int classIndication = 0x01;
+  static const int classSuccessResponse = 0x02;
+  static const int classFailureResponse = 0x03;
+  static const int classInvalidMessageClass = 0xff;
+
+  static const int typeBinding = 0x0001;
+  static const int typeInvalid = 0xffff;
+
+
   int type;
 
   StunTransactionID transactionID;
