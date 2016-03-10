@@ -29,7 +29,7 @@ class StunAddressAttribute extends StunAttribute {
        const [
          StunAttribute.mappedAddress, StunAttribute.responseAddress, StunAttribute.changedAddress,
          StunAttribute.sourceAddress, StunAttribute.reflectedFrom, StunAttribute.xorMappedAddress,
-         StunAttribute.xorMappedAddressOptional, StunAttribute.otherAddress]}) {
+         StunAttribute.xorMappedAddressOptional, StunAttribute.otherAddress,StunAttribute.responseOrigin]}) {
     int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrderType.BigEndian);
     if (false == expectType.contains(type)) {
       throw {"mes": ""};
