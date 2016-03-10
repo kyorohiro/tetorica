@@ -1,6 +1,8 @@
 part of hetimanet_stun;
 
 class StunBasicAttribute extends StunAttribute {
+  static const int fingerPrintXorValue = 0x5354554e;
+
   int type; //2byte
   int get length => value.length; //32bit 4byte
   List<int> value = [];
@@ -8,6 +10,7 @@ class StunBasicAttribute extends StunAttribute {
   StunBasicAttribute(this.type, List<int> v) {
     value.addAll(v);
   }
+
 
   @override
   String toString() {

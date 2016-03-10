@@ -35,6 +35,8 @@ abstract class StunAttribute {
   static const int responseOrigin =0x802b;
   static const int otherAddress =0x802c;
 
+
+
   int get type; //2byte
   int get length; //2byte
   Uint8List encode();

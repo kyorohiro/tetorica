@@ -24,7 +24,12 @@ class StunAddressAttribute extends StunAttribute {
     return "${t}";
   }
 
-  static StunAddressAttribute decode(List<int> buffer, int start, {List<int> expectType: const [StunAttribute.mappedAddress, StunAttribute.responseAddress, StunAttribute.changedAddress, StunAttribute.sourceAddress, StunAttribute.reflectedFrom, StunAttribute.xorMappedAddress, StunAttribute.xorMappedAddressOptional]}) {
+  static StunAddressAttribute decode(List<int> buffer, int start,
+    {List<int> expectType:
+       const [
+         StunAttribute.mappedAddress, StunAttribute.responseAddress, StunAttribute.changedAddress,
+         StunAttribute.sourceAddress, StunAttribute.reflectedFrom, StunAttribute.xorMappedAddress,
+         StunAttribute.xorMappedAddressOptional, StunAttribute.otherAddress]}) {
     int type = core.ByteOrder.parseShort(buffer, start + 0, core.ByteOrderType.BigEndian);
     if (false == expectType.contains(type)) {
       throw {"mes": ""};
