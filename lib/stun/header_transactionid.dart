@@ -1,11 +1,24 @@
 part of hetimanet_stun;
 
 class StunTransactionID {
+  static const List<int> rfc5389MagicCookie = const [0x21, 0x12, 0xA4, 0x42];
   List<int> value;
   static math.Random _random = new math.Random();
   StunTransactionID.random() {
     value = [];
     for (int i = 0; i < 16; i++) {
+      value.add(_random.nextInt(0xFF));
+    }
+  }
+
+  StunTransactionID.randomRFC5389() {
+    value = [];
+    int i = 0;
+    for (; i < 4; i++) {
+      value.add(rfc5389MagicCookie[i]);
+    }
+
+    for (; i < 16; i++) {
       value.add(_random.nextInt(0xFF));
     }
   }
