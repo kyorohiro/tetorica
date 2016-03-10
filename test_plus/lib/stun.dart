@@ -12,16 +12,17 @@ doTest(net.TetSocketBuilder builder) async {
   await client.prepare();
 
   print("################### test001");
+  stun.StunRfcVersion version = stun.StunRfcVersion.ref3489;
   try {
-    await client.test001();
+    await client.test001(version:version);
   } catch (e) {}
   print("################### test002");
   try {
-    await client.test002();
+    await client.test002(version:version);
   } catch (e) {}
   print("################### test003");
   try {
-    await client.test003();
+    await client.test003(version:version);
   } catch (e) {}
 
   print("###################");

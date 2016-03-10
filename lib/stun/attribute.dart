@@ -80,6 +80,8 @@ abstract class StunAttribute {
         case StunAttribute.changedAddress:
         case StunAttribute.sourceAddress:
         case StunAttribute.reflectedFrom:
+        case StunAttribute.xorMappedAddress:
+        case StunAttribute.xorMappedAddressB:
           a = StunAddressAttribute.decode(buffer, start);
           break;
         case StunAttribute.changeRequest:

@@ -15,9 +15,9 @@ class StunHeader {
   StunTransactionID transactionID;
   List<StunAttribute> attributes = [];
 
-  StunHeader(this.type, {this.transactionID: null, StunRfcVersion type: StunRfcVersion.ref3489}) {
+  StunHeader(this.type, {this.transactionID: null, StunRfcVersion version: StunRfcVersion.ref3489}) {
     if (transactionID == null) {
-      if (type == StunRfcVersion.ref3489) {
+      if (version == StunRfcVersion.ref3489) {
         transactionID = new StunTransactionID.random();
       } else {
         transactionID = new StunTransactionID.randomRFC5389();

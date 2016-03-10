@@ -116,7 +116,7 @@ class StunClient {
     } catch (e) {}
 
 
-// todo 
+// todo
 // retest1
     try {
       test3Result = await test003();
@@ -153,8 +153,8 @@ class StunClient {
   //  CHANGE-REQUEST attribute, and without the RESPONSE-ADDRESS attribute.
   //  This causes the server to send the response back to the address and
   //  port that the request came from.
-  Future<StunClientSendHeaderResult> test001() async {
-    StunHeader header = new StunHeader(StunHeader.bindingRequest);
+  Future<StunClientSendHeaderResult> test001({StunRfcVersion version:StunRfcVersion.ref3489}) async {
+    StunHeader header = new StunHeader(StunHeader.bindingRequest, version:version);
     header.attributes.add(new StunChangeRequestAttribute(false, false));
     return await sendHeader(header);
   }
@@ -163,8 +163,8 @@ class StunClient {
   // In test II, the client sends a
   // Binding Request with both the "change IP" and "change port" flags
   // from the CHANGE-REQUEST attribute set.
-  Future<StunClientSendHeaderResult> test002() async {
-    StunHeader header = new StunHeader(StunHeader.bindingRequest);
+  Future<StunClientSendHeaderResult> test002({StunRfcVersion version:StunRfcVersion.ref3489}) async {
+    StunHeader header = new StunHeader(StunHeader.bindingRequest, version:version);
     header.attributes.add(new StunChangeRequestAttribute(true, true));
     return await sendHeader(header);
   }
@@ -172,8 +172,8 @@ class StunClient {
   //
   // In test III, the client sends
   // a Binding Request with only the "change port" flag set.
-  Future test003() async {
-    StunHeader header = new StunHeader(StunHeader.bindingRequest);
+  Future test003({StunRfcVersion version:StunRfcVersion.ref3489}) async {
+    StunHeader header = new StunHeader(StunHeader.bindingRequest, version:version);
     header.attributes.add(new StunChangeRequestAttribute(false, true));
     return await sendHeader(header);
   }
