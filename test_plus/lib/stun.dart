@@ -17,7 +17,10 @@ doTest(net.TetSocketBuilder builder) async {
   //stun.StunRfcVersion version = stun.StunRfcVersion.ref3489;
   try {
     stun.StunClientSendHeaderResult r = await client.test001(version: version);
-    print("-z- ${r.remoteAddress} ${r.remotePort} ${r.header.mappedAddress()} ${r.header.mappedPort()}");
+    print("-ra- ${r.remoteAddress} ${r.remotePort} ");
+    print("-ma- ${r.header.mappedAddress()} ${r.header.mappedPort()} ${r.header.haveMappedAddress()}");
+    print("-oa- ${r.header.originAddress()} ${r.header.originPort()} ${r.header.haveOriginAddress()}");
+    print("-oa- ${r.header.otherAddress()} ${r.header.otherPort()} ${r.header.haveOtherAddress()}");
   } catch (e, t) {
     print("EE ${e} ${t}");
   }

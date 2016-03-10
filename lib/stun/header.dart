@@ -89,6 +89,10 @@ class StunHeader {
     }
   }
 
+  bool haveOtherAddress() {
+    return (otherAddressAttribute() == null? false : true);
+  }
+
   String otherAddress() {
     StunAddressAttribute otherAddress = otherAddressAttribute();
     return (otherAddress == null ? "" : otherAddress.address);
@@ -108,6 +112,10 @@ class StunHeader {
     } else {
       return xorMappedAddress;
     }
+  }
+
+  bool haveMappedAddress() {
+    return (mappedAddressAttribute() == null? false : true);
   }
 
   String mappedAddress() {
