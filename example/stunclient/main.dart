@@ -16,13 +16,13 @@ main(List<String> args) async {
     clientIp = args[2];
   }
 
-  if(clientIp == null) {
-    print("[${clientIp}]");
+  if(clientIp != null) {
+    print("#A#[${clientIp}]");
     await checkIP(builder, clientIp, primaryIP, primaryPort);
     return;
   }
   for (net.TetNetworkInterface i in await builder.getNetworkInterfaces()) {
-    print("[${i}]");
+    print("#B#[${i}]");
     await checkIP(builder, i.address, primaryIP, primaryPort);
   }
 }
