@@ -46,13 +46,13 @@ class StunServer {
         }
 
         net.TetUdpSocket udpSock = null;
-        if (changeIP == false && changePort == false) {
+        if (changeIP == false && changePort == false) {print("--sA");
           udpSock = primaryUdp;
-        } else if (changeIP == true && changePort == true) {
+        } else if (changeIP == true && changePort == true) {print("--sB");
           udpSock = secondaryUdpWithDiffPort;
-        } else if (changeIP == true && changePort == false) {
+        } else if (changeIP == true && changePort == false) {print("--sC");
           udpSock = primaryUdpWithDiffPort;
-        } else if (changeIP == false && changePort == true) {
+        } else if (changeIP == false && changePort == true) {print("--sD");
           udpSock = secondaryUdp;
         }
         int family = ((new net.IPAddr.fromString(info.remoteAddress)).isV4() ? StunAddressAttribute.familyIPv4 : StunAddressAttribute.familyIPv6);
