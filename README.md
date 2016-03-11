@@ -37,3 +37,7 @@ http://tools.ietf.org/html/rfc5769
 http://tools.ietf.org/html/rfc5780
 
 http://tools.ietf.org/html/rfc3489
+
+http://www.bittorrent.org/beps/bep_0003.html
+
+http://www.bittorrent.org/beps/bep_0005.html
