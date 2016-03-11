@@ -53,6 +53,14 @@ class StunHeader {
     return null;
   }
 
+  bool haveChangeRequest() {
+    return (classRequest == null? false: true);
+  }
+
+  StunChangeRequestAttribute changeReuest() {
+    return getAttribute([StunAttribute.changeRequest]);
+  }
+
   StunAddressAttribute originAddressAttribute() {
     StunAddressAttribute sourceAddress = getAttribute([StunAttribute.sourceAddress]);
     StunAddressAttribute originAddress = getAttribute([StunAttribute.responseOrigin]);
