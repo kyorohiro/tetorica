@@ -21,7 +21,7 @@ main(List<String> args) async {
     print("## ${addr.rawvalue}");
     print("## ${addr.toString()}");
     stun.StunClient client = new stun.StunClient(builder, addr.toString(), 18081, primaryIP, primaryPort);
-    await client.testStunType();
+    print("${await client.testStunType()}");
   }
 //  stun.StunClient client = new stun.StunClient(builder, "127.0.0.1", 18081, primaryIP, primaryPort);
 //  await client.testStunType();
