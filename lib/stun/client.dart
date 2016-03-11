@@ -29,25 +29,22 @@ class StunClient {
   Map<StunTransactionID, Completer<StunClientSendHeaderResult>> cash = {};
   net.TetUdpSocket _udp = null;
 
-  StunClient(
-    this.builder,
-    this.clientAddress, this.clientPort,
-    this.stunServer, this.stunServerPort) {
+  StunClient(this.builder, this.clientAddress, this.clientPort, this.stunServer, this.stunServerPort) {
     ;
   }
 
   Future testStunType({List<net.IPAddr> expectedIpList, List<int> expectedPortList}) async {
     StunClientBasicTest basic = new StunClientBasicTest(this);
     //print("### ${clientAddress}");
-    if(expectedIpList == null) {
+    if (expectedIpList == null) {
       expectedIpList = [];
     }
-    if(expectedPortList == null) {
+    if (expectedPortList == null) {
       expectedPortList = [];
     }
     expectedIpList.add(new net.IPAddr.fromString(clientAddress));
     expectedPortList.add(clientPort);
-    return await basic.testBasic(expectedIpList:expectedIpList,expectedPortList:expectedPortList);
+    return await basic.testBasic(expectedIpList: expectedIpList, expectedPortList: expectedPortList);
   }
 
   Future prepare() async {

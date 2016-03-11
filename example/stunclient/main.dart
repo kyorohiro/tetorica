@@ -12,11 +12,11 @@ main(List<String> args) async {
   int primaryPort = int.parse(args[1]);
 
   String clientIp = null;
-  if(args.length >= 3) {
+  if (args.length >= 3) {
     clientIp = args[2];
   }
 
-  if(clientIp != null) {
+  if (clientIp != null) {
     print("#A#[${clientIp}]");
     await checkIP(builder, clientIp, primaryIP, primaryPort);
     return;
