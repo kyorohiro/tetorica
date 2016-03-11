@@ -47,6 +47,30 @@ class IPAddr {
   bool isBroadcast() {
     return IPConv.isBroadcast(rawvalue);
   }
+
+  int get hashCode {
+    int result = 0;
+    for(int v in rawvalue) {
+      result = 37 * result + v;
+    }
+    return result;
+  }
+
+  bool operator ==(o) {
+    if (o == null || false == (o is IPAddr)) {
+      return false;
+    }
+    IPAddr p = o;
+    if(p.rawvalue.length != rawvalue.length) {
+      return false;
+    }
+    for(int i=0;i<p.rawvalue.length;i++) {
+      if(p.rawvalue[i] != rawvalue[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
 
 class IPConv {
