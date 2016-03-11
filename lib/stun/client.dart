@@ -38,7 +38,7 @@ class StunClient {
 
   Future testStunType({List<net.IPAddr> expectedIpList, List<int> expectedPortList}) async {
     StunClientBasicTest basic = new StunClientBasicTest(this);
-    print("### ${clientAddress}");
+    //print("### ${clientAddress}");
     if(expectedIpList == null) {
       expectedIpList = [];
     }
@@ -74,7 +74,7 @@ class StunClient {
       cash.remove(header.transactionID).completeError({"mes": "id is deprecated"});
     }
     cash[header.transactionID] = new Completer();
-    print("### ${stunServer} ${stunServerPort}");
+    //print("### ${stunServer} ${stunServerPort}");
     _udp.send(header.encode(), stunServer, stunServerPort);
     cash[header.transactionID].future.timeout(timeout, onTimeout: () {
       //print("+1+ ${cash.containsKey(header.transactionID)} ${cash}");

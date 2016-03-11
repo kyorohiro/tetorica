@@ -13,15 +13,15 @@ main(List<String> args) async {
 
 
   for (net.TetNetworkInterface i in await builder.getNetworkInterfaces()) {
-    print("## ${i}");
+    print("[${i}]");
     net.IPAddr addr = new net.IPAddr.fromString(i.address);
     if(addr.isLocalHost() == true) {
       continue;
     }
-    print("## ${addr.rawvalue}");
-    print("## ${addr.toString()}");
+    print("   ${addr.toString()}");
     stun.StunClient client = new stun.StunClient(builder, addr.toString(), 18081, primaryIP, primaryPort);
-    print("${await client.testStunType()}");
+    print("   ${await client.testStunType()}");
+    print("\n");
   }
 //  stun.StunClient client = new stun.StunClient(builder, "127.0.0.1", 18081, primaryIP, primaryPort);
 //  await client.testStunType();

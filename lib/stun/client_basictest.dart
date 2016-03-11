@@ -73,13 +73,13 @@ class StunClientBasicTest {
     if (version == StunRfcVersion.ref3489) {
       header.attributes.add(new StunChangeRequestAttribute(false, false));
     }
-    print("----------1");
+    //sprint("----------1");
     await client.prepare();
-        print("----------2");
+      //  print("----------2");
     var ret = await client.sendHeader(header);
-        print("----------3");
+      //  print("----------3");
     client.close();
-        print("----------4");
+      //  print("----------4");
     return ret;
   }
 
