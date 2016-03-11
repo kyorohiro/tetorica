@@ -12,9 +12,11 @@ void main() {
       IPAddr addrV4 = new IPAddr.fromString("127.0.0.1");
       IPAddr addrV4b = new IPAddr.fromString("127.255.255.255");
       IPAddr addrV6 = new IPAddr.fromString(":1");
+      IPAddr addrV6b = new IPAddr.fromString("::1");
       unit.expect(true, addrV4.isLocalHost());
       unit.expect(true, addrV4b.isLocalHost());
       unit.expect(true, addrV6.isLocalHost());
+      unit.expect(true, addrV6b.isLocalHost());
     });
     unit.test("broadcast", () {
       IPAddr addrV4 = new IPAddr.fromString("255.255.255.255");

@@ -17,22 +17,30 @@ enum StunNatType { openInternet, blockUdp, symmetricUdpFirewall, symmetricUdp, f
 // 9 Client Behavior
 class StunClient {
   net.TetSocketBuilder builder;
-  String address;
-  int port;
+
+  String clientAddress;
+  int clientPort;
+
   String stunServer;
   int stunServerPort;
+
   Duration _defaultTimeout = new Duration(seconds: 5);
 
   Map<StunTransactionID, Completer<StunClientSendHeaderResult>> cash = {};
   net.TetUdpSocket _udp = null;
 
-  StunClient(this.builder, this.stunServer, this.stunServerPort, {this.address: "0.0.0.0", this.port: 0}) {
+  StunClient(
+    this.builder,
+    this.clientAddress, this.clientPort,
+    this.stunServer, this.stunServerPort) {
     ;
   }
 
-  Future testStunType(List<net.IPAddr> ipList) async {
+  Future testStunType({List<net.IPAddr> expectedIpList, List<int> expectedPortList}) async {
     StunClientBasicTest basic = new StunClientBasicTest(this);
-    return basic.testBasic(ipList);
+    expectedIpList.add(new net.IPAddr.fromString(clientAddress));
+    expectedPortList.add(clientPort);
+    return basic.testBasic(expectedIpList:expectedIpList,expectedPortList:expectedPortList);
   }
 
   Future prepare() async {
@@ -41,7 +49,7 @@ class StunClient {
     }
 
     net.TetUdpSocket u = builder.createUdpClient();
-    await u.bind(address, port);
+    await u.bind(clientAddress, clientPort);
     _udp = u;
     _udp.onReceive.listen((net.TetReceiveUdpInfo info) {
       StunHeader header = StunHeader.decode(info.data, 0);

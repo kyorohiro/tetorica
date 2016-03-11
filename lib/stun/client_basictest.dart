@@ -16,7 +16,8 @@ class StunClientBasicTest {
     return await client.prepare();
   }
 
-  Future<List<StunNatType>> testBasic(List<net.IPAddr> ipList) async {
+  Future<List<StunNatType>> testBasic(
+    {List<net.IPAddr> expectedIpList, List<int> expectedPortList}) async {
     StunClientSendHeaderResult test1Result = null;
     StunClientSendHeaderResult test2Result = null;
     StunClientSendHeaderResult test3Result = null;
@@ -28,7 +29,7 @@ class StunClientBasicTest {
         return [StunNatType.stunServerThrowError];
       }
       if (false == test1Result.header.haveOtherAddress()) {
-        if (ipList.contains(new net.IPAddr.fromString(test1Result.remoteAddress))) {
+        if (expectedIpList.contains(new net.IPAddr.fromString(test1Result.remoteAddress))) {
           return [StunNatType.openInternet, StunNatType.symmetricUdpFirewall];
         } else {
           return [StunNatType.fullConeNat, StunNatType.symmetricNat, StunNatType.restricted, StunNatType.portRestricted];
@@ -43,7 +44,7 @@ class StunClientBasicTest {
     // test 002
     try {
       test2Result = await test002();
-      if (ipList.contains(new net.IPAddr.fromString(test1Result.remoteAddress))) {
+      if (expectedIpList.contains(new net.IPAddr.fromString(test1Result.remoteAddress))) {
         if (test2Result.passed()) {
           return [StunNatType.openInternet];
         } else {
@@ -57,7 +58,7 @@ class StunClientBasicTest {
         }
       }
     } catch (e) {
-      if (ipList.contains(new net.IPAddr.fromString(test1Result.remoteAddress))) {
+      if (expectedIpList.contains(new net.IPAddr.fromString(test1Result.remoteAddress))) {
         return [StunNatType.symmetricUdpFirewall];
       }
     }
@@ -72,18 +73,27 @@ class StunClientBasicTest {
     if (version == StunRfcVersion.ref3489) {
       header.attributes.add(new StunChangeRequestAttribute(false, false));
     }
-    return await client.sendHeader(header);
+    await client.prepare();
+    var ret = await client.sendHeader(header);
+    client.close();
+    return ret;
   }
 
   Future<StunClientSendHeaderResult> test002({StunRfcVersion version: StunRfcVersion.ref3489}) async {
     StunHeader header = new StunHeader(StunHeader.bindingRequest, version: version);
     header.attributes.add(new StunChangeRequestAttribute(true, true));
-    return await client.sendHeader(header);
+    await client.prepare();
+    var ret = await client.sendHeader(header);
+    client.close();
+    return ret;
   }
 
   Future test003({StunRfcVersion version: StunRfcVersion.ref3489}) async {
     StunHeader header = new StunHeader(StunHeader.bindingRequest, version: version);
     header.attributes.add(new StunChangeRequestAttribute(false, true));
-    return await client.sendHeader(header);
+    await client.prepare();
+    var ret = await client.sendHeader(header);
+    client.close();
+    return ret;
   }
 }

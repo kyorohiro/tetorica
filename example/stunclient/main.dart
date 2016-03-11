@@ -8,11 +8,15 @@ main(List<String> args) async {
     print("dart xxx.dart [primary ip] [primary port]");
     return;
   }
-  //String primaryIP = args[0];
-  //int primaryPort = int.parse(args[1]);
+  String primaryIP = args[0];
+  int primaryPort = int.parse(args[1]);
 
   for(net.TetNetworkInterface i in await builder.getNetworkInterfaces()) {
     print("## ${i}");
+    net.IPAddr addr = new net.IPAddr.fromString(i.address);
+    stun.StunClient client = new stun.StunClient(builder, addr.toString(), 18081, primaryIP, primaryPort);
+    client.testStunType();
+
   }
 //  stun.StunClient client = new stun.StunClient(builder, primaryIP, primaryPort);
 //  client.testStunType(ipList);

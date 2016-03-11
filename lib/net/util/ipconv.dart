@@ -14,17 +14,17 @@ class IPAddr {
 
   IPAddr.fromString(String ip) {
     int e = ip.indexOf("%");
-    if(e > 0) {
-      linkOption = ip.substring(e+1);
+    if (e > 0) {
+      linkOption = ip.substring(e + 1);
       ip = ip.substring(0, e);
     }
     rawvalue = IPConv.toRawIP(ip);
   }
 
-  IPAddr.fromBytes(this.rawvalue, {this.linkOption:""}) {}
+  IPAddr.fromBytes(this.rawvalue, {this.linkOption: ""}) {}
 
   String toString() {
-    String opt = (linkOption.length == 0?"":"%${linkOption}");
+    String opt = (linkOption.length == 0 ? "" : "%${linkOption}");
     return "${IPConv.toIPString(rawvalue)}${opt}";
   }
 
@@ -52,8 +52,8 @@ class IPAddr {
 class IPConv {
   static List<int> toRawIP(String ip, {List<int> output}) {
     int e = ip.indexOf("%");
-    if(e > 0) {
-      ip = ip.substring(0,e);
+    if (e > 0) {
+      ip = ip.substring(0, e);
     }
     List rawIP = null;
     if (ip.contains(".")) {
@@ -80,13 +80,23 @@ class IPConv {
       }
       int i = 0;
       List<String> vv = ip.split(new RegExp(":"));
+      int numOfNoZeros = 0;
       for (String v in vv) {
-        //print(" ${v} ${i} ## ip ${vv}");
+        if (v.length != 0) {
+          numOfNoZeros++;
+        }
+      }
+      bool isZeros = false;
+      for (String v in vv) {
+        //print("ZZ ${numOfNoZeros} ${v} ${vv}");
         if (v.length == 0) {
-          int r = 8 - vv.length + 1;
-          for (int o = 0; o < r && i<16; o++) {
-            rawIP[i++] = 0;
-            rawIP[i++] = 0;
+          if (isZeros == false) {
+            int r = 8 - numOfNoZeros;
+            for (int o = 0; o < r && i < 16; o++) {
+              rawIP[i++] = 0;
+              rawIP[i++] = 0;
+            }
+            isZeros = true;
           }
         } else {
           int s = int.parse(v, radix: 16);
@@ -159,9 +169,9 @@ class IPConv {
       return (ip[0] == 127);
     } else {
       //::1
-      if(0xff&ip[15]==1) {
-        for(int i=0;i<15;i++) {
-          if(0xff&ip[i] != 0) {
+      if (0xff & ip[15] == 1) {
+        for (int i = 0; i < 15; i++) {
+          if (0xff & ip[i] != 0) {
             return false;
           }
         }
@@ -182,10 +192,7 @@ class IPConv {
 
   static bool isPrivate(List<int> ip) {
     if (ip.length == 4) {
-      return
-       (0xff & ip[0] == 10) ||
-      ((0xff & ip[0] == 172) && (0xf0 & ip[1] == 16)) ||
-      ((0xff & ip[0] == 192) && (0xff & ip[1] == 168));
+      return (0xff & ip[0] == 10) || ((0xff & ip[0] == 172) && (0xf0 & ip[1] == 16)) || ((0xff & ip[0] == 192) && (0xff & ip[1] == 168));
     } else {
       //fec0::/10
       return (0xff & ip[0] == 0xfe) && (0xC0 & ip[1] == 0xC0);
@@ -205,9 +212,9 @@ class IPConv {
       return (0xff & ip[0] == 255) && (0xff & ip[1] == 255) && (0xff & ip[2] == 255) && (0xff & ip[3] == 255);
     } else {
       //ff02::1
-      if(0xff&ip[0] == 0xff && 0xff&ip[1] == 0x02 && 0xff&ip[15]==1) {
-        for(int i=2;i<15;i++) {
-          if(0xff&ip[i] != 0) {
+      if (0xff & ip[0] == 0xff && 0xff & ip[1] == 0x02 && 0xff & ip[15] == 1) {
+        for (int i = 2; i < 15; i++) {
+          if (0xff & ip[i] != 0) {
             return false;
           }
         }
