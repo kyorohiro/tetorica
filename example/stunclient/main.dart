@@ -14,7 +14,7 @@ main(List<String> args) async {
   for (net.TetNetworkInterface i in await builder.getNetworkInterfaces()) {
     print("[${i}]");
     net.IPAddr addr = new net.IPAddr.fromString(i.address);
-    if (addr.isLocalHost() == true) {
+    if (addr.isLocalHost() == true || addr.isLinkLocal() == true) {
       continue;
     }
     try {
