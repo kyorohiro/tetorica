@@ -25,7 +25,7 @@ class StunClient {
   int port;
   String stunServer;
   int stunServerPort;
-  Duration _defaultTimeout = new Duration(seconds: 5);
+  Duration _defaultTimeout = new Duration(seconds: 3);
 
   Map<StunTransactionID, Completer<StunClientSendHeaderResult>> cash = {};
   net.TetUdpSocket _udp = null;
@@ -43,6 +43,7 @@ class StunClient {
     await u.bind(address, port);
     _udp = u;
     _udp.onReceive.listen((net.TetReceiveUdpInfo info) {
+      print("-- ${info.data}");
       StunHeader header = StunHeader.decode(info.data, 0);
       if (cash.containsKey(header.transactionID)) {
         cash.remove(header.transactionID).complete(new StunClientSendHeaderResult(info.remoteAddress, info.remotePort, header));
