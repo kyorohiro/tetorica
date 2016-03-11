@@ -39,7 +39,7 @@ class StunClientBasicTest {
       // test1 is no response
       return [StunNatType.blockUdp];
     }
-
+/*
     //
     // test 002
     try {
@@ -62,7 +62,7 @@ class StunClientBasicTest {
         return [StunNatType.symmetricUdpFirewall];
       }
     }
-
+*/
     //
     // retest1
     return [StunNatType.restricted, StunNatType.portRestricted];
@@ -73,9 +73,13 @@ class StunClientBasicTest {
     if (version == StunRfcVersion.ref3489) {
       header.attributes.add(new StunChangeRequestAttribute(false, false));
     }
+    print("----------1");
     await client.prepare();
+        print("----------2");
     var ret = await client.sendHeader(header);
+        print("----------3");
     client.close();
+        print("----------4");
     return ret;
   }
 
