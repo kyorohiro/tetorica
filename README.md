@@ -41,3 +41,5 @@ http://tools.ietf.org/html/rfc3489
 http://www.bittorrent.org/beps/bep_0003.html
 
 http://www.bittorrent.org/beps/bep_0005.html
+
+https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf
