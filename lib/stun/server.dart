@@ -59,7 +59,7 @@ class StunServer {
 
         header.attributes.add(header.createMappedAddressAttribute(info.remoteAddress, info.remotePort));
         header.attributes.add(header.createOtherAddressAttribute(secondaryIP, secondaryPort));
-        header.attributes.add(header.createOtherAddressAttribute(primaryIP, primaryPort));
+        header.attributes.add(header.createOriginAddressAttribute(primaryIP, primaryPort));
 
         udpSock.send(header.encode(), info.remoteAddress, info.remotePort);
         print("--send");
