@@ -19,6 +19,7 @@ class StunClientBasicTest {
   Future<List<StunNatType>> testBasic(
     {List<net.IPAddr> expectedIpList, List<int> expectedPortList}) async {
     StunClientSendHeaderResult test1Result = null;
+    StunClientSendHeaderResult test1ResultB = null;
     StunClientSendHeaderResult test2Result = null;
     StunClientSendHeaderResult test3Result = null;
     //
@@ -39,7 +40,7 @@ class StunClientBasicTest {
       // test1 is no response
       return [StunNatType.blockUdp];
     }
-/*
+
     //
     // test 002
     try {
@@ -48,13 +49,13 @@ class StunClientBasicTest {
         if (test2Result.passed()) {
           return [StunNatType.openInternet];
         } else {
-          return [StunNatType.openInternet, StunNatType.fullConeNat];
+          return [StunNatType.stunServerThrowError];
         }
       } else {
         if (test2Result.passed()) {
           return [StunNatType.fullConeNat];
         } else {
-          return [StunNatType.fullConeNat, StunNatType.symmetricNat, StunNatType.restricted, StunNatType.portRestricted];
+          return [StunNatType.stunServerThrowError];
         }
       }
     } catch (e) {
@@ -62,9 +63,36 @@ class StunClientBasicTest {
         return [StunNatType.symmetricUdpFirewall];
       }
     }
-*/
+
+    ///
+    ///
+    ///
+    try {
+      test1ResultB = await test001();
+      if (false == test1ResultB.passed()) {
+        return [StunNatType.stunServerThrowError];
+      }
+      if(test1ResultB.header.mappedAddress() != test1Result.header.mappedAddress()) {
+        return [StunNatType.symmetricNat];
+      }
+    } catch (e) {
+      // test1 is no response
+      return [StunNatType.stunServerThrowError];
+    }
+
     //
-    // retest1
+    //
+    // print("###-----");
+    try {
+      test3Result = await test003();
+      if (false == test3Result.passed()) {
+        return [StunNatType.stunServerThrowError];
+      }
+      return [StunNatType.restricted];
+    } catch (e) {
+      return [StunNatType.portRestricted];
+    }
+
     return [StunNatType.restricted, StunNatType.portRestricted];
   }
 
