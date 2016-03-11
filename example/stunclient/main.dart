@@ -11,25 +11,23 @@ main(List<String> args) async {
   String primaryIP = args[0];
   int primaryPort = int.parse(args[1]);
 
-
   for (net.TetNetworkInterface i in await builder.getNetworkInterfaces()) {
     print("[${i}]");
     net.IPAddr addr = new net.IPAddr.fromString(i.address);
-    if(addr.isLocalHost() == true) {
+    if (addr.isLocalHost() == true) {
       continue;
-    }
+    }/*
     try {
-    print("   ${addr.toString()}");
-    stun.StunClient client = new stun.StunClient(builder, addr.toString(), 18081, primaryIP, primaryPort);
-    print("   ${await client.testStunType()}");
-  } catch(e){
-    ;
-  }
+      print("   ${addr.toString()}");
+      stun.StunClient client = new stun.StunClient(builder, addr.toString(), 18081, primaryIP, primaryPort);
+      print("   ${await client.testStunType()}");
+    } catch (e) {
+      ;
+    }*/
     print("\n");
   }
 //  stun.StunClient client = new stun.StunClient(builder, "127.0.0.1", 18081, primaryIP, primaryPort);
 //  await client.testStunType();
-
 
 //  stun.StunClient client = new stun.StunClient(builder, primaryIP, primaryPort);
 //  client.testStunType(ipList);
