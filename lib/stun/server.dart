@@ -28,35 +28,37 @@ class StunServer {
   }
 
   Future primaryAct() async {
-    await for(net.TetReceiveUdpInfo info in primaryUdp.onReceive) {
+    await for (net.TetReceiveUdpInfo info in primaryUdp.onReceive) {
       try {
-        StunHeader header = await StunHeader.decode(info.data, 0);
+        StunHeader receivedHeader = await StunHeader.decode(info.data, 0);
         bool changeIP = false;
         bool changePort = false;
-        bool ref3489 = (header.rfcVersion() == StunRfcVersion.ref3489);
+        StunRfcVersion rfcVersion = StunRfcVersion.ref3489;
 
-        if(header.haveChangeRequest()) {
-          StunChangeRequestAttribute attr = header.changeReuest();
+        if (receivedHeader.haveChangeRequest()) {
+          StunChangeRequestAttribute attr = receivedHeader.changeReuest();
           changeIP = attr.changeIP;
           changePort = attr.changePort;
         }
 
         net.TetUdpSocket udpSock = null;
-        if(changeIP == false && changePort == false) {
+        if (changeIP == false && changePort == false) {
           udpSock = primaryUdp;
-        } else if(changeIP == true && changePort == true) {
+        } else if (changeIP == true && changePort == true) {
           udpSock = secondaryUdpWithDiffPort;
-        } else if(changeIP == true && changePort == false) {
+        } else if (changeIP == true && changePort == false) {
           udpSock = primaryUdpWithDiffPort;
-        } else if(changeIP == false && changePort == true) {
+        } else if (changeIP == false && changePort == true) {
           udpSock = secondaryUdp;
         }
-//        udpSock.send(, address, port)
+        int family = ((new net.IPAddr.fromString(info.remoteAddress)).isV4() ? StunAddressAttribute.familyIPv4 : StunAddressAttribute.familyIPv6);
+        StunHeader header = new StunHeader(StunHeader.bindingResponse, version:rfcVersion);
+        header.attributes.add(new StunAddressAttribute(StunAttribute.mappedAddress, family, info.remotePort, info.remoteAddress));
+        udpSock.send(header.encode(), info.remoteAddress, info.remotePort);
         //
-      } catch(e,t) {
+      } catch (e, t) {
         ;
       }
     }
   }
-
 }
