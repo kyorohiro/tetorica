@@ -54,7 +54,7 @@ class StunHeader {
   }
 
   bool haveChangeRequest() {
-    return (classRequest == null? false: true);
+    return (changeReuest() == null? false: true);
   }
 
   StunChangeRequestAttribute changeReuest() {
