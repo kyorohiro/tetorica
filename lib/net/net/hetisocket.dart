@@ -65,6 +65,11 @@ class TetNetworkInterface
   String address;
   int prefixLength;
   String name;
+
+  @override
+  String toString() {
+    return """${{"address":address,"name":name}}""";
+  }
 }
 
 class TetSocketInfo {
