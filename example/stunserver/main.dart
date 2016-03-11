@@ -18,6 +18,6 @@ main(List<String> args) async {
     primaryPort,
     secondaryIP,
     secondaryPort);
-  server.go();
 
+  await server.go();
 }

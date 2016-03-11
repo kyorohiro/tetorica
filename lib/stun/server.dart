@@ -25,6 +25,8 @@ class StunServer {
     await primaryUdpWithDiffPort.bind(primaryIP, secondaryPort);
     await secondaryUdp.bind(secondaryIP, primaryPort);
     await secondaryUdpWithDiffPort.bind(secondaryIP, secondaryPort);
+
+    await primaryAct();
   }
 
   Future primaryAct() async {
