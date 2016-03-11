@@ -61,7 +61,7 @@ class StunServer {
         udpSock.send(header.encode(), info.remoteAddress, info.remotePort);
         //
       } catch (e, t) {
-        ;
+        print("-e-${e} ${t}");
       }
     }
   }
