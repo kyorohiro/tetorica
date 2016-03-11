@@ -12,6 +12,10 @@ class StunAddressAttribute extends StunAttribute {
   String address;
 
   StunAddressAttribute(this.type, this.family, this.port, this.address) {}
+  StunAddressAttribute.XAddressFromAddress(StunTransactionID transactionID, this.type, this.family, this.port, this.address) {
+    this.address = convXAddress(transactionID, address);
+    this.port = convXPort(transactionID, port);
+  }
 
   @override
   String toString() {
@@ -76,6 +80,14 @@ class StunAddressAttribute extends StunAttribute {
   }
 
   String xAddress(StunTransactionID id) {
+    return StunAddressAttribute.convXAddress(id, address);
+  }
+
+  int xPort(StunTransactionID id) {
+    return convXPort(id, port);
+  }
+
+  static String convXAddress(StunTransactionID id, String address) {
     List<int> a = net.IPConv.toRawIP(address);
     List<int> b = id.value;
     List<int> c = [];
@@ -85,7 +97,7 @@ class StunAddressAttribute extends StunAttribute {
     return net.IPConv.toIPString(c);
   }
 
-  int xPort(StunTransactionID id) {
+  static int convXPort(StunTransactionID id, int port) {
     List<int> a = core.ByteOrder.parseShortByte(port, core.ByteOrderType.BigEndian);
     List<int> b = id.magicCookie();
     List<int> c = [a[0] ^ b[0], a[1] ^ b[1]];

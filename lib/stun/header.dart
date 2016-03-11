@@ -54,7 +54,7 @@ class StunHeader {
   }
 
   bool haveChangeRequest() {
-    return (changeReuest() == null? false: true);
+    return (changeReuest() == null ? false : true);
   }
 
   StunChangeRequestAttribute changeReuest() {
@@ -97,8 +97,35 @@ class StunHeader {
     }
   }
 
+  StunAddressAttribute createMappedAddressAttribute(String address, int port) {
+    int family = ((new net.IPAddr.fromString(address)).isV4() ? StunAddressAttribute.familyIPv4 : StunAddressAttribute.familyIPv6);
+    if (StunRfcVersion.ref3489 == rfcVersion()) {
+      return new StunAddressAttribute(StunAttribute.mappedAddress, family, port, address);
+    } else {
+      return new StunAddressAttribute.XAddressFromAddress(transactionID, StunAttribute.xorMappedAddress, family, port, address);
+    }
+  }
+
+  StunAddressAttribute createOtherAddressAttribute(String address, int port) {
+    int family = ((new net.IPAddr.fromString(address)).isV4() ? StunAddressAttribute.familyIPv4 : StunAddressAttribute.familyIPv6);
+    if (StunRfcVersion.ref3489 == rfcVersion()) {
+      return new StunAddressAttribute(StunAttribute.changedAddress, family, port, address);
+    } else {
+      return new StunAddressAttribute(StunAttribute.otherAddress, family, port, address);
+    }
+  }
+
+  StunAddressAttribute createOriginAddressAttribute(String address, int port) {
+    int family = ((new net.IPAddr.fromString(address)).isV4() ? StunAddressAttribute.familyIPv4 : StunAddressAttribute.familyIPv6);
+    if (StunRfcVersion.ref3489 == rfcVersion()) {
+      return new StunAddressAttribute(StunAttribute.sourceAddress, family, port, address);
+    } else {
+      return new StunAddressAttribute(StunAttribute.responseOrigin, family, port, address);
+    }
+  }
+
   bool haveOtherAddress() {
-    return (otherAddressAttribute() == null? false : true);
+    return (otherAddressAttribute() == null ? false : true);
   }
 
   String otherAddress() {
@@ -123,7 +150,7 @@ class StunHeader {
   }
 
   bool haveMappedAddress() {
-    return (mappedAddressAttribute() == null? false : true);
+    return (mappedAddressAttribute() == null ? false : true);
   }
 
   String mappedAddress() {

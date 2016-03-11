@@ -55,9 +55,11 @@ class StunServer {
         } else if (changeIP == false && changePort == true) {print("--sD");
           udpSock = secondaryUdp;
         }
-        int family = ((new net.IPAddr.fromString(info.remoteAddress)).isV4() ? StunAddressAttribute.familyIPv4 : StunAddressAttribute.familyIPv6);
         StunHeader header = new StunHeader(StunHeader.bindingResponse, version:rfcVersion, transactionID: receivedHeader.transactionID);
-        header.attributes.add(new StunAddressAttribute(StunAttribute.mappedAddress, family, info.remotePort, info.remoteAddress));
+
+        header.attributes.add(header.createMappedAddressAttribute(info.remoteAddress, info.remotePort));
+        header.attributes.add(header.createOtherAddressAttribute(secondaryIP, secondaryPort));
+        header.attributes.add(header.createOtherAddressAttribute(primaryIP, primaryPort));
 
         udpSock.send(header.encode(), info.remoteAddress, info.remotePort);
         print("--send");
