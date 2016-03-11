@@ -32,7 +32,7 @@ class StunServer {
   Future primaryAct() async {
     print("-- prim");
     await for (net.TetReceiveUdpInfo info in primaryUdp.onReceive) {
-      print("-- -- prim ${info.data}");
+      print("-- -- prim ${info.data} ${info.remoteAddress} ${info.remotePort}");
       try {
         StunHeader receivedHeader = await StunHeader.decode(info.data, 0);
         bool changeIP = false;
