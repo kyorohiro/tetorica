@@ -107,9 +107,9 @@ class StunClientBasicTest {
     await client.prepare();
     //print("----------2");
     var ret = await client.sendHeader(header);
-    print("----------3");
+    //print("----------3");
     client.close();
-    print("----------4");
+    //print("----------4");
     return ret;
   }
 
