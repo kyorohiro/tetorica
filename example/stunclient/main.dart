@@ -16,14 +16,14 @@ main(List<String> args) async {
     net.IPAddr addr = new net.IPAddr.fromString(i.address);
     if (addr.isLocalHost() == true) {
       continue;
-    }/*
+    }
     try {
       print("   ${addr.toString()}");
       stun.StunClient client = new stun.StunClient(builder, addr.toString(), 18081, primaryIP, primaryPort);
       print("   ${await client.testStunType()}");
     } catch (e) {
       ;
-    }*/
+    }
     print("\n");
   }
 //  stun.StunClient client = new stun.StunClient(builder, "127.0.0.1", 18081, primaryIP, primaryPort);
