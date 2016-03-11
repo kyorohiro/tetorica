@@ -2,7 +2,7 @@ part of hetimanet;
 
 class IPAddr {
   List<int> rawvalue;
-  String linkOption;
+  String linkOption = "";
 
   bool isV4() {
     return IPConv.isIpV4(rawvalue);
