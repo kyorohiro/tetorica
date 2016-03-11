@@ -47,7 +47,7 @@ class StunClient {
     }
     expectedIpList.add(new net.IPAddr.fromString(clientAddress));
     expectedPortList.add(clientPort);
-    return basic.testBasic(expectedIpList:expectedIpList,expectedPortList:expectedPortList);
+    return await basic.testBasic(expectedIpList:expectedIpList,expectedPortList:expectedPortList);
   }
 
   Future prepare() async {
