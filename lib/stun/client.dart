@@ -24,7 +24,7 @@ class StunClient {
   String stunServer;
   int stunServerPort;
 
-  Duration _defaultTimeout = new Duration(seconds: 5);
+  Duration _defaultTimeout = new Duration(milliseconds: 2200);
 
   Map<StunTransactionID, Completer<StunClientSendHeaderResult>> cash = {};
   net.TetUdpSocket _udp = null;
