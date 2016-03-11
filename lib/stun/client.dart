@@ -11,11 +11,7 @@ class StunClientSendHeaderResult {
   }
 }
 
-enum StunNatType {
-   openInternet,
-   blockUdp,
-   symmetricUdpFirewall,
-   symmetricUdp, fullConeNat, symmetricNat, restricted, portRestricted, stunServerThrowError }
+enum StunNatType { openInternet, blockUdp, symmetricUdpFirewall, symmetricUdp, fullConeNat, symmetricNat, restricted, portRestricted, stunServerThrowError }
 
 // https://tools.ietf.org/html/rfc3489
 // 9 Client Behavior
@@ -34,6 +30,11 @@ class StunClient {
     ;
   }
 
+  Future testStunType(List<net.IPAddr> ipList) async {
+    StunClientBasicTest basic = new StunClientBasicTest(this);
+    return basic.testBasic(ipList);
+  }
+
   Future prepare() async {
     if (_udp != null) {
       return;
@@ -43,21 +44,11 @@ class StunClient {
     await u.bind(address, port);
     _udp = u;
     _udp.onReceive.listen((net.TetReceiveUdpInfo info) {
-      //print("-- ${info.data}");
       StunHeader header = StunHeader.decode(info.data, 0);
       if (cash.containsKey(header.transactionID)) {
-        //print("-AA- ${cash.containsKey(header.transactionID)} \n -AB-${header} ${cash}");
         cash.remove(header.transactionID).complete(new StunClientSendHeaderResult(info.remoteAddress, info.remotePort, header));
-        //print("-B- ${cash.containsKey(header.transactionID)} ${cash}");
       }
     });
-  }
-
-  Future close() async {
-    if (_udp != null) {
-      _udp.close();
-      _udp = null;
-    }
   }
 
   Future<StunClientSendHeaderResult> sendHeader(StunHeader header, {Duration timeout}) async {
@@ -77,4 +68,10 @@ class StunClient {
     return cash[header.transactionID].future;
   }
 
+  Future close() async {
+    if (_udp != null) {
+      _udp.close();
+      _udp = null;
+    }
+  }
 }
