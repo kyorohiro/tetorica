@@ -58,7 +58,9 @@ class StunServer {
         int family = ((new net.IPAddr.fromString(info.remoteAddress)).isV4() ? StunAddressAttribute.familyIPv4 : StunAddressAttribute.familyIPv6);
         StunHeader header = new StunHeader(StunHeader.bindingResponse, version:rfcVersion);
         header.attributes.add(new StunAddressAttribute(StunAttribute.mappedAddress, family, info.remotePort, info.remoteAddress));
+
         udpSock.send(header.encode(), info.remoteAddress, info.remotePort);
+        print("--send");
         //
       } catch (e, t) {
         print("-e-${e} ${t}");
