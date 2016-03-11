@@ -45,7 +45,8 @@ class StunClientBasicTest {
     // test 002
     try {
       test2Result = await test002();
-      if (expectedIpList.contains(new net.IPAddr.fromString(test1Result.remoteAddress))) {
+      //peint(expectedPortList);
+      if (expectedIpList.contains(new net.IPAddr.fromString(test1Result.header.mappedAddress()))) {
         if (test2Result.passed()) {
           return [StunNatType.openInternet];
         } else {
