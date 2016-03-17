@@ -51,7 +51,6 @@ main() {
     });
 
     test.test("encode F", () {
-      int s = 1;
       for (int s = 0; s < 20; s++) {
         for (int j = 0; j < 0xdd; j++) {
           Result r = new Result(s, 500);
