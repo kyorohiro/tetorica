@@ -15,29 +15,33 @@ class Hex {
       throw {};
     }
 
-    int v;
+    int v1;
+    int v2;
+    int v3;
     for (int end = len - len % 2; si < end; si += 2) {
-      v = source[si];
-      if (0x41 <= v && v <= 0x46) {
-        buffer[ri] = (v - 0x37);
-      } else if (0x61 <= v && v <= 0x66) {
-        buffer[ri] = v - 0x57;
-      } else if (0x30 <= v && v <= 0x39) {
-        buffer[ri] = v - 0x30;
+      v1 = source[si];
+      v2 = source[si + 1];
+      if (0x41 <= v1 && v1 <= 0x46) {
+        v3 = (v1 - 0x37);
+      } else if (0x61 <= v1 && v1 <= 0x66) {
+        v3 = v1 - 0x57;
+      } else if (0x30 <= v1 && v1 <= 0x39) {
+        v3 = v1 - 0x30;
       } else {
         throw {};
       }
-      if (0x41 <= v && v <= 0x46) {
-        buffer[ri++] = (buffer[ri] << 4) | (v - 0x37);
-      } else if (0x61 <= v && v <= 0x66) {
-        buffer[ri++] = (buffer[ri] << 4) | (v - 0x57);
-      } else if (0x30 <= v && v <= 0x39) {
-        buffer[ri++] = (buffer[ri] << 4) | (v - 0x30);
+      if (0x41 <= v2 && v2 <= 0x46) {
+        buffer[ri++] = (v3 << 4) | (v2 - 0x37);
+      } else if (0x61 <= v2 && v2 <= 0x66) {
+        buffer[ri++] = (v3 << 4) | (v2 - 0x57);
+      } else if (0x30 <= v2 && v2 <= 0x39) {
+        buffer[ri++] = (v3 << 4) | (v2 - 0x30);
       } else {
         throw {};
       }
     }
     if (len % 2 == 1) {
+      int v;
       if (0x41 <= v && v <= 0x46) {
         buffer[ri++] = (v - 0x37);
       } else if (0x61 <= v && v <= 0x66) {
@@ -48,7 +52,7 @@ class Hex {
         throw {};
       }
     }
-    result.length += result.index + ri;
+    result.length = ri;
     return buffer;
   }
 
@@ -63,8 +67,8 @@ class Hex {
     buffer[ri++] = 0x78;
     for (; si < len; si++) {
       v = source[si];
-      buffer[ri++] = hexBytes[(v >> 4) & 0xff];
-      buffer[ri++] = hexBytes[v & 0xff];
+      buffer[ri++] = hexBytes[(v >> 4) & 0xf];
+      buffer[ri++] = hexBytes[v & 0xf];
     }
     result.length = result.index + ri;
     return buffer;
