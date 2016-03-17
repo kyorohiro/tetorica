@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:test/test.dart' as test;
 
 main() {
+  print("### ${Base64.equalByte} ${Base64.base64Bytes}");
   test.group("base64", () {
     test.test("encode A", () {
       Result r = new Result(0, 100);
