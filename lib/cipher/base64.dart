@@ -1,6 +1,5 @@
 library base64;
 
-import 'dart:typed_data';
 import 'cipher.dart';
 
 class Base64 {
