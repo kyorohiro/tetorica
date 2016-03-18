@@ -8,7 +8,6 @@ import 'dart:typed_data';
 main() {
   print("### ${Base64.equalByte} ${Base64.base64Bytes}");
   test.group("base64", () {
-    /*
     test.test("encode A", () {
       Uint8List r = new Uint8List(100);
       List<int> inputValue = ASCII.encode("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
@@ -37,46 +36,50 @@ main() {
       l = Base64.decode(v, 0, v.length, bbuffer, 0, bbuffer.length);
       test.expect(inputValue, bbuffer.sublist(0, l));
     });
-*/
+
     test.test("encode E", () {
       Uint8List bbuffer = new Uint8List(500);
       List<int> inputValue = [];
-      for (int j = 0; j < 0xff; j++)
-      {
+      for (int j = 0; j < 0xff; j++) {
         //
         inputValue.clear();
         for (int i = j; i <= 0xff; i++) {
           inputValue.add(i);
         }
         //
-        print("#-------------------------#");
         int l = Base64.encode(inputValue, 0, inputValue.length, bbuffer, 0, bbuffer.length);
-        print("##A# ${ASCII.decode(bbuffer.sublist(0, l))} ${l}");
 
         int ll = Base64.decode(bbuffer.sublist(0, l), 0, bbuffer.sublist(0, l).length, bbuffer, 0, bbuffer.length);
-        print("##B# ${inputValue.length} ${ll}");
         test.expect(inputValue.length, ll);
-        test.expect(
-          Hex.encodeWithNew(inputValue),
-          Hex.encodeWithNew(bbuffer.sublist(0, ll)));
+        test.expect(Hex.encodeWithNew(inputValue), Hex.encodeWithNew(bbuffer.sublist(0, ll)));
       }
     });
-/*
+
     test.test("encode F", () {
-      for (int s = 0; s < 20; s++) {
-        for (int j = 0; j < 0xdd; j++) {
-          BBuffer r = new BBuffer(s, 500);
-          List<int> inputValue = [];
+      Uint8List bbuffer = new Uint8List(1000);
+      List<int> inputValue = [];
+      for (int s = 0; s <30; s++) {
+        for (int j = 0; j < 0xff-s; j++) {
+          //
+          inputValue.clear();
           for (int i = j; i <= 0xff; i++) {
             inputValue.add(i);
           }
-          int l = Base64.encode(inputValue, s, inputValue.length, r);
-          List<int> v = r.buffer.sublist(0, r.position + r.length);
-          List<int> w = Base64.decode(v, s, v.length - s, r);
-          w = w.sublist(r.position, r.position + r.length);
+          //
+//          print("#-------------------------#");
+          int l = Base64.encode(inputValue, s, inputValue.length, bbuffer, s, bbuffer.length);
+//          print("##A# ${s} ${inputValue.length} ${ASCII.decode(bbuffer.sublist(s, s+l))} ${l}");
+
+          int ll = Base64.decode(
+            bbuffer.sublist(0, s+l), s, l,
+            bbuffer, s, bbuffer.length);
+//          print("##B# ${s} ${j} ${inputValue.length} ${ll}");
+          test.expect(inputValue.length-s, ll);
+          test.expect(
+            Hex.encodeWithNew(inputValue.sublist(s)),
+            Hex.encodeWithNew(bbuffer.sublist(s, s+ll)));
         }
       }
     });
-    */
   });
 }
