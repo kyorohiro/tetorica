@@ -4,37 +4,37 @@ import 'cipher.dart';
 import 'dart:typed_data';
 
 class ARCFOUR {
-  static List<int> operate(List<int> value, List<int> key, BBuffer result) {
-    Uint8List state = new Uint8List(256);
+  static int makeState(List<int> key, int keyIndex, int keyLength, Uint8List out, int outIndex) {
+    for (int i = 0; i < 256; i++) {
+      out[i + outIndex] = i;
+    }
 
-    //
-    // make state
-    {
-      for (int i = 0; i < 256; i++) {
-        state[i] = i;
-      }
-      for (int i = 0, j = 0, tmp = 0; i < 256; i++) {
-        j = (j + state[i] + key[i % key.length]) % 256;
-        state[i] = i;
-        tmp = state[i];
-        state[i] = state[j];
-        state[j] = tmp;
-      }
+    for (int i = 0, j = 0, tmp = 0; i < 256; i++) {
+      j = (j + out[i + outIndex] + key[i % keyLength + keyIndex]) % 256;
+      out[i + outIndex] = i;
+      tmp = out[i + outIndex];
+      out[i + outIndex] = out[j + outIndex];
+      out[j + outIndex] = tmp;
     }
+    return 256;
+  }
+
+  int operate(List<int> value, int valueIndex, int valueLength, List<int> state, int stateIndex, List<int> ij, int ijIndex, Uint8List output, int outputIndex) {
+    int i = ij[ijIndex];
+    int j = ij[ijIndex + 1];
     //
     //
-    {
-      List<int> buffer = result.buffer;
-      int ri = result.position;
-      for (int i = 0, j = 0, v = 0, len = value.length, tmp = 0; v < len; v++) {
-        i = (i + 1) % 256;
-        j = (j + state[i]) % 256;
-        tmp = state[i];
-        state[i] = state[j];
-        state[j] = tmp;
-        buffer[ri++] = state[(state[i] + state[j]) % 256] ^ value[v];
-      }
-      result.length = ri;
+    int ri = outputIndex;
+    for (int v = 0, tmp = 0; v < valueLength; v++) {
+      i = (i + 1) % 256;
+      j = (j + state[i + stateIndex]) % 256;
+      tmp = state[i + stateIndex];
+      state[i + stateIndex] = state[j + stateIndex];
+      state[j + stateIndex] = tmp;
+      output[ri++] = state[(state[i + stateIndex] + state[j + stateIndex]) % 256] ^ value[v + valueIndex];
     }
+    ij[ijIndex] = i;
+    ij[ijIndex + 1] = i;
+    return ri - outputIndex;
   }
 }
