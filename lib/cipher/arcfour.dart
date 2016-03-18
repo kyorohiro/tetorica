@@ -30,7 +30,7 @@ class ARCFOUR {
       tmp = state[i + stateIndex];
       state[i + stateIndex] = state[j + stateIndex];
       state[j + stateIndex] = tmp;
-      output[ri++] = state[(state[i + stateIndex] + state[j + stateIndex]) % 256] ^ value[v + valueIndex];
+      output[ri++] = state[((state[i + stateIndex] + state[j + stateIndex]) % 256) + stateIndex] ^ value[v + valueIndex];
     }
     ij[ijIndex] = i;
     ij[ijIndex + 1] = i;
