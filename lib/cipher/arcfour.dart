@@ -11,7 +11,6 @@ class ARCFOUR {
 
     for (int i = 0, j = 0, tmp = 0; i < 256; i++) {
       j = (j + out[i + outIndex] + key[i % keyLength + keyIndex]) % 256;
-      out[i + outIndex] = i;
       tmp = out[i + outIndex];
       out[i + outIndex] = out[j + outIndex];
       out[j + outIndex] = tmp;
@@ -19,7 +18,7 @@ class ARCFOUR {
     return 256;
   }
 
-  int operate(List<int> value, int valueIndex, int valueLength, List<int> state, int stateIndex, List<int> ij, int ijIndex, Uint8List output, int outputIndex) {
+  static int operate(List<int> value, int valueIndex, int valueLength, List<int> state, int stateIndex, List<int> ij, int ijIndex, Uint8List output, int outputIndex) {
     int i = ij[ijIndex];
     int j = ij[ijIndex + 1];
     //
