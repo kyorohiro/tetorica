@@ -9,7 +9,7 @@ class Base64 {
 
   static List<int> encode(List<int> input, int sourceIndex, int sourceLength, BBuffer result) {
     int len = sourceLength - sourceIndex, end = len - (len % 3);
-    int resultIndex = result.index;
+    int resultIndex = result.position;
     List<int> buffer = result.buffer;
 
     int si = sourceIndex;
@@ -41,12 +41,12 @@ class Base64 {
         buffer[ri++] = equalByte;
       }
     }
-    result.length = ri - result.index;
+    result.length = ri - result.position;
     return buffer;
   }
 
   static List<int> decode(List<int> input, int sourceIndex, int sourceLength, BBuffer result) {
-    int resultIndex = result.index;
+    int resultIndex = result.position;
     List<int> buffer = result.buffer;
     int si = sourceIndex;
     int ri = resultIndex;
@@ -67,7 +67,7 @@ class Base64 {
       ri -= 2;
     }
 
-    result.length = ri - result.index;
+    result.length = ri - result.position;
     return buffer;
   }
 }

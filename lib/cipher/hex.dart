@@ -1,6 +1,6 @@
 library hex;
 
-import 'cipher.dart';
+import 'dart:typed_data';
 import 'dart:convert' as conv;
 
 class Hex {
@@ -8,16 +8,18 @@ class Hex {
 
   static List<int> decodeWithNew(String value) {
     List<int> source = conv.ASCII.encode(value);
-    int bufferLen = 2+source.length*2;
-    BBuffer buffer = new BBuffer(0, bufferLen);
-    return decode(source, 0, source.length, buffer);
+    int bufferLen = 2 + source.length * 2;
+    //BBuffer buffer = new BBuffer(0, bufferLen);
+    Uint8List buffer = new Uint8List(bufferLen);
+    decode(source, 0, source.length, buffer, 0, bufferLen);
+    return buffer;
   }
 
-  static List<int> decode(List<int> source, int sourceIndex, int sourceLength, BBuffer result) {
+  static int decode(List<int> source, int sourceIndex, int sourceLength, List<int> result, int resultIndex, int resultLength) {
     int si = sourceIndex + 2;
     int len = sourceLength;
-    int ri = result.index;
-    List<int> buffer = result.buffer;
+    int ri = resultIndex;
+    List<int> buffer = result;
 
     if (sourceLength < 2) {
       throw {};
@@ -60,15 +62,14 @@ class Hex {
         throw {};
       }
     }
-    result.length = ri;
-    return buffer;
+    return ri - resultIndex;
   }
 
-  static List<int> encode(List<int> source, int sourceIndex, int sourceLength, BBuffer result) {
+  static int encode(List<int> source, int sourceIndex, int sourceLength, List<int> result, int resultIndex, int resultLength) {
     int si = sourceIndex;
     int len = sourceLength;
-    int ri = result.index;
-    List<int> buffer = result.buffer;
+    int ri = resultIndex;
+    List<int> buffer = result;
 
     int v;
     buffer[ri++] = 0x30;
@@ -78,7 +79,7 @@ class Hex {
       buffer[ri++] = hexBytes[(v >> 4) & 0xf];
       buffer[ri++] = hexBytes[v & 0xf];
     }
-    result.length = result.index + ri;
-    return buffer;
+
+    return ri - resultIndex;
   }
 }

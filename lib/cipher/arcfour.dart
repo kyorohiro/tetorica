@@ -25,7 +25,7 @@ class ARCFOUR {
     //
     {
       List<int> buffer = result.buffer;
-      int ri = result.index;
+      int ri = result.position;
       for (int i = 0, j = 0, v = 0, len = value.length, tmp = 0; v < len; v++) {
         i = (i + 1) % 256;
         j = (j + state[i]) % 256;

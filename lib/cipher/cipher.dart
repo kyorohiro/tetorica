@@ -4,10 +4,22 @@ import 'dart:typed_data';
 
 class BBuffer {
   List<int> buffer;
-  int index;
-  int length;
-  BBuffer(this.index, this.length) {
-    this.buffer = new Uint8List(length);
+  int position;
+  int _capacity;
+  int length = 0;
+
+  BBuffer(this.position, this._capacity, {List<int> this.buffer: null}) {
+    this.buffer = new Uint8List(this._capacity);
+    ByteBuffer b;
+    ByteData d = new ByteData(1);
+  }
+
+  BBuffer.fromBuffer(this.position, List<int> this.buffer) {
+    this._capacity = this.buffer.length;
+  }
+
+  BBuffer mapping(int nextPosition) {
+    return new BBuffer.fromBuffer(nextPosition, this.buffer);
   }
 
   updateBuffer() {
