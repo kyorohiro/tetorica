@@ -1,55 +1,67 @@
 import 'package:tetorica/cipher/base64.dart';
 import 'package:tetorica/cipher/cipher.dart';
+import 'package:tetorica/cipher/hex.dart';
 import 'dart:convert';
 import 'package:test/test.dart' as test;
+import 'dart:typed_data';
 
 main() {
   print("### ${Base64.equalByte} ${Base64.base64Bytes}");
   test.group("base64", () {
+    /*
     test.test("encode A", () {
-      BBuffer r = new BBuffer(0, 100);
+      Uint8List r = new Uint8List(100);
       List<int> inputValue = ASCII.encode("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
-      List<int> v = Base64.encode(inputValue, 0, inputValue.length, r);
-      print(ASCII.decode(v));
-      print("${r.position} ${r.length}");
-      test.expect(ASCII.decode(v.sublist(r.position, r.position + r.length)), "QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ejAxMjM0NTY3ODkrLw==");
+      int l = Base64.encode(inputValue, 0, inputValue.length, r, 0, r.length);
+      print(ASCII.decode(r));
+      test.expect(ASCII.decode(r.sublist(0, l)), "QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ejAxMjM0NTY3ODkrLw==");
     });
+
     test.test("decode A", () {
-      BBuffer r = new BBuffer(0, 100);
+      Uint8List bbuffer = new Uint8List(100);
       List<int> inputValue = ASCII.encode("QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ejAxMjM0NTY3ODkrLw==");
-      List<int> w = Base64.decode(inputValue, 0, inputValue.length, r);
-      print("${r.position} ${r.length}");
-      print(ASCII.decode(w.sublist(0, r.length), allowInvalid: true));
-      test.expect(ASCII.decode(w.sublist(r.position, r.position + r.length)), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
+      int l = Base64.decode(inputValue, 0, inputValue.length, bbuffer, 0, bbuffer.length);
+      print(ASCII.decode(bbuffer.sublist(0, l), allowInvalid: true));
+      test.expect(ASCII.decode(bbuffer.sublist(0, l)), "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
     });
 
     test.test("encode B", () {
-      BBuffer r = new BBuffer(0, 500);
+      Uint8List bbuffer = new Uint8List(500);
       List<int> inputValue = [];
       for (int i = 0; i <= 0xff; i++) {
         inputValue.add(i);
       }
-      List<int> v = Base64.encode(inputValue, 0, inputValue.length, r);
-      v = v.sublist(r.position, r.position + r.length);
-      List<int> w = Base64.decode(v, 0, v.length, r);
-      w = w.sublist(r.position, r.position + r.length);
-      test.expect(inputValue, w);
-    });
+      int l = Base64.encode(inputValue, 0, inputValue.length, bbuffer, 0, bbuffer.length);
+      List<int> v = bbuffer.sublist(0, l);
 
+      l = Base64.decode(v, 0, v.length, bbuffer, 0, bbuffer.length);
+      test.expect(inputValue, bbuffer.sublist(0, l));
+    });
+*/
     test.test("encode E", () {
-      for (int j = 0; j < 0xff; j++) {
-        BBuffer r = new BBuffer(0, 500);
-        List<int> inputValue = [];
+      Uint8List bbuffer = new Uint8List(500);
+      List<int> inputValue = [];
+      for (int j = 0; j < 0xff; j++)
+      {
+        //
+        inputValue.clear();
         for (int i = j; i <= 0xff; i++) {
           inputValue.add(i);
         }
-        List<int> v = Base64.encode(inputValue, 0, inputValue.length, r);
-        v = v.sublist(r.position, r.position + r.length);
-        List<int> w = Base64.decode(v, 0, v.length, r);
-        w = w.sublist(r.position, r.position + r.length);
+        //
+        print("#-------------------------#");
+        int l = Base64.encode(inputValue, 0, inputValue.length, bbuffer, 0, bbuffer.length);
+        print("##A# ${ASCII.decode(bbuffer.sublist(0, l))} ${l}");
+
+        int ll = Base64.decode(bbuffer.sublist(0, l), 0, bbuffer.sublist(0, l).length, bbuffer, 0, bbuffer.length);
+        print("##B# ${inputValue.length} ${ll}");
+        test.expect(inputValue.length, ll);
+        test.expect(
+          Hex.encodeWithNew(inputValue),
+          Hex.encodeWithNew(bbuffer.sublist(0, ll)));
       }
     });
-
+/*
     test.test("encode F", () {
       for (int s = 0; s < 20; s++) {
         for (int j = 0; j < 0xdd; j++) {
@@ -58,12 +70,13 @@ main() {
           for (int i = j; i <= 0xff; i++) {
             inputValue.add(i);
           }
-          List<int> v = Base64.encode(inputValue, s, inputValue.length, r);
-          v = v.sublist(0, r.position + r.length);
+          int l = Base64.encode(inputValue, s, inputValue.length, r);
+          List<int> v = r.buffer.sublist(0, r.position + r.length);
           List<int> w = Base64.decode(v, s, v.length - s, r);
           w = w.sublist(r.position, r.position + r.length);
         }
       }
     });
+    */
   });
 }

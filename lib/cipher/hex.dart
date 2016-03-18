@@ -8,11 +8,18 @@ class Hex {
 
   static List<int> decodeWithNew(String value) {
     List<int> source = conv.ASCII.encode(value);
-    int bufferLen = 2 + source.length * 2;
+    int bufferLen = (source.length-2)~/2 + source.length%2;
     //BBuffer buffer = new BBuffer(0, bufferLen);
     Uint8List buffer = new Uint8List(bufferLen);
     decode(source, 0, source.length, buffer, 0, bufferLen);
     return buffer;
+  }
+
+  static String encodeWithNew(List<int> value) {
+    int bufferLen = 2 + value.length * 2;
+    Uint8List buffer = new Uint8List(bufferLen);
+    encode(value, 0, value.length, buffer, 0, bufferLen);
+    return conv.ASCII.decode(buffer);
   }
 
   static int decode(List<int> source, int sourceIndex, int sourceLength, List<int> result, int resultIndex, int resultLength) {
