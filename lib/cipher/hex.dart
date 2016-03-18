@@ -1,9 +1,17 @@
 library hex;
 
 import 'cipher.dart';
+import 'dart:convert' as conv;
 
 class Hex {
   static const List<int> hexBytes = const [0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66];
+
+  static List<int> decodeWithNew(String value) {
+    List<int> source = conv.ASCII.encode(value);
+    int bufferLen = 2+source.length*2;
+    BBuffer buffer = new BBuffer(0, bufferLen);
+    return decode(source, 0, source.length, buffer);
+  }
 
   static List<int> decode(List<int> source, int sourceIndex, int sourceLength, BBuffer result) {
     int si = sourceIndex + 2;
