@@ -52,23 +52,32 @@ class AES {
   //c 3 7 b f
   static void shiftRows(List<int> state, int stateIndex) {
     int tmp;
-    tmp = state[1+4*0];
-    state[1+4*0] = state[1+4*1];
-    state[1+4*1] = state[1+4*2];
-    state[1+4*2] = state[1+4*3];
-    state[1+4*3] = tmp;
+    tmp = state[1+4*0 + stateIndex];
+    state[1+4*0 + stateIndex] = state[1+4*1 + stateIndex];
+    state[1+4*1 + stateIndex] = state[1+4*2 + stateIndex];
+    state[1+4*2 + stateIndex] = state[1+4*3 + stateIndex];
+    state[1+4*3 + stateIndex] = tmp;
 
-    tmp = state[2+4*0];
-    state[2+4*0] = state[2+4*1];
-    state[2+4*1] = state[2+4*2];
-    state[2+4*2] = state[2+4*3];
-    state[2+4*3] = tmp;
+    tmp = state[2+4*0 + stateIndex];
+    state[2+4*0 + stateIndex] = state[2+4*1 + stateIndex];
+    state[2+4*1 + stateIndex] = state[2+4*2 + stateIndex];
+    state[2+4*2 + stateIndex] = state[2+4*3 + stateIndex];
+    state[2+4*3 + stateIndex] = tmp;
 
-    tmp = state[3+4*0];
-    state[3+4*0] = state[3+4*1];
-    state[3+4*1] = state[3+4*2];
-    state[3+4*2] = state[3+4*3];
-    state[3+4*3] = tmp;
+    tmp = state[3+4*0 + stateIndex];
+    state[3+4*0 + stateIndex] = state[3+4*1 + stateIndex];
+    state[3+4*1 + stateIndex] = state[3+4*2 + stateIndex];
+    state[3+4*2 + stateIndex] = state[3+4*3 + stateIndex];
+    state[3+4*3 + stateIndex] = tmp;
+  }
+
+  static int xtime(int x) {
+    //
+    return  ( x << 1 ) ^ ( ( (x & 0x80) != 0 ) ? 0x1b : 0x00 );
+  }
+
+  static int dot() {
+
   }
 
   static List<List<int>> sbox = [
