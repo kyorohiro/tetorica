@@ -62,5 +62,27 @@ main() {
         test.expect("${v1-v2}", "0x0000000000000fff");
       }
     });
+    test.test("[*]", () {
+      {
+        BigInt v1 = new BigInt.fromInt(0x2, 4);
+        BigInt v2 = new BigInt.fromInt(0x2, 4);
+        test.expect("${v1*v2}", "0x0000000000000004");
+      }
+      {
+        BigInt v1 = new BigInt.fromInt(0xf, 4);
+        BigInt v2 = new BigInt.fromInt(0xf, 4);
+        test.expect("${v1*v2}", "0x00000000000000e1");
+      }
+      {
+        BigInt v1 = new BigInt.fromInt(0xff, 4);
+        BigInt v2 = new BigInt.fromInt(0xff, 4);
+        test.expect("${v1*v2}", "0x000000000000fe01");
+      }
+      {
+        BigInt v1 = new BigInt.fromInt(0xff, 4);
+        BigInt v2 = new BigInt.fromInt(0x2, 4);
+        test.expect("${v1*v2}", "0x00000000000001fe");
+      }
+    });
   });
 }

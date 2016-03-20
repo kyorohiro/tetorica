@@ -54,6 +54,23 @@ class BigInt {
     return result;
   }
 
+  BigInt operator *(BigInt other) {
+    if (this.lengthPerByte != other.lengthPerByte) {
+      throw {"message": "need same length ${lengthPerByte} ${other.lengthPerByte}"};
+    }
+
+    BigInt result = new BigInt.fromLength(this.lengthPerByte);
+    int tmp = 0;
+    for (int i = binary.length - 1; i >= 0; i--) {
+      tmp = binary[i] * other.binary[i] + (tmp >> 8);
+      result.binary[i] = tmp & 0xff;
+    }
+    return result;
+  }
+
+
+
+
   int get hashCode {
     int h = 0;
     for (int i = 0, len = binary.length; i < len; i++) {
