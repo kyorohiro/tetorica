@@ -3,6 +3,7 @@ library aes;
 
 import 'dart:typed_data';
 import 'hex.dart';
+
 class AES {
   static void xor(List<int> target, int targetIndex, List<int> src, int srcIndex, int length) {
     for (int i = 0; i < length; i++) {
@@ -152,10 +153,10 @@ class AES {
     int t3;
     int t4;
     for (int c = 0; c < 4; c++) {
-      t1 = dot(0x0e, state[0 + 4 * c]) ^ dot(0x0b, state[1 + 4 * c]) ^ dot(0x0d, state[2 + 4 * c]) ^ dot(0x09, state[3 + 4 * c]);
-      t2 = dot(0x09, state[0 + 4 * c]) ^ dot(0x0e, state[1 + 4 * c]) ^ dot(0x0b, state[2 + 4 * c]) ^ dot(0x0d, state[3 + 4 * c]);
-      t3 = dot(0x0d, state[0 + 4 * c]) ^ dot(0x09, state[1 + 4 * c]) ^ dot(0x0e, state[2 + 4 * c]) ^ dot(0x0b, state[3 + 4 * c]);
-      t4 = dot(0x0b, state[0 + 4 * c]) ^ dot(0x0d, state[1 + 4 * c]) ^ dot(0x09, state[2 + 4 * c]) ^ dot(0x0e, state[3 + 4 * c]);
+      t1 = dot(0x0e, state[0 + 4 * c+stateIndex]) ^ dot(0x0b, state[1 + 4 * c+stateIndex]) ^ dot(0x0d, state[2 + 4 * c+stateIndex]) ^ dot(0x09, state[3 + 4 * c+stateIndex]);
+      t2 = dot(0x09, state[0 + 4 * c+stateIndex]) ^ dot(0x0e, state[1 + 4 * c+stateIndex]) ^ dot(0x0b, state[2 + 4 * c+stateIndex]) ^ dot(0x0d, state[3 + 4 * c+stateIndex]);
+      t3 = dot(0x0d, state[0 + 4 * c+stateIndex]) ^ dot(0x09, state[1 + 4 * c+stateIndex]) ^ dot(0x0e, state[2 + 4 * c+stateIndex]) ^ dot(0x0b, state[3 + 4 * c+stateIndex]);
+      t4 = dot(0x0b, state[0 + 4 * c+stateIndex]) ^ dot(0x0d, state[1 + 4 * c+stateIndex]) ^ dot(0x09, state[2 + 4 * c+stateIndex]) ^ dot(0x0e, state[3 + 4 * c+stateIndex]);
 
       state[0 + 4 * c + stateIndex] = t1;
       state[1 + 4 * c + stateIndex] = t2;
@@ -223,52 +224,74 @@ class AES {
     List<int> exKey = new Uint8List.fromList(exKeyBase);
     keyExpansion(key, key.length, exKeyBase);
     //
-    for (int inputed = 0, outputed = 0, len = input.length; inputed < len; inputed +=16, outputed+=16) {
-      if(inputed == 0) {
-      //  print("#AAA## ${input.length} ${inputed} ");
+    for (int inputed = 0, outputed = 0, len = input.length; inputed < len; inputed += 16, outputed += 16) {
+      if (inputed == 0) {
+        //  print("#AAA## ${input.length} ${inputed} ");
         xor(input, 0, iv, 0, iv.length);
       } else {
-      //  print("#BBB## ${input.length} ${inputed} ");
-        xor(input, inputed, output, outputed-16, 16);
+        //  print("#BBB## ${input.length} ${inputed} ");
+        xor(input, inputed, output, outputed - 16, 16);
       }
-      for(int i=0;i<exKeyLength;i++) {
+      for (int i = 0; i < exKeyLength; i++) {
         exKey[i] = exKeyBase[i];
       }
+
       AES.encrypt(input, inputed, key.length, exKey, output, outputed);
-    //  print("${Hex.encodeWithNew(output)} ${inputed} ${outputed}");
+      //print("${Hex.encodeWithNew(output)} ${inputed} ${outputed}");
+    }
+  }
+
+  static decryptWithCBC(List<int> input, List<int> iv, List<int> key, List<int> output) {
+    //
+    int exKeyLength = 4 * AES.calcWordLength(key.length);
+    List<int> exKeyBase = new Uint8List(exKeyLength);
+    List<int> exKey = new Uint8List.fromList(exKeyBase);
+    keyExpansion(key, key.length, exKeyBase);
+    //
+    for (int len = input.length, inputed = len - 16, outputed = len - 16; inputed >= 0; inputed -= 16, outputed -= 16) {
+      for (int i = 0; i < exKeyLength; i++) {
+        exKey[i] = exKeyBase[i];
+      }
+
+      AES.decrypt(input, inputed, key.length, exKey, output, outputed);
+
+      if (inputed == 0) {
+        print("#AAA## ${input.length} ${inputed} ${Hex.encodeWithNew(output)} ");
+        xor(output, 0, iv, 0, iv.length);
+      } else {
+        print("#BBB## ${input.length} ${inputed} ${Hex.encodeWithNew(output)} ${Hex.encodeWithNew(input)}");
+        xor(output, inputed, input, inputed - 16, 16);
+      }
+
+      print("${Hex.encodeWithNew(output)} ${inputed} ${outputed}");
     }
   }
 
   static decrypt(
-    List<int> input, int inputIndex, int keyLength, List<int> words,
-    List<int> output, int outputIndex) {
-      int Nb = calcNb(keyLength);
-      int Nk = calcNk(keyLength);
-      int Nr = calcNr(keyLength);
-      List<int> state = input;//new Uint8List.fromList(input.sublist(inputIndex, inputIndex+16));
-      addRound(state, inputIndex, words, Nr*4*4);
+    List<int> input, int inputIndex, int keyLength,
+    List<int> words, List<int> output, int outputIndex) {
+    int Nr = calcNr(keyLength);
+    List<int> state = input; //new Uint8List.fromList(input.sublist(inputIndex, inputIndex+16));
+    addRound(state, inputIndex, words, Nr * 4 * 4);
 
-      for (int round = Nr; round > 0; round--) {
-        invShiftRows(state, inputIndex);
-        invSubBytes(state, inputIndex);
-        addRound(state, inputIndex, words, ( round - 1 ) * 4*4);
-        if (round > 1) {
-          invMixColumns(state, inputIndex);
-        }
-      }
-      for (int i = 0; i < 16; i++) {
-        output[i+outputIndex] = state[i+inputIndex];
+    for (int round = Nr; round > 0; round--) {
+      invShiftRows(state, inputIndex);
+      invSubBytes(state, inputIndex);
+      addRound(state, inputIndex, words, (round - 1) * 4 * 4);
+      if (round > 1) {
+        invMixColumns(state, inputIndex);
       }
     }
+    for (int i = 0; i < 16; i++) {
+      output[i + outputIndex] = state[i + inputIndex];
+    }
+  }
 
-  static encrypt(
-    List<int> input, int inputIndex, int keyLength, List<int> words,
-    List<int> output, int outputIndex) {
-
+  static encrypt(List<int> input, int inputIndex, int keyLength, List<int> words, List<int> output, int outputIndex) {
     int Nb = calcNb(keyLength);
     int Nk = calcNk(keyLength);
     int Nr = calcNr(keyLength);
-    List<int> state = input;//new Uint8List.fromList(input.sublist(inputIndex, inputIndex+16));
+    List<int> state = input; //new Uint8List.fromList(input.sublist(inputIndex, inputIndex+16));
 
     // 5.1
     // cipher
@@ -282,7 +305,7 @@ class AES {
       addRound(state, inputIndex, words, (round + 1) * 4 * 4);
     }
     for (int i = 0; i < 16; i++) {
-      output[i+outputIndex] = state[i+inputIndex];
+      output[i + outputIndex] = state[i + inputIndex];
     }
   }
 

@@ -73,6 +73,8 @@ main() {
         AES.encrypt(plainText, 0, key.length, words, output, 0);
         test.expect(Hex.encodeWithNew(output), "0x7649abac8119b246cee98e9b12e9197d");
       }
+    });
+    test.test("decrypt", () {
       {
         List<int> key = Hex.decodeWithNew("0x2b7e151628aed2a6abf7158809cf4f3c");
         List<int> iv = Hex.decodeWithNew("0x000102030405060708090a0b0c0d0e0f");
@@ -85,13 +87,12 @@ main() {
         AES.keyExpansion(key, key.length, words);
         //
         AES.decrypt(cipherText, 0, key.length, words, output, 0);
-                print("### ${Hex.encodeWithNew(output)}");
+        print("### ${Hex.encodeWithNew(output)}");
         AES.xor(output, 0, iv, 0, iv.length);
         print("### ${Hex.encodeWithNew(output)}");
         test.expect(Hex.encodeWithNew(output), "0x6bc1bee22e409f96e93d7e117393172a");
       }
     });
-
     test.test("encrypt", () {
       // 16bit
       {
@@ -110,7 +111,7 @@ main() {
       }
     });
 
-    test.test("encrypt", () {
+    test.test("encrypt CBC", () {
       // 16bit
       {
         List<int> key = Hex.decodeWithNew("0x2b7e151628aed2a6abf7158809cf4f3c");
@@ -120,6 +121,21 @@ main() {
 
         AES.encryptWithCBC(plainText, iv, key, output);
         test.expect(Hex.encodeWithNew(output), "0x7649abac8119b246cee98e9b12e9197d" + "5086cb9b507219ee95db113a917678b2");
+      }
+    });
+
+
+    test.test("decrypt CBC", () {
+      // 16bit
+      {
+        List<int> key = Hex.decodeWithNew("0x2b7e151628aed2a6abf7158809cf4f3c");
+        List<int> iv = Hex.decodeWithNew("0x000102030405060708090a0b0c0d0e0f");
+        List<int> plainText = Hex.decodeWithNew("0x" + "6bc1bee22e409f96e93d7e117393172a" + "ae2d8a571e03ac9c9eb76fac45af8e51");
+        List<int> cypherText = Hex.decodeWithNew(  "0x7649abac8119b246cee98e9b12e9197d" + "5086cb9b507219ee95db113a917678b2");
+        List<int> output = new Uint8List(16 * 2);
+
+        AES.decryptWithCBC(cypherText, iv, key, output);
+        test.expect(Hex.encodeWithNew(output), "0x" + "6bc1bee22e409f96e93d7e117393172a" + "ae2d8a571e03ac9c9eb76fac45af8e51");
       }
     });
     //
