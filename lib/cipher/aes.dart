@@ -210,11 +210,16 @@ class AES {
     createExKeyFromKey(key, key.length, exKeyBase);
 
     for (int inputed = 0, outputed = 0, len = input.length; inputed < len; inputed += 16, outputed += 16) {
+      //
+      // CBC
       if (inputed == 0) {
         xor(input, 0, iv, 0, iv.length);
       } else {
         xor(input, inputed, output, outputed - 16, 16);
       }
+
+      //
+      // AES
       for (int i = 0; i < exKeyLength; i++) {
         exKey[i] = exKeyBase[i];
       }
@@ -228,23 +233,23 @@ class AES {
     List<int> exKeyBase = new Uint8List(exKeyLength);
     List<int> exKey = new Uint8List.fromList(exKeyBase);
     createExKeyFromKey(key, key.length, exKeyBase);
+
     //
     for (int len = input.length, inputed = len - 16, outputed = len - 16; inputed >= 0; inputed -= 16, outputed -= 16) {
+      //
+      // AES
       for (int i = 0; i < exKeyLength; i++) {
         exKey[i] = exKeyBase[i];
       }
-
       AES.decrypt(input, inputed, key.length, exKey, output, outputed);
 
+      //
+      // CBC
       if (inputed == 0) {
-        print("#AAA## ${input.length} ${inputed} ${Hex.encodeWithNew(output)} ");
         xor(output, 0, iv, 0, iv.length);
       } else {
-        print("#BBB## ${input.length} ${inputed} ${Hex.encodeWithNew(output)} ${Hex.encodeWithNew(input)}");
         xor(output, inputed, input, inputed - 16, 16);
       }
-
-      print("${Hex.encodeWithNew(output)} ${inputed} ${outputed}");
     }
   }
 
