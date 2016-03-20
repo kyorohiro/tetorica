@@ -11,7 +11,7 @@ class AES {
     }
   }
 
-  static void rotWord(List<int> word, int index) {
+  static void rotExKeyItem(List<int> word, int index) {
     int tmp;
     tmp = word[index + 0];
     word[index + 0] = word[index + 1];
@@ -20,7 +20,7 @@ class AES {
     word[index + 3] = tmp;
   }
 
-  static void subWord(List<int> word, int index) {
+  static void subExKeyItem(List<int> word, int index) {
     for (int i = 0; i < 4; i++, index++) {
       word[index] = sbox[(word[index] & 0xF0) >> 4][word[index] & 0x0F];
     }
@@ -185,15 +185,15 @@ class AES {
       outputExKey[4 * i + 2] = outputExKey[4 * (i - 1) + 2];
       outputExKey[4 * i + 3] = outputExKey[4 * (i - 1) + 3];
       if (i % nk == 0) {
-        rotWord(outputExKey, 4 * i);
-        subWord(outputExKey, 4 * i);
+        rotExKeyItem(outputExKey, 4 * i);
+        subExKeyItem(outputExKey, 4 * i);
         if (i % 36 == 0) {
           rcon = 0x1b;
         }
         outputExKey[4 * i + 0] ^= rcon;
         rcon = (rcon << 1) & 0xff;
       } else if (nk > 6 && (i % nk) == 4) {
-        subWord(outputExKey, 4 * i);
+        subExKeyItem(outputExKey, 4 * i);
       }
       outputExKey[4 * i + 0] ^= outputExKey[4 * (i - nk) + 0];
       outputExKey[4 * i + 1] ^= outputExKey[4 * (i - nk) + 1];
