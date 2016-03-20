@@ -74,7 +74,6 @@ class AES {
   }
 
   static int xtime(int x) {
-    //
     return (x << 1) ^ (((x & 0x80) != 0) ? 0x1b : 0x00);
   }
 
@@ -166,38 +165,26 @@ class AES {
   static int calcNb(int keyLength) => 4;
   static int calcNk(int keyLength) => keyLength ~/ 4;
   static int calcNr(int keyLength) => (keyLength >> 2) + 6;
-  static int calcWordLength(int keyLength) => calcNb(keyLength) * (calcNr(keyLength) + 1);
+  static int calcExKeyItemLength(int keyLength) => calcNb(keyLength) * (calcNr(keyLength) + 1);
+  static int calcExKeyLength(int keyLength) => calcExKeyItemLength(keyLength)*4;
 
-  // 5.2
-  // keyLength : key bytes length
-  //    32byte --> Nk==8
-  //    24byte --> Nk==6
-  //    16byte --> Nk==4
-  //
-  // words
-  //    0 1 2 3
-  //    4 5 6 7 ...
-  static keyExpansion(List<int> key, int keyLength, List<int> words) {
-    // copy
-    int Nb = calcNb(keyLength);
-    int Nk = calcNk(keyLength);
-    int Nr = calcNr(keyLength);
-    //int key_words
-    //Nk= keyLength >> 2;
-    int WordLength = calcWordLength(keyLength);
+  static keyExpansion(List<int> key, int keyBytesLength, List<int> words) {
+    int nb = calcNb(keyBytesLength);
+    int nk = calcNk(keyBytesLength);
+    int exKeyItemLength = calcExKeyItemLength(keyBytesLength);
 
-    for (int i = 0, len = Nk * Nb; i < len; i++) {
+    for (int i = 0, len = nk * nb; i < len; i++) {
       words[i] = key[i];
     }
 
     //
     int rcon = 0x01;
-    for (int i = Nk; i < WordLength; i++) {
+    for (int i = nk; i < exKeyItemLength; i++) {
       words[4 * i + 0] = words[4 * (i - 1) + 0];
       words[4 * i + 1] = words[4 * (i - 1) + 1];
       words[4 * i + 2] = words[4 * (i - 1) + 2];
       words[4 * i + 3] = words[4 * (i - 1) + 3];
-      if (i % Nk == 0) {
+      if (i % nk == 0) {
         rotWord(words, 4 * i);
         subWord(words, 4 * i);
         if (i % 36 == 0) {
@@ -205,19 +192,19 @@ class AES {
         }
         words[4 * i + 0] ^= rcon;
         rcon = (rcon << 1) & 0xff;
-      } else if (Nk > 6 && (i % Nk) == 4) {
+      } else if (nk > 6 && (i % nk) == 4) {
         subWord(words, 4 * i);
       }
-      words[4 * i + 0] ^= words[4 * (i - Nk) + 0];
-      words[4 * i + 1] ^= words[4 * (i - Nk) + 1];
-      words[4 * i + 2] ^= words[4 * (i - Nk) + 2];
-      words[4 * i + 3] ^= words[4 * (i - Nk) + 3];
+      words[4 * i + 0] ^= words[4 * (i - nk) + 0];
+      words[4 * i + 1] ^= words[4 * (i - nk) + 1];
+      words[4 * i + 2] ^= words[4 * (i - nk) + 2];
+      words[4 * i + 3] ^= words[4 * (i - nk) + 3];
     }
   }
 
   static encryptWithCBC(List<int> input, List<int> iv, List<int> key, List<int> output) {
     //
-    int exKeyLength = 4 * AES.calcWordLength(key.length);
+    int exKeyLength = 4 * AES.calcExKeyItemLength(key.length);
     List<int> exKeyBase = new Uint8List(exKeyLength);
     List<int> exKey = new Uint8List.fromList(exKeyBase);
     keyExpansion(key, key.length, exKeyBase);
@@ -241,7 +228,7 @@ class AES {
 
   static decryptWithCBC(List<int> input, List<int> iv, List<int> key, List<int> output) {
     //
-    int exKeyLength = 4 * AES.calcWordLength(key.length);
+    int exKeyLength = 4 * AES.calcExKeyItemLength(key.length);
     List<int> exKeyBase = new Uint8List(exKeyLength);
     List<int> exKey = new Uint8List.fromList(exKeyBase);
     keyExpansion(key, key.length, exKeyBase);
