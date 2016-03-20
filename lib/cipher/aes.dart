@@ -31,7 +31,7 @@ class AES {
   // 1 5 9 d
   // 2 6 a e
   // 3 7 b f
-  static void addRound(List<int> state, int stateIndex, List<int> word, int wordIndex) {
+  static void addRoundKey(List<int> state, int stateIndex, List<int> word, int wordIndex) {
     for (int c = 0; c < 4; c++) {
       for (int r = 0; r < 4; r++) {
         state[r + 4 * c + stateIndex] = state[r + 4 * c + stateIndex] ^ word[4 * c + r + wordIndex];
@@ -40,10 +40,8 @@ class AES {
   }
 
   static void subBytes(List<int> state, int stateIndex) {
-    for (int r = 0; r < 4; r++) {
-      for (int c = 0; c < 4; c++) {
-        state[r + 4 * c + stateIndex] = sbox[(state[r + 4 * c + stateIndex] & 0xF0) >> 4][state[r + 4 * c + stateIndex] & 0x0F];
-      }
+    for (int i = stateIndex, end = stateIndex + 16; i < end; i++) {
+      state[i] = sbox[(state[i] & 0xF0) >> 4][state[i] & 0x0F];
     }
   }
 
@@ -153,10 +151,10 @@ class AES {
     int t3;
     int t4;
     for (int c = 0; c < 4; c++) {
-      t1 = dot(0x0e, state[0 + 4 * c+stateIndex]) ^ dot(0x0b, state[1 + 4 * c+stateIndex]) ^ dot(0x0d, state[2 + 4 * c+stateIndex]) ^ dot(0x09, state[3 + 4 * c+stateIndex]);
-      t2 = dot(0x09, state[0 + 4 * c+stateIndex]) ^ dot(0x0e, state[1 + 4 * c+stateIndex]) ^ dot(0x0b, state[2 + 4 * c+stateIndex]) ^ dot(0x0d, state[3 + 4 * c+stateIndex]);
-      t3 = dot(0x0d, state[0 + 4 * c+stateIndex]) ^ dot(0x09, state[1 + 4 * c+stateIndex]) ^ dot(0x0e, state[2 + 4 * c+stateIndex]) ^ dot(0x0b, state[3 + 4 * c+stateIndex]);
-      t4 = dot(0x0b, state[0 + 4 * c+stateIndex]) ^ dot(0x0d, state[1 + 4 * c+stateIndex]) ^ dot(0x09, state[2 + 4 * c+stateIndex]) ^ dot(0x0e, state[3 + 4 * c+stateIndex]);
+      t1 = dot(0x0e, state[0 + 4 * c + stateIndex]) ^ dot(0x0b, state[1 + 4 * c + stateIndex]) ^ dot(0x0d, state[2 + 4 * c + stateIndex]) ^ dot(0x09, state[3 + 4 * c + stateIndex]);
+      t2 = dot(0x09, state[0 + 4 * c + stateIndex]) ^ dot(0x0e, state[1 + 4 * c + stateIndex]) ^ dot(0x0b, state[2 + 4 * c + stateIndex]) ^ dot(0x0d, state[3 + 4 * c + stateIndex]);
+      t3 = dot(0x0d, state[0 + 4 * c + stateIndex]) ^ dot(0x09, state[1 + 4 * c + stateIndex]) ^ dot(0x0e, state[2 + 4 * c + stateIndex]) ^ dot(0x0b, state[3 + 4 * c + stateIndex]);
+      t4 = dot(0x0b, state[0 + 4 * c + stateIndex]) ^ dot(0x0d, state[1 + 4 * c + stateIndex]) ^ dot(0x09, state[2 + 4 * c + stateIndex]) ^ dot(0x0e, state[3 + 4 * c + stateIndex]);
 
       state[0 + 4 * c + stateIndex] = t1;
       state[1 + 4 * c + stateIndex] = t2;
@@ -267,17 +265,15 @@ class AES {
     }
   }
 
-  static decrypt(
-    List<int> input, int inputIndex, int keyLength,
-    List<int> exKey, List<int> output, int outputIndex) {
+  static decrypt(List<int> input, int inputIndex, int keyLength, List<int> exKey, List<int> output, int outputIndex) {
     int Nr = calcNr(keyLength);
     List<int> state = input; //new Uint8List.fromList(input.sublist(inputIndex, inputIndex+16));
-    addRound(state, inputIndex, exKey, Nr * 4 * 4);
+    addRoundKey(state, inputIndex, exKey, Nr * 4 * 4);
 
     for (int round = Nr; round > 0; round--) {
       invShiftRows(state, inputIndex);
       invSubBytes(state, inputIndex);
-      addRound(state, inputIndex, exKey, (round - 1) * 4 * 4);
+      addRoundKey(state, inputIndex, exKey, (round - 1) * 4 * 4);
       if (round > 1) {
         invMixColumns(state, inputIndex);
       }
@@ -293,14 +289,14 @@ class AES {
 
     // 5.1
     // cipher
-    addRound(state, inputIndex, exKey, 0);
+    addRoundKey(state, inputIndex, exKey, 0);
     for (int round = 0; round < Nr; round++) {
       subBytes(state, inputIndex);
       shiftRows(state, inputIndex);
       if (round < (Nr - 1)) {
         mixColumns(state, inputIndex);
       }
-      addRound(state, inputIndex, exKey, (round + 1) * 4 * 4);
+      addRoundKey(state, inputIndex, exKey, (round + 1) * 4 * 4);
     }
     for (int i = 0; i < 16; i++) {
       output[i + outputIndex] = state[i + inputIndex];
