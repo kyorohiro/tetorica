@@ -168,7 +168,7 @@ class AES {
   static int calcExKeyItemLength(int keyLength) => calcNb(keyLength) * (calcNr(keyLength) + 1);
   static int calcExKeyLength(int keyLength) => calcExKeyItemLength(keyLength)*4;
 
-  static keyExpansion(List<int> key, int keyBytesLength, List<int> outputExKey) {
+  static createExKeyFromKey(List<int> key, int keyBytesLength, List<int> outputExKey) {
     int nb = calcNb(keyBytesLength);
     int nk = calcNk(keyBytesLength);
     int exKeyItemLength = calcExKeyItemLength(keyBytesLength);
@@ -207,31 +207,27 @@ class AES {
     int exKeyLength = 4 * AES.calcExKeyItemLength(key.length);
     List<int> exKeyBase = new Uint8List(exKeyLength);
     List<int> exKey = new Uint8List.fromList(exKeyBase);
-    keyExpansion(key, key.length, exKeyBase);
-    //
+    createExKeyFromKey(key, key.length, exKeyBase);
+
     for (int inputed = 0, outputed = 0, len = input.length; inputed < len; inputed += 16, outputed += 16) {
       if (inputed == 0) {
-        //  print("#AAA## ${input.length} ${inputed} ");
         xor(input, 0, iv, 0, iv.length);
       } else {
-        //  print("#BBB## ${input.length} ${inputed} ");
         xor(input, inputed, output, outputed - 16, 16);
       }
       for (int i = 0; i < exKeyLength; i++) {
         exKey[i] = exKeyBase[i];
       }
-
       AES.encrypt(input, inputed, key.length, exKey, output, outputed);
-      //print("${Hex.encodeWithNew(output)} ${inputed} ${outputed}");
     }
   }
 
   static decryptWithCBC(List<int> input, List<int> iv, List<int> key, List<int> output) {
     //
-    int exKeyLength = 4 * AES.calcExKeyItemLength(key.length);
+    int exKeyLength = AES.calcExKeyLength(key.length);
     List<int> exKeyBase = new Uint8List(exKeyLength);
     List<int> exKey = new Uint8List.fromList(exKeyBase);
-    keyExpansion(key, key.length, exKeyBase);
+    createExKeyFromKey(key, key.length, exKeyBase);
     //
     for (int len = input.length, inputed = len - 16, outputed = len - 16; inputed >= 0; inputed -= 16, outputed -= 16) {
       for (int i = 0; i < exKeyLength; i++) {
