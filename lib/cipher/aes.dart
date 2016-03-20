@@ -32,7 +32,8 @@ class AES {
   static void addRound(List<int> state, int stateIndex, List<int> word, int wordIndex) {
     for (int c = 0; c < 4; c++) {
       for (int r = 0; r < 4; r++) {
-        state[r + 4 * c + stateIndex] = state[r + 4 * c + stateIndex] ^ word[c + 4 * r + wordIndex];
+        state[r + 4 * c + stateIndex]
+        = state[r + 4 * c + stateIndex] ^ word[4*c + r + wordIndex];
       }
     }
   }
@@ -40,7 +41,8 @@ class AES {
   static void subBytes(List<int> state, int stateIndex) {
     for (int r = 0; r < 4; r++) {
       for (int c = 0; c < 4; c++) {
-        state[r + 4 * c + stateIndex] = sbox[(state[r + 4 * c + stateIndex] & 0xF0) >> 4][state[r + 4 * c + stateIndex] & 0x0F];
+        state[r + 4 * c + stateIndex]
+        = sbox[(state[r + 4 * c + stateIndex] & 0xF0) >> 4][state[r + 4 * c + stateIndex] & 0x0F];
       }
     }
   }
@@ -219,11 +221,11 @@ class AES {
   }
 
   static encrypt(List<int> input, List<int> output, List<int> key, int keyLength) {
-    int Nb = 4;
-    int Nk = keyLength ~/ 4;
-    int Nr = (keyLength >> 2) + 6; //32:8 24:6 16:4
+    int Nb = calcNb(keyLength);
+    int Nk = calcNk(keyLength);
+    int Nr = calcNr(keyLength);
     List<int> state = new Uint8List.fromList(input);
-    List<int> words = new Uint8List(60 * 4);
+    List<int> words = new Uint8List(4*calcWordLength(keyLength));
 
     //
     print("--1");
@@ -231,19 +233,14 @@ class AES {
 
     // 5.1
     // cipher
-    print("--2");
     addRound(state, 0, words, 0);
-    print("--3");
-    for (int round = 1; round < Nr; round++) {
-      print("--4a ${round}");
+    for (int round = 0; round < Nr; round++) {
       subBytes(state, 0);
-      print("--4b ${round}");
       shiftRows(state, 0);
-      print("--4c ${round}");
-      mixColumns(state, 0);
-      print("--4d ${round}");
-      addRound(state, 0, words, (round + 1) * 4);
-      print("--4e ${round}");
+      if(round < (Nr-1)) {
+        mixColumns(state, 0);
+      }
+      addRound(state, 0, words, (round + 1) * 4*4);
     }
     for (int i = 0; i < 16; i++) {
       output[i] = state[i];
