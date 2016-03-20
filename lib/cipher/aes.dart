@@ -239,10 +239,31 @@ class AES {
     }
   }
 
+  static decrypt(
+    List<int> input, int inputIndex, int keyLength, List<int> words,
+    List<int> output, int outputIndex) {
+      int Nb = calcNb(keyLength);
+      int Nk = calcNk(keyLength);
+      int Nr = calcNr(keyLength);
+      List<int> state = input;//new Uint8List.fromList(input.sublist(inputIndex, inputIndex+16));
+      addRound(state, inputIndex, words, Nr*4*4);
+
+      for (int round = Nr; round > 0; round--) {
+        invShiftRows(state, inputIndex);
+        invSubBytes(state, inputIndex);
+        addRound(state, inputIndex, words, ( round - 1 ) * 4*4);
+        if (round > 1) {
+          invMixColumns(state, inputIndex);
+        }
+      }
+      for (int i = 0; i < 16; i++) {
+        output[i+outputIndex] = state[i+inputIndex];
+      }
+    }
+
   static encrypt(
     List<int> input, int inputIndex, int keyLength, List<int> words,
     List<int> output, int outputIndex) {
-    print("--1");
 
     int Nb = calcNb(keyLength);
     int Nk = calcNk(keyLength);
