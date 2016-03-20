@@ -1,4 +1,7 @@
 // http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf
+
+import 'dart:typed_data';
+
 class AES {
   static void xor(List<int> target, int targetIndex, List<int> src, int srcIndex, int length) {
     for (int i = 0; i < length; i++) {
@@ -77,7 +80,8 @@ class AES {
 
   static int dot(int x, int y) {
     int product = 0;
-    for (int mask = 0x01; mask != 0; mask <<= 1) {
+    for (int mask = 0x01; mask != 0; mask = (mask<<1)&0xFF) {
+      print("mask ${mask}");
       if (y & mask != 0) {
         product ^= x;
       }
@@ -93,6 +97,7 @@ class AES {
     int t3;
     int t4;
     for (int c = 0; c < 4; c++) {
+      print("c ${c}");
       t1 = dot(2, state[0 + 4 * c + stateIndex]) ^ dot(3, state[1 + 4 * c + stateIndex]) ^ state[2 + 4 * c + stateIndex] ^ state[3 + 4 * c + stateIndex];
       t2 = state[0 + 4 * c + stateIndex] ^ dot(2, state[1 + 4 * c + stateIndex]) ^ dot(3, state[2 + 4 * c + stateIndex]) ^ state[3 + 4 * c + stateIndex];
       t3 = state[0 + 4 * c + stateIndex] ^ state[1 + 4 * c + stateIndex] ^ dot(2, state[2 + 4 * c + stateIndex]) ^ dot(3, state[3 + 4 * c + stateIndex]);
@@ -160,21 +165,94 @@ class AES {
     }
   }
 
+
+  static int calcNb(int keyLength) => 4;
+  static int calcNk(int keyLength) => keyLength ~/ 4;
+  static int calcNr(int keyLength) => (keyLength >> 2) + 6;
+  static int calcWordLength(int keyLength) => calcNb(keyLength)*(calcNr(keyLength)+1);
+
   // 5.2
-// keyLength :
-//    32 --> 256
-//    16 --> 128
-  static keyExpansion(List<int> key,int keyLength, List<int> words) {
+  // keyLength : key bytes length
+  //    32byte --> Nk==8
+  //    24byte --> Nk==6
+  //    16byte --> Nk==4
+  //
+  // words
+  //    0 1 2 3
+  //    4 5 6 7 ...
+  static keyExpansion(List<int> key, int keyLength, List<int> words) {
     // copy
-    for(int i=0;i<keyLength;i++) {
+    int Nb = calcNb(keyLength);
+    int Nk = calcNk(keyLength);
+    int Nr = calcNr(keyLength);
+    //int key_words
+    //Nk= keyLength >> 2;
+    int WordLength = calcWordLength(keyLength);
+
+    print("------ ${Nb} ${Nk} ${Nr}");
+    for (int i = 0, len=Nk*Nb; i < len; i++) {
       words[i] = key[i];
     }
 
     //
-    for(int end=keyLength~/4,i=0;i<end;i++) {
-
+    int rcon = 0x01;
+    for (int i = Nk; i < WordLength; i++) {
+      words[4 * i + 0] = words[4 * (i-1) + 0];
+      words[4 * i + 1] = words[4 * (i-1) + 1];
+      words[4 * i + 2] = words[4 * (i-1) + 2];
+      words[4 * i + 3] = words[4 * (i-1) + 3];
+      if (i % Nk == 0) {
+        print("#A### ${i} ${Nk} ${rcon}###\n");
+        rotWord(words, 4 * i);
+        subWord(words, 4 * i);
+        if (i % 36 == 0) {
+          rcon = 0x1b;
+        }
+        words[4 * i + 0] ^= rcon;
+        rcon = (rcon<<1)&0xff;
+      } else if (Nk > 6 && (i % Nk) == 4) {
+        print("#B### ${i} ${Nk}###\n");
+        subWord(words, 4 * i);
+      }
+      words[4 * i + 0] ^= words[4 * (i - Nk) + 0];
+      words[4 * i + 1] ^= words[4 * (i - Nk) + 1];
+      words[4 * i + 2] ^= words[4 * (i - Nk) + 2];
+      words[4 * i + 3] ^= words[4 * (i - Nk) + 3];
     }
   }
+
+  static encrypt(List<int> input, List<int> output, List<int> key, int keyLength) {
+    int Nb = 4;
+    int Nk = keyLength ~/ 4;
+    int Nr = (keyLength >> 2) + 6; //32:8 24:6 16:4
+    List<int> state = new Uint8List.fromList(input);
+    List<int> words = new Uint8List(60 * 4);
+
+    //
+    print("--1");
+    keyExpansion(key, keyLength, words);
+
+    // 5.1
+    // cipher
+    print("--2");
+    addRound(state, 0, words, 0);
+    print("--3");
+    for (int round = 1; round < Nr; round++) {
+      print("--4a ${round}");
+      subBytes(state, 0);
+      print("--4b ${round}");
+      shiftRows(state, 0);
+      print("--4c ${round}");
+      mixColumns(state, 0);
+      print("--4d ${round}");
+      addRound(state, 0, words, (round + 1) * 4);
+      print("--4e ${round}");
+    }
+    for (int i = 0; i < 16; i++) {
+      output[i] = state[i];
+    }
+  }
+
   static List<List<int>> sbox = [
     [0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76],
     [0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0],
