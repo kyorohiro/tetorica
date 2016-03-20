@@ -6,31 +6,30 @@ import 'dart:convert' as conv;
 class Hex {
   static const List<int> hexBytes = const [0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66];
 
-  static List<int> decodeWithNew(String value) {
+  static List<int> decodeWithNew(String value, {bool have0x:true}) {
     List<int> source = conv.ASCII.encode(value);
     int bufferLen = (source.length-2)~/2 + source.length%2;
     //BBuffer buffer = new BBuffer(0, bufferLen);
     Uint8List buffer = new Uint8List(bufferLen);
-    decode(source, 0, source.length, buffer, 0, bufferLen);
+    decode(source, 0, source.length, buffer, 0, bufferLen, have0x: have0x);
     return buffer;
   }
 
-  static String encodeWithNew(List<int> value) {
+  static String encodeWithNew(List<int> value, {bool have0x:true}) {
     int bufferLen = 2 + value.length * 2;
     Uint8List buffer = new Uint8List(bufferLen);
-    encode(value, 0, value.length, buffer, 0, bufferLen);
+    encode(value, 0, value.length, buffer, 0, bufferLen, have0x: have0x);
     return conv.ASCII.decode(buffer);
   }
 
-  static int decode(List<int> source, int sourceIndex, int sourceLength, List<int> result, int resultIndex, int resultLength) {
-    int si = sourceIndex + 2;
+  static int decode(List<int> source, int sourceIndex, int sourceLength, List<int> result, int resultIndex, int resultLength, {bool have0x:true}) {
+    if (have0x == true && sourceLength < 2) {
+      throw {};
+    }
+    int si = (have0x==true?sourceIndex + 2:sourceIndex);
     int len = sourceLength;
     int ri = resultIndex;
     List<int> buffer = result;
-
-    if (sourceLength < 2) {
-      throw {};
-    }
 
     int v1;
     int v2;
@@ -72,15 +71,17 @@ class Hex {
     return ri - resultIndex;
   }
 
-  static int encode(List<int> source, int sourceIndex, int sourceLength, List<int> result, int resultIndex, int resultLength) {
+  static int encode(List<int> source, int sourceIndex, int sourceLength, List<int> result, int resultIndex, int resultLength,{bool have0x:true}) {
     int si = sourceIndex;
     int len = sourceLength;
     int ri = resultIndex;
     List<int> buffer = result;
 
     int v;
-    buffer[ri++] = 0x30;
-    buffer[ri++] = 0x78;
+    if(have0x) {
+      buffer[ri++] = 0x30;
+      buffer[ri++] = 0x78;
+    }
     for (; si < len; si++) {
       v = source[si];
       buffer[ri++] = hexBytes[(v >> 4) & 0xf];
