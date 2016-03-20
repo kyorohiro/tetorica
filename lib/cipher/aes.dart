@@ -168,37 +168,37 @@ class AES {
   static int calcExKeyItemLength(int keyLength) => calcNb(keyLength) * (calcNr(keyLength) + 1);
   static int calcExKeyLength(int keyLength) => calcExKeyItemLength(keyLength)*4;
 
-  static keyExpansion(List<int> key, int keyBytesLength, List<int> words) {
+  static keyExpansion(List<int> key, int keyBytesLength, List<int> outputExKey) {
     int nb = calcNb(keyBytesLength);
     int nk = calcNk(keyBytesLength);
     int exKeyItemLength = calcExKeyItemLength(keyBytesLength);
 
     for (int i = 0, len = nk * nb; i < len; i++) {
-      words[i] = key[i];
+      outputExKey[i] = key[i];
     }
 
     //
     int rcon = 0x01;
     for (int i = nk; i < exKeyItemLength; i++) {
-      words[4 * i + 0] = words[4 * (i - 1) + 0];
-      words[4 * i + 1] = words[4 * (i - 1) + 1];
-      words[4 * i + 2] = words[4 * (i - 1) + 2];
-      words[4 * i + 3] = words[4 * (i - 1) + 3];
+      outputExKey[4 * i + 0] = outputExKey[4 * (i - 1) + 0];
+      outputExKey[4 * i + 1] = outputExKey[4 * (i - 1) + 1];
+      outputExKey[4 * i + 2] = outputExKey[4 * (i - 1) + 2];
+      outputExKey[4 * i + 3] = outputExKey[4 * (i - 1) + 3];
       if (i % nk == 0) {
-        rotWord(words, 4 * i);
-        subWord(words, 4 * i);
+        rotWord(outputExKey, 4 * i);
+        subWord(outputExKey, 4 * i);
         if (i % 36 == 0) {
           rcon = 0x1b;
         }
-        words[4 * i + 0] ^= rcon;
+        outputExKey[4 * i + 0] ^= rcon;
         rcon = (rcon << 1) & 0xff;
       } else if (nk > 6 && (i % nk) == 4) {
-        subWord(words, 4 * i);
+        subWord(outputExKey, 4 * i);
       }
-      words[4 * i + 0] ^= words[4 * (i - nk) + 0];
-      words[4 * i + 1] ^= words[4 * (i - nk) + 1];
-      words[4 * i + 2] ^= words[4 * (i - nk) + 2];
-      words[4 * i + 3] ^= words[4 * (i - nk) + 3];
+      outputExKey[4 * i + 0] ^= outputExKey[4 * (i - nk) + 0];
+      outputExKey[4 * i + 1] ^= outputExKey[4 * (i - nk) + 1];
+      outputExKey[4 * i + 2] ^= outputExKey[4 * (i - nk) + 2];
+      outputExKey[4 * i + 3] ^= outputExKey[4 * (i - nk) + 3];
     }
   }
 
