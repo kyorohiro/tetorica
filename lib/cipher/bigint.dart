@@ -5,13 +5,12 @@ import 'hex.dart';
 
 // uint
 class BigInt {
-  int _len = 0;
-  int get lengthPerByte => _len;
+  int get lengthPerByte => binary.length;
   List<int> binary;
 
   BigInt.fromInt(int value, int length) {
-    binary = new Uint8List(length);
-    _len = binary.length;
+    binary = new Uint8List((length>8)?length:8);
+    int _len = binary.length;
     binary[_len - 8] = (value >> 56 & 0xff);
     binary[_len - 7] = (value >> 48 & 0xff);
     binary[_len - 6] = (value >> 40 & 0xff);
@@ -24,7 +23,6 @@ class BigInt {
 
   BigInt.fromLength(int length) {
     binary = new Uint8List(length);
-    _len = binary.length;
   }
 
   BigInt operator +(BigInt other) {
@@ -34,7 +32,7 @@ class BigInt {
 
     BigInt result = new BigInt.fromLength(this.lengthPerByte);
     int tmp = 0;
-    for (int i = binary.length; i >= 0; i--) {
+    for (int i = binary.length-1; i >= 0; i--) {
       tmp = binary[i] + other.binary[i] + (tmp >> 8);
       result.binary[i] = tmp & 0xff;
     }
