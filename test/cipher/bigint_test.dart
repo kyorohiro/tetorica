@@ -27,7 +27,6 @@ main() {
         BigInt v1 = new BigInt.fromInt(0xe, 4);
         BigInt v2 = new BigInt.fromInt(0xf, 4);
         test.expect("${v1-v2}", "0xffffffffffffffff");
-        print("### ${v1-v2}");
       }
       {
         BigInt v1 = new BigInt.fromInt(0xd, 4);
@@ -35,6 +34,12 @@ main() {
         BigInt v3 = new BigInt.fromInt(0x3, 4);
         test.expect("${v1-v2}", "0xfffffffffffffffe");
         test.expect("${v1-v2+v3}", "0x0000000000000001");
+      }
+
+      {
+        BigInt v1 = new BigInt.fromInt(0x1000, 4);
+        BigInt v2 = new BigInt.fromInt(0x1, 4);
+        test.expect("${v1-v2}", "0x0000000000000fff");
       }
     });
   });
