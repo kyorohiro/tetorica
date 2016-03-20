@@ -81,15 +81,10 @@ main() {
         List<int> key = Hex.decodeWithNew("0x2b7e151628aed2a6abf7158809cf4f3c");
         List<int> iv = Hex.decodeWithNew("0x000102030405060708090a0b0c0d0e0f");
         List<int> plainText = Hex.decodeWithNew("0x6bc1bee22e409f96e93d7e117393172a");
-        List<int> cipherText = Hex.decodeWithNew("0x7649abac8119b246cee98e9b12e9197d");
-
-        List<int> words = new Uint8List(4 * AES.calcWordLength(16));
         List<int> output = new Uint8List(16);
         AES.xor(plainText, 0, iv, 0, iv.length);
         AES.encrypt(plainText, output, key, key.length);
-        print(Hex.encodeWithNew(output));
-//        test.expect(Hex.encodeWithNew(words), result);
-//        test.expect(words.length, 4 * AES.calcWordLength(16));
+        test.expect(Hex.encodeWithNew(output), "0x7649abac8119b246cee98e9b12e9197d");
       }
     });
   });
