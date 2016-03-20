@@ -7,9 +7,10 @@ import 'hex.dart';
 class BigInt {
   int get lengthPerByte => binary.length;
   List<int> binary;
+  bool get isNegative => (binary[0] & 0x80) != 0;
 
   BigInt.fromInt(int value, int length) {
-    binary = new Uint8List((length>8)?length:8);
+    binary = new Uint8List((length > 8) ? length : 8);
     int _len = binary.length;
     binary[_len - 8] = (value >> 56 & 0xff);
     binary[_len - 7] = (value >> 48 & 0xff);
@@ -32,7 +33,7 @@ class BigInt {
 
     BigInt result = new BigInt.fromLength(this.lengthPerByte);
     int tmp = 0;
-    for (int i = binary.length-1; i >= 0; i--) {
+    for (int i = binary.length - 1; i >= 0; i--) {
       tmp = binary[i] + other.binary[i] + (tmp >> 8);
       result.binary[i] = tmp & 0xff;
     }
@@ -46,12 +47,19 @@ class BigInt {
 
     BigInt result = new BigInt.fromLength(this.lengthPerByte);
     int tmp = 0;
-    for (int i = binary.length-1; i >= 0; i--) {
+    for (int i = binary.length - 1; i >= 0; i--) {
       tmp = binary[i] - other.binary[i] + (tmp >> 8);
       result.binary[i] = tmp & 0xff;
-//      print("== ${result.binary[i]} ${tmp} : ${binary[i]} - ${other.binary[i]}");
     }
     return result;
+  }
+
+  int get hashCode {
+    int h = 0;
+    for (int i = 0, len = binary.length; i < len; i++) {
+      h = h * 31 + binary[i].hashCode;
+    }
+    return h;
   }
 
   @override
