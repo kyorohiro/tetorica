@@ -1,4 +1,5 @@
 // http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf
+library aes;
 
 import 'dart:typed_data';
 
@@ -32,8 +33,7 @@ class AES {
   static void addRound(List<int> state, int stateIndex, List<int> word, int wordIndex) {
     for (int c = 0; c < 4; c++) {
       for (int r = 0; r < 4; r++) {
-        state[r + 4 * c + stateIndex]
-        = state[r + 4 * c + stateIndex] ^ word[4*c + r + wordIndex];
+        state[r + 4 * c + stateIndex] = state[r + 4 * c + stateIndex] ^ word[4 * c + r + wordIndex];
       }
     }
   }
@@ -41,8 +41,7 @@ class AES {
   static void subBytes(List<int> state, int stateIndex) {
     for (int r = 0; r < 4; r++) {
       for (int c = 0; c < 4; c++) {
-        state[r + 4 * c + stateIndex]
-        = sbox[(state[r + 4 * c + stateIndex] & 0xF0) >> 4][state[r + 4 * c + stateIndex] & 0x0F];
+        state[r + 4 * c + stateIndex] = sbox[(state[r + 4 * c + stateIndex] & 0xF0) >> 4][state[r + 4 * c + stateIndex] & 0x0F];
       }
     }
   }
@@ -82,8 +81,7 @@ class AES {
 
   static int dot(int x, int y) {
     int product = 0;
-    for (int mask = 0x01; mask != 0; mask = (mask<<1)&0xFF) {
-      print("mask ${mask}");
+    for (int mask = 0x01; mask != 0; mask = (mask << 1) & 0xFF) {
       if (y & mask != 0) {
         product ^= x;
       }
@@ -99,7 +97,6 @@ class AES {
     int t3;
     int t4;
     for (int c = 0; c < 4; c++) {
-      print("c ${c}");
       t1 = dot(2, state[0 + 4 * c + stateIndex]) ^ dot(3, state[1 + 4 * c + stateIndex]) ^ state[2 + 4 * c + stateIndex] ^ state[3 + 4 * c + stateIndex];
       t2 = state[0 + 4 * c + stateIndex] ^ dot(2, state[1 + 4 * c + stateIndex]) ^ dot(3, state[2 + 4 * c + stateIndex]) ^ state[3 + 4 * c + stateIndex];
       t3 = state[0 + 4 * c + stateIndex] ^ state[1 + 4 * c + stateIndex] ^ dot(2, state[2 + 4 * c + stateIndex]) ^ dot(3, state[3 + 4 * c + stateIndex]);
@@ -167,11 +164,10 @@ class AES {
     }
   }
 
-
   static int calcNb(int keyLength) => 4;
   static int calcNk(int keyLength) => keyLength ~/ 4;
   static int calcNr(int keyLength) => (keyLength >> 2) + 6;
-  static int calcWordLength(int keyLength) => calcNb(keyLength)*(calcNr(keyLength)+1);
+  static int calcWordLength(int keyLength) => calcNb(keyLength) * (calcNr(keyLength) + 1);
 
   // 5.2
   // keyLength : key bytes length
@@ -191,17 +187,17 @@ class AES {
     //Nk= keyLength >> 2;
     int WordLength = calcWordLength(keyLength);
 
-    for (int i = 0, len=Nk*Nb; i < len; i++) {
+    for (int i = 0, len = Nk * Nb; i < len; i++) {
       words[i] = key[i];
     }
 
     //
     int rcon = 0x01;
     for (int i = Nk; i < WordLength; i++) {
-      words[4 * i + 0] = words[4 * (i-1) + 0];
-      words[4 * i + 1] = words[4 * (i-1) + 1];
-      words[4 * i + 2] = words[4 * (i-1) + 2];
-      words[4 * i + 3] = words[4 * (i-1) + 3];
+      words[4 * i + 0] = words[4 * (i - 1) + 0];
+      words[4 * i + 1] = words[4 * (i - 1) + 1];
+      words[4 * i + 2] = words[4 * (i - 1) + 2];
+      words[4 * i + 3] = words[4 * (i - 1) + 3];
       if (i % Nk == 0) {
         rotWord(words, 4 * i);
         subWord(words, 4 * i);
@@ -209,7 +205,7 @@ class AES {
           rcon = 0x1b;
         }
         words[4 * i + 0] ^= rcon;
-        rcon = (rcon<<1)&0xff;
+        rcon = (rcon << 1) & 0xff;
       } else if (Nk > 6 && (i % Nk) == 4) {
         subWord(words, 4 * i);
       }
@@ -220,16 +216,37 @@ class AES {
     }
   }
 
-  static encrypt(List<int> input, List<int> output, List<int> key, int keyLength) {
+  static encryptWithCBC(List<int> input, List<int> iv, List<int> key, List<int> output) {
+    //
+    int exKeyLength = 4 * AES.calcWordLength(key.length);
+    List<int> exKeyBase = new Uint8List(exKeyLength);
+    List<int> exKey = new Uint8List.fromList(exKeyBase);
+    keyExpansion(key, key.length, exKey);
+    //
+    for (int inputed = 0, outputed = 0, len = input.length; inputed < len; inputed +=16, outputed+=16) {
+      if(inputed == 0) {
+        xor(input, 0, iv, 0, iv.length);
+      } else {
+        xor(input, inputed, input, inputed-16, 16);
+      }
+      for(int i=0;i<exKeyLength;i++) {
+        exKey[i] = exKeyBase[i];
+      }
+      AES.encrypt(input, inputed, key.length, exKey, output, outputed);
+
+//      test.expect(Hex.encodeWithNew(output), "0x7649abac8119b246cee98e9b12e9197d");
+    }
+  }
+
+  static encrypt(
+    List<int> input, int inputIndex, int keyLength, List<int> words,
+    List<int> output, int outputIndex) {
+    print("--1");
+
     int Nb = calcNb(keyLength);
     int Nk = calcNk(keyLength);
     int Nr = calcNr(keyLength);
-    List<int> state = new Uint8List.fromList(input);
-    List<int> words = new Uint8List(4*calcWordLength(keyLength));
-
-    //
-    print("--1");
-    keyExpansion(key, keyLength, words);
+    List<int> state = new Uint8List.fromList(input.sublist(inputIndex, inputIndex+16));
 
     // 5.1
     // cipher
@@ -237,13 +254,13 @@ class AES {
     for (int round = 0; round < Nr; round++) {
       subBytes(state, 0);
       shiftRows(state, 0);
-      if(round < (Nr-1)) {
+      if (round < (Nr - 1)) {
         mixColumns(state, 0);
       }
-      addRound(state, 0, words, (round + 1) * 4*4);
+      addRound(state, 0, words, (round + 1) * 4 * 4);
     }
     for (int i = 0; i < 16; i++) {
-      output[i] = state[i];
+      output[i+outputIndex] = state[i];
     }
   }
 
