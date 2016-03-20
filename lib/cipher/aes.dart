@@ -2,7 +2,7 @@
 library aes;
 
 import 'dart:typed_data';
-
+import 'hex.dart';
 class AES {
   static void xor(List<int> target, int targetIndex, List<int> src, int srcIndex, int length) {
     for (int i = 0; i < length; i++) {
@@ -221,20 +221,21 @@ class AES {
     int exKeyLength = 4 * AES.calcWordLength(key.length);
     List<int> exKeyBase = new Uint8List(exKeyLength);
     List<int> exKey = new Uint8List.fromList(exKeyBase);
-    keyExpansion(key, key.length, exKey);
+    keyExpansion(key, key.length, exKeyBase);
     //
     for (int inputed = 0, outputed = 0, len = input.length; inputed < len; inputed +=16, outputed+=16) {
       if(inputed == 0) {
+      //  print("#AAA## ${input.length} ${inputed} ");
         xor(input, 0, iv, 0, iv.length);
       } else {
-        xor(input, inputed, input, inputed-16, 16);
+      //  print("#BBB## ${input.length} ${inputed} ");
+        xor(input, inputed, output, outputed-16, 16);
       }
       for(int i=0;i<exKeyLength;i++) {
         exKey[i] = exKeyBase[i];
       }
       AES.encrypt(input, inputed, key.length, exKey, output, outputed);
-
-//      test.expect(Hex.encodeWithNew(output), "0x7649abac8119b246cee98e9b12e9197d");
+    //  print("${Hex.encodeWithNew(output)} ${inputed} ${outputed}");
     }
   }
 
