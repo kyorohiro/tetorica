@@ -1,7 +1,5 @@
 import 'package:tetorica/cipher/arcfour.dart';
-import 'package:tetorica/cipher/cipher.dart';
 import 'package:tetorica/cipher/hex.dart';
-import 'dart:convert';
 import 'package:test/test.dart' as test;
 
 main() {

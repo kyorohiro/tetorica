@@ -1,8 +1,8 @@
 // http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf
+// http://csrc.nist.gov/publications/nistpubs/800-38a/sp800-38a.pdf
 library aes;
 
 import 'dart:typed_data';
-import 'hex.dart';
 
 class AES {
   static void xor(List<int> target, int targetIndex, List<int> src, int srcIndex, int length) {

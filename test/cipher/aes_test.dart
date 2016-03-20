@@ -74,7 +74,7 @@ main() {
         test.expect(Hex.encodeWithNew(output), "0x7649abac8119b246cee98e9b12e9197d");
       }
     });
-    test.test("decrypt", () {
+    test.test("decrypt 128bit", () {
       {
         List<int> key = Hex.decodeWithNew("0x2b7e151628aed2a6abf7158809cf4f3c");
         List<int> iv = Hex.decodeWithNew("0x000102030405060708090a0b0c0d0e0f");
@@ -87,14 +87,11 @@ main() {
         AES.createExKeyFromKey(key, key.length, words);
         //
         AES.decrypt(cipherText, 0, key.length, words, output, 0);
-        print("### ${Hex.encodeWithNew(output)}");
         AES.xor(output, 0, iv, 0, iv.length);
-        print("### ${Hex.encodeWithNew(output)}");
         test.expect(Hex.encodeWithNew(output), "0x6bc1bee22e409f96e93d7e117393172a");
       }
     });
-    test.test("encrypt", () {
-      // 16bit
+    test.test("encrypt 128bit", () {
       {
         List<int> key = Hex.decodeWithNew("0x2b7e151628aed2a6abf7158809cf4f3c");
         List<int> iv = Hex.decodeWithNew("0x000102030405060708090a0b0c0d0e0f");
@@ -111,31 +108,30 @@ main() {
       }
     });
 
-    test.test("encrypt CBC", () {
+
+    test.test("encrypt CBC 4 128bit", () {
       // 16bit
       {
         List<int> key = Hex.decodeWithNew("0x2b7e151628aed2a6abf7158809cf4f3c");
         List<int> iv = Hex.decodeWithNew("0x000102030405060708090a0b0c0d0e0f");
-        List<int> plainText = Hex.decodeWithNew("0x" + "6bc1bee22e409f96e93d7e117393172a" + "ae2d8a571e03ac9c9eb76fac45af8e51");
-        List<int> output = new Uint8List(16 * 2);
+        List<int> plainText = Hex.decodeWithNew("0x" + "6bc1bee22e409f96e93d7e117393172a" + "ae2d8a571e03ac9c9eb76fac45af8e51" + "30c81c46a35ce411e5fbc1191a0a52ef" + "f69f2445df4f9b17ad2b417be66c3710");
+        List<int> output = new Uint8List(16 * 4);
 
         AES.encryptWithCBC(plainText, iv, key, output);
-        test.expect(Hex.encodeWithNew(output), "0x7649abac8119b246cee98e9b12e9197d" + "5086cb9b507219ee95db113a917678b2");
+        test.expect(Hex.encodeWithNew(output), "0x7649abac8119b246cee98e9b12e9197d" + "5086cb9b507219ee95db113a917678b2" + "73bed6b8e3c1743b7116e69e22229516" + "3ff1caa1681fac09120eca307586e1a7");
       }
     });
 
-
-    test.test("decrypt CBC", () {
+    test.test("decrypt CBC 4 128 bit", () {
       // 16bit
       {
         List<int> key = Hex.decodeWithNew("0x2b7e151628aed2a6abf7158809cf4f3c");
         List<int> iv = Hex.decodeWithNew("0x000102030405060708090a0b0c0d0e0f");
-        List<int> plainText = Hex.decodeWithNew("0x" + "6bc1bee22e409f96e93d7e117393172a" + "ae2d8a571e03ac9c9eb76fac45af8e51");
-        List<int> cypherText = Hex.decodeWithNew(  "0x7649abac8119b246cee98e9b12e9197d" + "5086cb9b507219ee95db113a917678b2");
-        List<int> output = new Uint8List(16 * 2);
+        List<int> cypherText = Hex.decodeWithNew("0x7649abac8119b246cee98e9b12e9197d" + "5086cb9b507219ee95db113a917678b2" + "73bed6b8e3c1743b7116e69e22229516" + "3ff1caa1681fac09120eca307586e1a7");
+        List<int> output = new Uint8List(16 * 4);
 
         AES.decryptWithCBC(cypherText, iv, key, output);
-        test.expect(Hex.encodeWithNew(output), "0x" + "6bc1bee22e409f96e93d7e117393172a" + "ae2d8a571e03ac9c9eb76fac45af8e51");
+        test.expect(Hex.encodeWithNew(output), "0x6bc1bee22e409f96e93d7e117393172a" + "ae2d8a571e03ac9c9eb76fac45af8e51" + "30c81c46a35ce411e5fbc1191a0a52ef" + "f69f2445df4f9b17ad2b417be66c3710");
       }
     });
     //
