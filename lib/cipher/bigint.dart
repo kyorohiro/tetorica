@@ -49,7 +49,7 @@ class BigInt {
     for (int i = binary.length-1; i >= 0; i--) {
       tmp = binary[i] - other.binary[i] + (tmp >> 8);
       result.binary[i] = tmp & 0xff;
-      print("== ${result.binary[i]} ${tmp} : ${binary[i]} - ${other.binary[i]}");
+//      print("== ${result.binary[i]} ${tmp} : ${binary[i]} - ${other.binary[i]}");
     }
     return result;
   }
