@@ -189,7 +189,6 @@ class AES {
     //Nk= keyLength >> 2;
     int WordLength = calcWordLength(keyLength);
 
-    print("------ ${Nb} ${Nk} ${Nr}");
     for (int i = 0, len=Nk*Nb; i < len; i++) {
       words[i] = key[i];
     }
@@ -202,7 +201,6 @@ class AES {
       words[4 * i + 2] = words[4 * (i-1) + 2];
       words[4 * i + 3] = words[4 * (i-1) + 3];
       if (i % Nk == 0) {
-        print("#A### ${i} ${Nk} ${rcon}###\n");
         rotWord(words, 4 * i);
         subWord(words, 4 * i);
         if (i % 36 == 0) {
@@ -211,7 +209,6 @@ class AES {
         words[4 * i + 0] ^= rcon;
         rcon = (rcon<<1)&0xff;
       } else if (Nk > 6 && (i % Nk) == 4) {
-        print("#B### ${i} ${Nk}###\n");
         subWord(words, 4 * i);
       }
       words[4 * i + 0] ^= words[4 * (i - Nk) + 0];
