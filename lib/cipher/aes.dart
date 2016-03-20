@@ -247,21 +247,21 @@ class AES {
     int Nb = calcNb(keyLength);
     int Nk = calcNk(keyLength);
     int Nr = calcNr(keyLength);
-    List<int> state = new Uint8List.fromList(input.sublist(inputIndex, inputIndex+16));
+    List<int> state = input;//new Uint8List.fromList(input.sublist(inputIndex, inputIndex+16));
 
     // 5.1
     // cipher
-    addRound(state, 0, words, 0);
+    addRound(state, inputIndex, words, 0);
     for (int round = 0; round < Nr; round++) {
-      subBytes(state, 0);
-      shiftRows(state, 0);
+      subBytes(state, inputIndex);
+      shiftRows(state, inputIndex);
       if (round < (Nr - 1)) {
-        mixColumns(state, 0);
+        mixColumns(state, inputIndex);
       }
-      addRound(state, 0, words, (round + 1) * 4 * 4);
+      addRound(state, inputIndex, words, (round + 1) * 4 * 4);
     }
     for (int i = 0; i < 16; i++) {
-      output[i+outputIndex] = state[i];
+      output[i+outputIndex] = state[i+inputIndex];
     }
   }
 

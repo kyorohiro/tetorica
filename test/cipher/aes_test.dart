@@ -42,19 +42,7 @@ main() {
       }
       // 32bit
       {
-        String result = "0x"+
-        "603deb1015ca71be2b73aef0857d77811f352c07" +
-        "3b6108d72d9810a30914dff49ba354118e6925af" +
-        "a51a8b5f2067fcdea8b09c1a93d194cdbe49846e" +
-        "b75d5b9ad59aecb85bf3c917fee94248de8ebe96" +
-        "b5a9328a2678a647983122292f6c79b3812c81ad" +
-        "dadf48ba24360af2fab8b46498c5bfc9bebd198e" +
-        "268c3ba709e0421468007bacb2df331696e939e4" +
-        "6c518d80c814e20476a9fb8a5025c02d59c58239" +
-        "de1369676ccc5a71fa2563959674ee155886ca5d" +
-        "2e2f31d77e0af1fa27cf73c3749c47ab18501dda" +
-        "e2757e4f7401905acafaaae3e4d59b349adf6ace" +
-        "bd10190dfe4890d1e6188d0b046df344706c631e";
+        String result = "0x" + "603deb1015ca71be2b73aef0857d77811f352c07" + "3b6108d72d9810a30914dff49ba354118e6925af" + "a51a8b5f2067fcdea8b09c1a93d194cdbe49846e" + "b75d5b9ad59aecb85bf3c917fee94248de8ebe96" + "b5a9328a2678a647983122292f6c79b3812c81ad" + "dadf48ba24360af2fab8b46498c5bfc9bebd198e" + "268c3ba709e0421468007bacb2df331696e939e4" + "6c518d80c814e20476a9fb8a5025c02d59c58239" + "de1369676ccc5a71fa2563959674ee155886ca5d" + "2e2f31d77e0af1fa27cf73c3749c47ab18501dda" + "e2757e4f7401905acafaaae3e4d59b349adf6ace" + "bd10190dfe4890d1e6188d0b046df344706c631e";
 
         List<int> key = Hex.decodeWithNew("0x603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4");
         List<int> iv = Hex.decodeWithNew("0x000102030405060708090a0b0c0d0e0f");
@@ -69,7 +57,6 @@ main() {
       }
     });
 
-
     test.test("encrypt", () {
       // 16bit
       {
@@ -79,7 +66,7 @@ main() {
         List<int> output = new Uint8List(16);
 
         //
-        List<int> words = new Uint8List(4*AES.calcWordLength(key.length));
+        List<int> words = new Uint8List(4 * AES.calcWordLength(key.length));
         AES.keyExpansion(key, key.length, words);
         //
         AES.xor(plainText, 0, iv, 0, iv.length);
@@ -97,7 +84,7 @@ main() {
         List<int> output = new Uint8List(16);
 
         //
-        List<int> words = new Uint8List(4*AES.calcWordLength(key.length));
+        List<int> words = new Uint8List(4 * AES.calcWordLength(key.length));
         AES.keyExpansion(key, key.length, words);
         //
         AES.xor(plainText, 0, iv, 0, iv.length);
@@ -111,13 +98,11 @@ main() {
       {
         List<int> key = Hex.decodeWithNew("0x2b7e151628aed2a6abf7158809cf4f3c");
         List<int> iv = Hex.decodeWithNew("0x000102030405060708090a0b0c0d0e0f");
-        List<int> plainText = Hex.decodeWithNew(
-
-          "0x"+"6bc1bee22e409f96e93d7e117393172a"+"ae2d8a571e03ac9c9eb76fac45af8e51");
-        List<int> output = new Uint8List(16*2);
+        List<int> plainText = Hex.decodeWithNew("0x" + "6bc1bee22e409f96e93d7e117393172a" + "ae2d8a571e03ac9c9eb76fac45af8e51");
+        List<int> output = new Uint8List(16 * 2);
 
         AES.encryptWithCBC(plainText, iv, key, output);
-        test.expect(Hex.encodeWithNew(output), "0x7649abac8119b246cee98e9b12e9197d"+"5086cb9b507219ee95db113a917678b2");
+        test.expect(Hex.encodeWithNew(output), "0x7649abac8119b246cee98e9b12e9197d" + "5086cb9b507219ee95db113a917678b2");
       }
     });
     //
