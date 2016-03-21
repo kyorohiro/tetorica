@@ -213,7 +213,6 @@ main() {
         test.expect((-v2 <= -v1), true);
       }
     });
-/*int compareTo(BigInt other) {
     test.test("[~/] B", () {
       {
         BigInt v1 = new BigInt.fromInt(0x8, 4);
@@ -221,6 +220,24 @@ main() {
         BigInt v3 = new BigInt.fromInt(0x4, 4);
         test.expect("${v1~/v2}", "${v3}");
       }
-    });*/
+      {
+        BigInt v1 = new BigInt.fromInt(-0x8, 4);
+        BigInt v2 = new BigInt.fromInt(0x2, 4);
+        BigInt v3 = new BigInt.fromInt(-0x4, 4);
+        test.expect("${v1~/v2}", "${v3}");
+      }
+      {
+        BigInt v1 = new BigInt.fromInt(0x8, 4);
+        BigInt v2 = new BigInt.fromInt(-0x2, 4);
+        BigInt v3 = new BigInt.fromInt(-0x4, 4);
+        test.expect("${v1~/v2}", "${v3}");
+      }
+      {
+        BigInt v1 = new BigInt.fromInt(0x2, 4);
+        BigInt v2 = new BigInt.fromInt(-0x8, 4);
+        BigInt v3 = new BigInt.fromInt(0x0, 4);
+        test.expect("${v1~/v2}", "${v3}");
+      }
+    });
   });
 }

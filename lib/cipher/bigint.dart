@@ -123,7 +123,6 @@ class BigInt implements Comparable<BigInt> {
     return result;
   }
 
-/*
   BigInt operator ~/(BigInt other) {
     if (this.lengthPerByte != other.lengthPerByte) {
       throw {"message": "need same length ${lengthPerByte} ${other.lengthPerByte}"};
@@ -142,26 +141,21 @@ class BigInt implements Comparable<BigInt> {
 
     //
     //
-
-    BigInt result = new BigInt.fromLength(a.lengthPerByte);
-    BigInt t = new BigInt.fromLength(this.lengthPerByte);
-    for (int i = binary.length - 1, tmp = 0; i >= 0; i--) {
-      t.clearZero();
-      for (int j = i; j >= 0; j--) {
-        tmp = a.binary[j] * b.binary[i] + (tmp >> 8);
-        t.binary[j] = tmp & 0xff;
-      }
-      //print("#[${i}]# ${t}");
-      result = result + t;
+    BigInt tmp = new BigInt.fromBytes(b.binary);
+    BigInt result = new BigInt.fromInt(1, lengthPerByte);
+    BigInt one = new BigInt.fromInt(1, lengthPerByte);
+    while (a > (tmp * result)) {
+      result += one;
     }
-    //
-    //
+    if (a != (tmp * result)) {
+      result -= one;
+    }
     if (minus == -1) {
       result.mutableMinusOne();
     }
     return result;
   }
-*/
+
   bool operator <(BigInt other) => this.compareTo(other) < 0;
 
   bool operator <=(BigInt other) => this.compareTo(other) <= 0;
