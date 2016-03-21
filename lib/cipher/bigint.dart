@@ -139,18 +139,40 @@ class BigInt implements Comparable<BigInt> {
 
     for (int i = 0, len = binary.length; i < len; i++) {
       r.binary[i] = 0x01;
-      if (a < (b + r)) {
+      if (a < (b * r)) {
         r.binary[i] = 0;
         continue;
       }
-      int p = 1;
-      for (int j = 2, len = (i == 0 ? 0x80 : 0xff); j < len; j++) {
-        r.binary[i] = j;
-        if (a < (b * r)) {
-          r.binary[i] = p;
-          continue;
+      r.binary[i] = (i == 0 ? 0x7f : 0xff);
+      if (a >= (b * r)) {
+        continue;
+      }
+
+      r.binary[i] = 0x01;
+      int pe = (i == 0 ? 0x7f : 0xff);
+      int ps = 1;
+//      print("##A# ${ps} == ${pe}");
+      for (; ps != pe;) {
+//        print("### ${ps} == ${pe}");
+        var tt = (pe-ps)~/2+ps;
+        if(ps+1==pe) {
+          r.binary[i] = ps;
+          break;
         }
-        p = j;
+        r.binary[i] = tt;
+        var t = (b * r);
+        if (a < t) {
+//          print("#D# ${a} < ${t}");
+          pe = tt;
+        }
+        else if(a == t) {
+//          print("#E# ${a} = ${t}");
+          break;
+        }
+        else {
+//          print("#F# ${a} > ${t}");
+          ps = tt;
+        }
       }
     }
 

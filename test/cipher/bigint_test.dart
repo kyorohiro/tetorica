@@ -251,17 +251,28 @@ main() {
       }
 
       {
-        BigInt v1 = new BigInt.fromInt(0xffffffffffffffffffffffffffffffffffffffff, 64);
-        BigInt v2 = new BigInt.fromInt(0x3, 64);
-        BigInt v3 = new BigInt.fromInt(0x5555555555555555555555555555555555555555, 64);
+        BigInt v1 = new BigInt.fromInt(0xfffff, 8);
+        BigInt v2 = new BigInt.fromInt(0x3, 8);
+        BigInt v3 = new BigInt.fromInt(0x55555, 8);
         num t1 = new DateTime.now().millisecondsSinceEpoch;
-        for(int i=0;i<0x40;i++){
+        for (int i = 0; i < 0x40; i++) {
           test.expect("${v1~/v2}", "${v3}");
         }
         num t2 = new DateTime.now().millisecondsSinceEpoch;
         print("##${t2-t1}");
       }
 
+      {
+        BigInt v1 = new BigInt.fromInt(0xffffffffffffffffffffffffffffffffffffffff, 64);
+        BigInt v2 = new BigInt.fromInt(0x3, 64);
+        BigInt v3 = new BigInt.fromInt(0x5555555555555555555555555555555555555555, 64);
+        num t1 = new DateTime.now().millisecondsSinceEpoch;
+        for (int i = 0; i < 0x40; i++) {
+          test.expect("${v1~/v2}", "${v3}");
+        }
+        num t2 = new DateTime.now().millisecondsSinceEpoch;
+        print("##${t2-t1}");
+      }
     });
 
 
