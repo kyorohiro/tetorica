@@ -18,8 +18,8 @@ main() {
         BigInt v2 = new BigInt.fromInt(0xffff, 4);
         test.expect("${v1+v2}", "0x0000000000010000");
       }
-      for (int i = 0; i < 0x3ff; i+=2) {
-        for (int j = 0; j < 0x3ff; j+=3) {
+      for (int i = 0; i < 0x3ff; i += 2) {
+        for (int j = 0; j < 0x3ff; j += 3) {
           BigInt v1 = new BigInt.fromInt(i, 32);
           BigInt v2 = new BigInt.fromInt(j, 32);
           BigInt v3 = new BigInt.fromInt(i + j, 32);
@@ -73,8 +73,8 @@ main() {
         test.expect("${v1-v2}", "0x0000000000000fff");
       }
 
-      for (int i = -1*0xff; i < 0xff; i+=2) {
-        for (int j = -1*0xff; j < 0xff; j+=3) {
+      for (int i = -1 * 0xff; i < 0xff; i += 2) {
+        for (int j = -1 * 0xff; j < 0xff; j += 3) {
           BigInt v1 = new BigInt.fromInt(i, 32);
           BigInt v2 = new BigInt.fromInt(j, 32);
           BigInt v3 = new BigInt.fromInt(i - j, 32);
@@ -111,8 +111,8 @@ main() {
       }
       //
       //
-      for (int i = 0x0; i < 0xff; i+=2) {
-        for (int j = 0x0; j < 0xff; j+=3) {
+      for (int i = 0x0; i < 0xff; i += 2) {
+        for (int j = 0x0; j < 0xff; j += 3) {
           BigInt v1 = new BigInt.fromInt(i, 32);
           BigInt v2 = new BigInt.fromInt(j, 32);
           BigInt v3 = new BigInt.fromInt(i * j, 32);
@@ -207,9 +207,9 @@ main() {
         test.expect(v2.compareTo(v1), -1);
         test.expect((-v2).compareTo(-v1), -1);
         //
-        test.expect((v1  > v2), true);
+        test.expect((v1 > v2), true);
         test.expect((-v2 < -v1), true);
-        test.expect((v1  >= v2), true);
+        test.expect((v1 >= v2), true);
         test.expect((-v2 <= -v1), true);
       }
     });
@@ -240,23 +240,15 @@ main() {
       }
     });
     test.test("[~/] B", () {
-      test.expect("${new BigInt.fromInt(0x5, 4)%new BigInt.fromInt(0x2, 4)}",
-       "${new BigInt.fromInt(0x1, 4)}");
-      test.expect("${new BigInt.fromInt(0x4, 4)%new BigInt.fromInt(0x2, 4)}",
-        "${new BigInt.fromInt(0x0, 4)}");
-      test.expect("${new BigInt.fromInt(-0x5, 4)%new BigInt.fromInt(0x2, 4)}",
-         "${new BigInt.fromInt(0x1, 4)}");
-      test.expect("${new BigInt.fromInt(-0x4, 4)%new BigInt.fromInt(0x2, 4)}",
-          "${new BigInt.fromInt(0x0, 4)}");
+      test.expect("${new BigInt.fromInt(0x5, 4)%new BigInt.fromInt(0x2, 4)}", "${new BigInt.fromInt(0x1, 4)}");
+      test.expect("${new BigInt.fromInt(0x4, 4)%new BigInt.fromInt(0x2, 4)}", "${new BigInt.fromInt(0x0, 4)}");
+      test.expect("${new BigInt.fromInt(-0x5, 4)%new BigInt.fromInt(0x2, 4)}", "${new BigInt.fromInt(0x1, 4)}");
+      test.expect("${new BigInt.fromInt(-0x4, 4)%new BigInt.fromInt(0x2, 4)}", "${new BigInt.fromInt(0x0, 4)}");
       //
-      test.expect("${new BigInt.fromInt(0x5, 4)%new BigInt.fromInt(-0x2, 4)}",
-           "${new BigInt.fromInt(-0x1, 4)}");
-      test.expect("${new BigInt.fromInt(0x4, 4)%new BigInt.fromInt(-0x2, 4)}",
-            "${new BigInt.fromInt(-0x0, 4)}");
-      test.expect("${new BigInt.fromInt(-0x5, 4)%new BigInt.fromInt(-0x2, 4)}",
-             "${new BigInt.fromInt(-0x1, 4)}");
-      test.expect("${new BigInt.fromInt(-0x4, 4)%new BigInt.fromInt(-0x2, 4)}",
-              "${new BigInt.fromInt(-0x0, 4)}");
+      test.expect("${new BigInt.fromInt(0x5, 4)%new BigInt.fromInt(-0x2, 4)}", "${new BigInt.fromInt(-0x1, 4)}");
+      test.expect("${new BigInt.fromInt(0x4, 4)%new BigInt.fromInt(-0x2, 4)}", "${new BigInt.fromInt(-0x0, 4)}");
+      test.expect("${new BigInt.fromInt(-0x5, 4)%new BigInt.fromInt(-0x2, 4)}", "${new BigInt.fromInt(-0x1, 4)}");
+      test.expect("${new BigInt.fromInt(-0x4, 4)%new BigInt.fromInt(-0x2, 4)}", "${new BigInt.fromInt(-0x0, 4)}");
     });
   });
 }
