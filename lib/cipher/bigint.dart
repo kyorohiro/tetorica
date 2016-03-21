@@ -105,7 +105,11 @@ class BigInt implements Comparable<BigInt> {
     if (a.isNegative) {
       a = -a;
     }
-
+    if(a<b) {
+      var t=a;
+      a=b;
+      b=t;
+    }
     BigInt result = new BigInt.fromLength(a.lengthPerByte);
     BigInt t = new BigInt.fromLength(this.lengthPerByte);
     for (int i = binary.length - 1, tmp = 0; i >= 0; i--) {
@@ -132,7 +136,7 @@ class BigInt implements Comparable<BigInt> {
     if (a.isNegative) {
       a = -a;
     }
-    return (other.isNegative==false?a-(a~/b)*b:-(a-(a~/b)*b));
+    return (other.isNegative == false ? a - (a ~/ b) * b : -(a - (a ~/ b) * b));
   }
 
   BigInt operator ~/(BigInt other) {
@@ -153,8 +157,31 @@ class BigInt implements Comparable<BigInt> {
 
     //
     //
-    BigInt tmp = new BigInt.fromBytes(b.binary);
     BigInt result = new BigInt.fromInt(1, lengthPerByte);
+    {
+      BigInt tmp = new BigInt.fromBytes(b.binary);
+      BigInt one = new BigInt.fromInt(2, lengthPerByte);
+      BigInt d = new BigInt.fromInt(1, lengthPerByte);
+      result *= one;
+
+      int i=0;
+      while (a > (tmp * result)) {
+        result *= one;
+        d *=one;
+        print("## ${result} ${a} > ${(tmp * result)}# ${tmp}");
+        if(i++>20) {
+        break;
+      }
+//        print("## ${result} ${a} > ${(tmp * result)}# ${tmp}");
+      }
+      if (a != (tmp * result)) {
+        result = d;
+      }
+    }
+    print("## ${result} #${other} ${this}#");
+    //
+    //
+    BigInt tmp = new BigInt.fromBytes(b.binary);
     BigInt one = new BigInt.fromInt(1, lengthPerByte);
     while (a > (tmp * result)) {
       result += one;

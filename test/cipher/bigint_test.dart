@@ -109,6 +109,12 @@ main() {
         BigInt v2 = new BigInt.fromInt(0x2, 4);
         test.expect("${v1*v2}", "0x000000000001fffe");
       }
+
+      {
+        BigInt v1 = new BigInt.fromInt(0x100, 4);
+        BigInt v2 = new BigInt.fromInt(0x3, 4);
+        test.expect("${v1*v2}", "0x0000000000000300");
+      }
       //
       //
       for (int i = 0x0; i < 0xff; i += 2) {
@@ -119,12 +125,6 @@ main() {
           test.expect("${v3}", "${v1*v2}");
         }
       }
-/*
-      BigInt v1 = new BigInt.fromInt(4, 32);
-      BigInt v2 = new BigInt.fromInt(-4, 32);
-      BigInt v3 = new BigInt.fromInt(-16, 32);
-      print("## ${v1*v2} ${v3}##");
-      */
     });
 
     test.test("[mutableMinus]", () {
@@ -213,6 +213,7 @@ main() {
         test.expect((-v2 <= -v1), true);
       }
     });
+
     test.test("[~/] B", () {
       {
         BigInt v1 = new BigInt.fromInt(0x8, 4);
@@ -239,12 +240,19 @@ main() {
         test.expect("${v1~/v2}", "${v3}");
       }
       {
-        BigInt v1 = new BigInt.fromInt(0xff, 4);
+        BigInt v1 = new BigInt.fromInt(0x100, 4);
         BigInt v2 = new BigInt.fromInt(0x3, 4);
-        BigInt v3 = new BigInt.fromInt(0x55, 4);
+        test.expect("${v1*v2}", "0x0000000000000300");
+        test.expect("${v2*v1}", "0x0000000000000300");
+      }
+      {
+        BigInt v1 = new BigInt.fromInt(0xfff, 4);
+        BigInt v2 = new BigInt.fromInt(0x3, 4);
+        BigInt v3 = new BigInt.fromInt(0x555, 4);
         test.expect("${v1~/v2}", "${v3}");
       }
     });
+
     test.test("[%] B", () {
       test.expect("${new BigInt.fromInt(0x5, 4)%new BigInt.fromInt(0x2, 4)}", "${new BigInt.fromInt(0x1, 4)}");
       test.expect("${new BigInt.fromInt(0x4, 4)%new BigInt.fromInt(0x2, 4)}", "${new BigInt.fromInt(0x0, 4)}");
