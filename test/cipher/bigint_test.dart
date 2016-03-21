@@ -158,7 +158,27 @@ main() {
       {
         BigInt v1 = new BigInt.fromInt(-0x2, 4);
         BigInt v2 = new BigInt.fromInt(-0x2, 4);
-        print("#A## ${v1} ${v2} ${v1*v2} ##");
+        BigInt v3 = new BigInt.fromInt(0x4, 4);
+        test.expect("${v1*v2}", "${v3}");
+      }
+      {
+        BigInt v1 = new BigInt.fromInt(0x2, 4);
+        BigInt v2 = new BigInt.fromInt(-0x2, 4);
+        BigInt v3 = new BigInt.fromInt(-0x4, 4);
+        test.expect("${v1*v2}", "${v3}");
+      }
+
+      {
+        BigInt v1 = new BigInt.fromInt(-0x2, 4);
+        BigInt v2 = new BigInt.fromInt(0x2, 4);
+        BigInt v3 = new BigInt.fromInt(-0x4, 4);
+        test.expect("${v1*v2}", "${v3}");
+      }
+      {
+        BigInt v1 = new BigInt.fromInt(-0x2, 4);
+        BigInt v2 = new BigInt.fromInt(-0x2, 4);
+        BigInt v3 = new BigInt.fromInt(0x4, 4);
+        test.expect("${v1*v2}", "${v3}");
       }
     });
   });

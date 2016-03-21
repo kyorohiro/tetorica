@@ -94,10 +94,10 @@ class BigInt {
 
     int c = (((a.isNegative==true?1:0) ^ (b.isNegative==true?1:0))==1?-1:1);
     if(b.isNegative) {
-      b = -other;
+      b = -b;
     }
     if(a.isNegative) {
-      a = -other;
+      a = -a;
     }
 
     BigInt result = new BigInt.fromLength(a.lengthPerByte);
