@@ -84,6 +84,12 @@ class BigInt {
     }
   }
 
+  void clearZero() {
+    for (int i = binary.length - 1; i >= 0; i--) {
+      binary[i] = 0;
+    }
+  }
+
   BigInt operator *(BigInt other) {
     if (this.lengthPerByte != other.lengthPerByte) {
       throw {"message": "need same length ${lengthPerByte} ${other.lengthPerByte}"};
@@ -101,10 +107,10 @@ class BigInt {
       a = -a;
     }
 
-    int tmp = 0;
     BigInt result = new BigInt.fromLength(a.lengthPerByte);
-    for (int i = binary.length - 1; i >= 0; i--) {
-      BigInt t = new BigInt.fromLength(this.lengthPerByte);
+    BigInt t = new BigInt.fromLength(this.lengthPerByte);
+    for (int i = binary.length - 1, tmp = 0; i >= 0; i--) {
+      t.clearZero();
       for (int j = i; j >= 0; j--) {
         tmp = a.binary[j] * b.binary[i] + (tmp >> 8);
         t.binary[j] = tmp & 0xff;
