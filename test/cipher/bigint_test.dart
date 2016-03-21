@@ -238,8 +238,14 @@ main() {
         BigInt v3 = new BigInt.fromInt(0x0, 4);
         test.expect("${v1~/v2}", "${v3}");
       }
+      {
+        BigInt v1 = new BigInt.fromInt(0xff, 4);
+        BigInt v2 = new BigInt.fromInt(0x3, 4);
+        BigInt v3 = new BigInt.fromInt(0x55, 4);
+        test.expect("${v1~/v2}", "${v3}");
+      }
     });
-    test.test("[~/] B", () {
+    test.test("[%] B", () {
       test.expect("${new BigInt.fromInt(0x5, 4)%new BigInt.fromInt(0x2, 4)}", "${new BigInt.fromInt(0x1, 4)}");
       test.expect("${new BigInt.fromInt(0x4, 4)%new BigInt.fromInt(0x2, 4)}", "${new BigInt.fromInt(0x0, 4)}");
       test.expect("${new BigInt.fromInt(-0x5, 4)%new BigInt.fromInt(0x2, 4)}", "${new BigInt.fromInt(0x1, 4)}");
