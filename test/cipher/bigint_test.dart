@@ -195,6 +195,9 @@ main() {
         BigInt v2 = new BigInt.fromInt(0xFFFFF, 4);
         test.expect(v1.compareTo(v2), 0);
         test.expect((-v1).compareTo(-v2), 0);
+        test.expect((-v1 == -v2), true);
+        test.expect((-v1 >= -v2), true);
+        test.expect((-v1 <= -v2), true);
       }
       {
         BigInt v1 = new BigInt.fromInt(0xFFFFF, 4);
@@ -203,6 +206,11 @@ main() {
         test.expect((-v1).compareTo(-v2), 1);
         test.expect(v2.compareTo(v1), -1);
         test.expect((-v2).compareTo(-v1), -1);
+        //
+        test.expect((v1  > v2), true);
+        test.expect((-v2 < -v1), true);
+        test.expect((v1  >= v2), true);
+        test.expect((-v2 <= -v1), true);
       }
     });
 /*int compareTo(BigInt other) {

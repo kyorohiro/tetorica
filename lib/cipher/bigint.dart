@@ -162,6 +162,15 @@ class BigInt implements Comparable<BigInt> {
     return result;
   }
 */
+  bool operator <(BigInt other) => this.compareTo(other) < 0;
+
+  bool operator <=(BigInt other) => this.compareTo(other) <= 0;
+
+  bool operator >(BigInt other) => this.compareTo(other) > 0;
+
+  bool operator >=(BigInt other) => this.compareTo(other) >= 0;
+
+  bool operator ==(BigInt other) => this.compareTo(other) == 0;
   int compareTo(BigInt other) {
     BigInt a = this;
     BigInt b = new BigInt.fromBytes(other.binary);
@@ -175,11 +184,9 @@ class BigInt implements Comparable<BigInt> {
       b = -b;
     }
 
-    for(int i=0,len=binary.length;i<len;i++) {
-      if(a.binary[i] != b.binary[i]) {
-        return (a.binary[i] > b.binary[i]?
-          (a.isNegative==false?1:-1):
-          (a.isNegative==false?-1:1));
+    for (int i = 0, len = binary.length; i < len; i++) {
+      if (a.binary[i] != b.binary[i]) {
+        return (a.binary[i] > b.binary[i] ? (a.isNegative == false ? 1 : -1) : (a.isNegative == false ? -1 : 1));
       }
     }
     return 0;
