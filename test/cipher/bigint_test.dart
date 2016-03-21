@@ -146,6 +146,20 @@ main() {
         v1.mutableMinusOne();
         test.expect("${v1}", "${v2}");
       }
+
+      {
+        BigInt v1 = new BigInt.fromInt(-0xfff, 10);
+        BigInt v2 = new BigInt.fromInt(0xfff, 10);
+        test.expect("${-v1}", "${v2}");
+      }
+    });
+
+    test.test("[*] B", () {
+      {
+        BigInt v1 = new BigInt.fromInt(-0x2, 4);
+        BigInt v2 = new BigInt.fromInt(-0x2, 4);
+        print("#A## ${v1} ${v2} ${v1*v2} ##");
+      }
     });
   });
 }
