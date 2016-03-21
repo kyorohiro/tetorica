@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'hex.dart';
 
 // uint
-class BigInt {
+class BigInt implements Comparable<BigInt> {
   int get lengthPerByte => binary.length;
   List<int> binary;
 
@@ -97,9 +97,8 @@ class BigInt {
 
     BigInt a = this;
     BigInt b = other;
+    int minus = (((a.isNegative == true ? 1 : 0) ^ (b.isNegative == true ? 1 : 0)) == 1 ? -1 : 1);
 
-
-    int c = (((a.isNegative == true ? 1 : 0) ^ (b.isNegative == true ? 1 : 0)) == 1 ? -1 : 1);
     if (b.isNegative) {
       b = -b;
     }
@@ -118,10 +117,72 @@ class BigInt {
       //print("#[${i}]# ${t}");
       result = result + t;
     }
-    if (c == -1) {
+    if (minus == -1) {
       result.mutableMinusOne();
     }
     return result;
+  }
+
+/*
+  BigInt operator ~/(BigInt other) {
+    if (this.lengthPerByte != other.lengthPerByte) {
+      throw {"message": "need same length ${lengthPerByte} ${other.lengthPerByte}"};
+    }
+
+    BigInt a = this;
+    BigInt b = new BigInt.fromBytes(other.binary);
+    int minus = (((a.isNegative == true ? 1 : 0) ^ (b.isNegative == true ? 1 : 0)) == 1 ? -1 : 1);
+
+    if (a.isNegative) {
+      a = -a;
+    }
+    if (b.isNegative) {
+      b = -b;
+    }
+
+    //
+    //
+
+    BigInt result = new BigInt.fromLength(a.lengthPerByte);
+    BigInt t = new BigInt.fromLength(this.lengthPerByte);
+    for (int i = binary.length - 1, tmp = 0; i >= 0; i--) {
+      t.clearZero();
+      for (int j = i; j >= 0; j--) {
+        tmp = a.binary[j] * b.binary[i] + (tmp >> 8);
+        t.binary[j] = tmp & 0xff;
+      }
+      //print("#[${i}]# ${t}");
+      result = result + t;
+    }
+    //
+    //
+    if (minus == -1) {
+      result.mutableMinusOne();
+    }
+    return result;
+  }
+*/
+  int compareTo(BigInt other) {
+    BigInt a = this;
+    BigInt b = new BigInt.fromBytes(other.binary);
+    if (a.isNegative != other.isNegative) {
+      return (a.isNegative == false ? 1 : -1);
+    }
+    if (a.isNegative) {
+      a = -a;
+    }
+    if (b.isNegative) {
+      b = -b;
+    }
+
+    for(int i=0,len=binary.length;i<len;i++) {
+      if(a.binary[i] != b.binary[i]) {
+        return (a.binary[i] > b.binary[i]?
+          (a.isNegative==false?1:-1):
+          (a.isNegative==false?-1:1));
+      }
+    }
+    return 0;
   }
 
   int get hashCode {
