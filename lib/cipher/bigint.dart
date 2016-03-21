@@ -23,7 +23,7 @@ class BigInt {
       binary[_len - 2] = (value >> 8 & 0xff);
       binary[_len - 1] = (value >> 0 & 0xff);
     } else {
-      value *=-1;
+      value *= -1;
       binary[_len - 8] = (value >> 56 & 0xff);
       binary[_len - 7] = (value >> 48 & 0xff);
       binary[_len - 6] = (value >> 40 & 0xff);
@@ -58,7 +58,7 @@ class BigInt {
     return result;
   }
 
-  BigInt operator -(){
+  BigInt operator -() {
     return new BigInt.fromBytes(binary)..mutableMinusOne();
   }
 
@@ -91,23 +91,28 @@ class BigInt {
 
     BigInt a = this;
     BigInt b = other;
-    BigInt result = new BigInt.fromLength(a.lengthPerByte);
 
-    int c = (((a.isNegative==true?1:0) ^ (b.isNegative==true?1:0))==1?-1:1);
-    if(b.isNegative) {
+
+    int c = (((a.isNegative == true ? 1 : 0) ^ (b.isNegative == true ? 1 : 0)) == 1 ? -1 : 1);
+    if (b.isNegative) {
       b = -b;
     }
-    if(a.isNegative) {
+    if (a.isNegative) {
       a = -a;
     }
 
-
     int tmp = 0;
+    BigInt result = new BigInt.fromLength(a.lengthPerByte);
     for (int i = binary.length - 1; i >= 0; i--) {
-      tmp = a.binary[i] * b.binary[i] + (tmp >> 8);
-      result.binary[i] = tmp & 0xff;
+      BigInt t = new BigInt.fromLength(this.lengthPerByte);
+      for (int j = i; j >= 0; j--) {
+        tmp = a.binary[j] * b.binary[i] + (tmp >> 8);
+        t.binary[j] = tmp & 0xff;
+      }
+      //print("#[${i}]# ${t}");
+      result = result + t;
     }
-    if(c==-1) {
+    if (c == -1) {
       result.mutableMinusOne();
     }
     return result;

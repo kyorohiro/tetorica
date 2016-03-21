@@ -103,6 +103,7 @@ main() {
         BigInt v2 = new BigInt.fromInt(0x2, 4);
         test.expect("${v1*v2}", "0x00000000000001fe");
       }
+
       {
         BigInt v1 = new BigInt.fromInt(0xffff, 4);
         BigInt v2 = new BigInt.fromInt(0x2, 4);
@@ -118,11 +119,12 @@ main() {
           test.expect("${v3}", "${v1*v2}");
         }
       }
-
+/*
       BigInt v1 = new BigInt.fromInt(4, 32);
       BigInt v2 = new BigInt.fromInt(-4, 32);
       BigInt v3 = new BigInt.fromInt(-16, 32);
-    //  print("## ${v1*v2} ${v3}##");
+      print("## ${v1*v2} ${v3}##");
+      */
     });
 
     test.test("[mutableMinus]", () {
