@@ -12,14 +12,23 @@ class BigInt {
   BigInt.fromInt(int value, int length) {
     binary = new Uint8List((length > 8) ? length : 8);
     int _len = binary.length;
-    binary[_len - 8] = (value >> 56 & 0xff);
-    binary[_len - 7] = (value >> 48 & 0xff);
-    binary[_len - 6] = (value >> 40 & 0xff);
-    binary[_len - 5] = (value >> 32 & 0xff);
-    binary[_len - 4] = (value >> 24 & 0xff);
-    binary[_len - 3] = (value >> 16 & 0xff);
-    binary[_len - 2] = (value >> 8 & 0xff);
-    binary[_len - 1] = (value >> 0 & 0xff);
+    if (value >= 0) {
+      binary[_len - 8] = (value >> 56 & 0xff);
+      binary[_len - 7] = (value >> 48 & 0xff);
+      binary[_len - 6] = (value >> 40 & 0xff);
+      binary[_len - 5] = (value >> 32 & 0xff);
+      binary[_len - 4] = (value >> 24 & 0xff);
+      binary[_len - 3] = (value >> 16 & 0xff);
+      binary[_len - 2] = (value >> 8 & 0xff);
+      binary[_len - 1] = (value >> 0 & 0xff);
+    } else {
+      BigInt v1 = new BigInt.fromInt(-1*value, length);
+      BigInt v2 = new BigInt.fromInt(0, length);
+      BigInt v3 = (v2-v1);
+      for(int i=0;i<length;i++) {
+        binary[i] = v3.binary[i];
+      }
+    }
   }
 
   BigInt.fromLength(int length) {
@@ -67,9 +76,6 @@ class BigInt {
     }
     return result;
   }
-
-
-
 
   int get hashCode {
     int h = 0;

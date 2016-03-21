@@ -29,6 +29,10 @@ main() {
     });
     test.test("[-]", () {
       {
+        BigInt v1 = new BigInt.fromInt(-1, 10);
+        test.expect("${v1}", "0xffffffffffffffffffff");
+      }
+      {
         BigInt v1 = new BigInt.fromInt(0xf, 4);
         BigInt v2 = new BigInt.fromInt(0xf, 4);
         test.expect("${v1-v2}", "0x0000000000000000");
