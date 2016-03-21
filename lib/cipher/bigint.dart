@@ -123,6 +123,18 @@ class BigInt implements Comparable<BigInt> {
     return result;
   }
 
+  BigInt operator %(BigInt other) {
+    BigInt a = this;
+    BigInt b = other;
+    if (b.isNegative) {
+      b = -b;
+    }
+    if (a.isNegative) {
+      a = -a;
+    }
+    return (other.isNegative==false?a-(a~/b)*b:-(a-(a~/b)*b));
+  }
+
   BigInt operator ~/(BigInt other) {
     if (this.lengthPerByte != other.lengthPerByte) {
       throw {"message": "need same length ${lengthPerByte} ${other.lengthPerByte}"};
@@ -165,6 +177,7 @@ class BigInt implements Comparable<BigInt> {
   bool operator >=(BigInt other) => this.compareTo(other) >= 0;
 
   bool operator ==(BigInt other) => this.compareTo(other) == 0;
+
   int compareTo(BigInt other) {
     BigInt a = this;
     BigInt b = new BigInt.fromBytes(other.binary);

@@ -239,5 +239,24 @@ main() {
         test.expect("${v1~/v2}", "${v3}");
       }
     });
+    test.test("[~/] B", () {
+      test.expect("${new BigInt.fromInt(0x5, 4)%new BigInt.fromInt(0x2, 4)}",
+       "${new BigInt.fromInt(0x1, 4)}");
+      test.expect("${new BigInt.fromInt(0x4, 4)%new BigInt.fromInt(0x2, 4)}",
+        "${new BigInt.fromInt(0x0, 4)}");
+      test.expect("${new BigInt.fromInt(-0x5, 4)%new BigInt.fromInt(0x2, 4)}",
+         "${new BigInt.fromInt(0x1, 4)}");
+      test.expect("${new BigInt.fromInt(-0x4, 4)%new BigInt.fromInt(0x2, 4)}",
+          "${new BigInt.fromInt(0x0, 4)}");
+      //
+      test.expect("${new BigInt.fromInt(0x5, 4)%new BigInt.fromInt(-0x2, 4)}",
+           "${new BigInt.fromInt(-0x1, 4)}");
+      test.expect("${new BigInt.fromInt(0x4, 4)%new BigInt.fromInt(-0x2, 4)}",
+            "${new BigInt.fromInt(-0x0, 4)}");
+      test.expect("${new BigInt.fromInt(-0x5, 4)%new BigInt.fromInt(-0x2, 4)}",
+             "${new BigInt.fromInt(-0x1, 4)}");
+      test.expect("${new BigInt.fromInt(-0x4, 4)%new BigInt.fromInt(-0x2, 4)}",
+              "${new BigInt.fromInt(-0x0, 4)}");
+    });
   });
 }
