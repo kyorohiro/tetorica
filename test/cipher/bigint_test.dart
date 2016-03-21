@@ -18,6 +18,14 @@ main() {
         BigInt v2 = new BigInt.fromInt(0xffff, 4);
         test.expect("${v1+v2}", "0x0000000000010000");
       }
+      for (int i = 0; i < 0x3ff; i+=2) {
+        for (int j = 0; j < 0x3ff; j+=3) {
+          BigInt v1 = new BigInt.fromInt(i, 32);
+          BigInt v2 = new BigInt.fromInt(j, 32);
+          BigInt v3 = new BigInt.fromInt(i + j, 32);
+          test.expect("${v3}", "${v1+v2}");
+        }
+      }
     });
     test.test("[-]", () {
       {
@@ -26,8 +34,7 @@ main() {
         test.expect("${v1-v2}", "0x0000000000000000");
         test.expect(v1.isNegative, false);
         test.expect(v2.isNegative, false);
-        test.expect((v1-v2).isNegative, false);
-
+        test.expect((v1 - v2).isNegative, false);
       }
 
       {
@@ -36,7 +43,7 @@ main() {
         test.expect("${v1-v2}", "0x0000000000000001");
         test.expect(v1.isNegative, false);
         test.expect(v2.isNegative, false);
-        test.expect((v1-v2).isNegative, false);
+        test.expect((v1 - v2).isNegative, false);
       }
       {
         BigInt v1 = new BigInt.fromInt(0xe, 4);
@@ -44,7 +51,7 @@ main() {
         test.expect("${v1-v2}", "0xffffffffffffffff");
         test.expect(v1.isNegative, false);
         test.expect(v2.isNegative, false);
-        test.expect((v1-v2).isNegative, true);
+        test.expect((v1 - v2).isNegative, true);
       }
       {
         BigInt v1 = new BigInt.fromInt(0xd, 4);
@@ -52,8 +59,8 @@ main() {
         BigInt v3 = new BigInt.fromInt(0x3, 4);
         test.expect("${v1-v2}", "0xfffffffffffffffe");
         test.expect("${v1-v2+v3}", "0x0000000000000001");
-        test.expect((v1-v2).isNegative, true);
-        test.expect((v1-v2+v3).isNegative, false);
+        test.expect((v1 - v2).isNegative, true);
+        test.expect((v1 - v2 + v3).isNegative, false);
       }
 
       {
