@@ -90,11 +90,14 @@ class BigInt implements Comparable<BigInt> {
     }
   }
 
+  //  BigInt t = null;
   BigInt operator *(BigInt other) {
     if (this.lengthPerByte != other.lengthPerByte) {
       throw {"message": "need same length ${lengthPerByte} ${other.lengthPerByte}"};
     }
-
+    //if(t== null) {
+    //  t = new BigInt.fromLength(this.lengthPerByte);
+    //}
     int minus = (((this.isNegative == true ? 1 : 0) ^ (other.isNegative == true ? 1 : 0)) == 1 ? -1 : 1);
 
     BigInt a = (this.isNegative==true?-this:this);
