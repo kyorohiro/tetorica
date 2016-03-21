@@ -117,7 +117,7 @@ main() {
       BigInt v1 = new BigInt.fromInt(4, 32);
       BigInt v2 = new BigInt.fromInt(-4, 32);
       BigInt v3 = new BigInt.fromInt(-16, 32);
-      print("## ${v1*v2} ${v3}##");
+    //  print("## ${v1*v2} ${v3}##");
     });
 
     test.test("[mutableMinus]", () {
