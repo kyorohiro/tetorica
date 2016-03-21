@@ -103,6 +103,11 @@ main() {
         BigInt v2 = new BigInt.fromInt(0x2, 4);
         test.expect("${v1*v2}", "0x00000000000001fe");
       }
+      {
+        BigInt v1 = new BigInt.fromInt(0xffff, 4);
+        BigInt v2 = new BigInt.fromInt(0x2, 4);
+        test.expect("${v1*v2}", "0x000000000001fffe");
+      }
       //
       //
       for (int i = 0x0; i < 0xff; i+=2) {
