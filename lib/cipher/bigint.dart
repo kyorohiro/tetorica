@@ -145,24 +145,24 @@ class BigInt implements Comparable<BigInt> {
     }
     int minus = (((this.isNegative == true ? 1 : 0) ^ (other.isNegative == true ? 1 : 0)) == 1 ? -1 : 1);
 
-    BigInt a = (this.isNegative==false?this:-this);
-    BigInt b = (other.isNegative==false?new BigInt.fromBytes(other.binary):-(new BigInt.fromBytes(other.binary)));
+    BigInt a = (this.isNegative == false ? this : -this);
+    BigInt b = (other.isNegative == false ? new BigInt.fromBytes(other.binary) : -(new BigInt.fromBytes(other.binary)));
     BigInt r = new BigInt.fromLength(lengthPerByte);
 
-    for(int i=0,len=binary.length;i<len;i++) {
+    for (int i = 0, len = binary.length; i < len; i++) {
       r.binary[i] = 0x01;
-      if(a < (b+r)) {
+      if (a < (b + r)) {
         r.binary[i] = 0;
         continue;
       }
       int p = 1;
-      for(int j=2,len=(i==0?0x80:0xff);j<len;j++) {
+      for (int j = 2, len = (i == 0 ? 0x80 : 0xff); j < len; j++) {
         r.binary[i] = j;
-        if(a < (b*r)) {
+        if (a < (b * r)) {
           r.binary[i] = p;
           continue;
         }
-        p=j;
+        p = j;
       }
     }
 

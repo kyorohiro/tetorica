@@ -251,9 +251,9 @@ main() {
       }
 
       {
-        BigInt v1 = new BigInt.fromInt(0xffffff, 12);
-        BigInt v2 = new BigInt.fromInt(0x3, 12);
-        BigInt v3 = new BigInt.fromInt(0x555555, 12);
+        BigInt v1 = new BigInt.fromInt(0xffffffffffffffffffffffffffffffffffffffff, 64);
+        BigInt v2 = new BigInt.fromInt(0x3, 64);
+        BigInt v3 = new BigInt.fromInt(0x5555555555555555555555555555555555555555, 64);
         test.expect("${v1~/v2}", "${v3}");
       }
 
@@ -271,6 +271,6 @@ main() {
       test.expect("${new BigInt.fromInt(-0x5, 4)%new BigInt.fromInt(-0x2, 4)}", "${new BigInt.fromInt(-0x1, 4)}");
       test.expect("${new BigInt.fromInt(-0x4, 4)%new BigInt.fromInt(-0x2, 4)}", "${new BigInt.fromInt(-0x0, 4)}");
     });
-    
+
   });
 }
