@@ -49,6 +49,8 @@ class BigInt {
     return result;
   }
 
+  //BigInt operator -() => new BigInt(-1*value, lengthPerByte);
+
   BigInt operator -(BigInt other) {
     if (this.lengthPerByte != other.lengthPerByte) {
       throw {"message": "need same length ${lengthPerByte} ${other.lengthPerByte}"};
@@ -61,6 +63,14 @@ class BigInt {
       result.binary[i] = tmp & 0xff;
     }
     return result;
+  }
+
+  void mutableMinusOne() {
+    int tmp = 0;
+    for (int i = binary.length - 1; i >= 0; i--) {
+      tmp = 0 - binary[i] + (tmp >> 8);
+      binary[i] = tmp & 0xff;
+    }
   }
 
   BigInt operator *(BigInt other) {
