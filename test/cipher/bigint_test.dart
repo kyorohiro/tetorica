@@ -254,7 +254,9 @@ main() {
         BigInt v1 = new BigInt.fromInt(0xffffffffffffffffffffffffffffffffffffffff, 64);
         BigInt v2 = new BigInt.fromInt(0x3, 64);
         BigInt v3 = new BigInt.fromInt(0x5555555555555555555555555555555555555555, 64);
-        test.expect("${v1~/v2}", "${v3}");
+        for(int i=0;i<0x20;i++){
+          test.expect("${v1~/v2}", "${v3}");
+        }
       }
 
     });
