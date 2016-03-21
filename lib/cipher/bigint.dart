@@ -85,12 +85,13 @@ class BigInt {
   }
 
   BigInt operator *(BigInt other) {
-    BigInt a = this;
-    BigInt b = other;
-
-    if (a.lengthPerByte != b.lengthPerByte) {
+    if (this.lengthPerByte != other.lengthPerByte) {
       throw {"message": "need same length ${lengthPerByte} ${other.lengthPerByte}"};
     }
+
+    BigInt a = this;
+    BigInt b = other;
+    BigInt result = new BigInt.fromLength(a.lengthPerByte);
 
     int c = (((a.isNegative==true?1:0) ^ (b.isNegative==true?1:0))==1?-1:1);
     if(b.isNegative) {
@@ -100,7 +101,7 @@ class BigInt {
       a = -a;
     }
 
-    BigInt result = new BigInt.fromLength(a.lengthPerByte);
+
     int tmp = 0;
     for (int i = binary.length - 1; i >= 0; i--) {
       tmp = a.binary[i] * b.binary[i] + (tmp >> 8);
