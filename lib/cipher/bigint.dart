@@ -105,10 +105,10 @@ class BigInt implements Comparable<BigInt> {
     if (a.isNegative) {
       a = -a;
     }
-    if(a<b) {
-      var t=a;
-      a=b;
-      b=t;
+    if (a < b) {
+      var t = a;
+      a = b;
+      b = t;
     }
     BigInt result = new BigInt.fromLength(a.lengthPerByte);
     BigInt t = new BigInt.fromLength(this.lengthPerByte);
@@ -164,14 +164,14 @@ class BigInt implements Comparable<BigInt> {
       BigInt d = new BigInt.fromInt(1, lengthPerByte);
       result *= one;
 
-      int i=0;
+      int i = 0;
       while (a > (tmp * result)) {
         result *= one;
-        d *=one;
+        d *= one;
         print("## ${result} ${a} > ${(tmp * result)}# ${tmp}");
-        if(i++>20) {
-        break;
-      }
+        if (i++ > 20) {
+          break;
+        }
 //        print("## ${result} ${a} > ${(tmp * result)}# ${tmp}");
       }
       if (a != (tmp * result)) {

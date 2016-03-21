@@ -246,9 +246,9 @@ main() {
         test.expect("${v2*v1}", "0x0000000000000300");
       }
       {
-        BigInt v1 = new BigInt.fromInt(0xfff, 4);
-        BigInt v2 = new BigInt.fromInt(0x3, 4);
-        BigInt v3 = new BigInt.fromInt(0x555, 4);
+        BigInt v1 = new BigInt.fromInt(0xffffff, 12);
+        BigInt v2 = new BigInt.fromInt(0x3, 12);
+        BigInt v3 = new BigInt.fromInt(0x555555, 12);
         test.expect("${v1~/v2}", "${v3}");
       }
     });
