@@ -95,16 +95,10 @@ class BigInt implements Comparable<BigInt> {
       throw {"message": "need same length ${lengthPerByte} ${other.lengthPerByte}"};
     }
 
-    BigInt a = this;
-    BigInt b = other;
-    int minus = (((a.isNegative == true ? 1 : 0) ^ (b.isNegative == true ? 1 : 0)) == 1 ? -1 : 1);
+    int minus = (((this.isNegative == true ? 1 : 0) ^ (other.isNegative == true ? 1 : 0)) == 1 ? -1 : 1);
 
-    if (b.isNegative) {
-      b = -b;
-    }
-    if (a.isNegative) {
-      a = -a;
-    }
+    BigInt a = (this.isNegative==true?-this:this);
+    BigInt b = (other.isNegative==true?-other:other);
     if (a < b) {
       var t = a;
       a = b;
@@ -128,14 +122,8 @@ class BigInt implements Comparable<BigInt> {
   }
 
   BigInt operator %(BigInt other) {
-    BigInt a = this;
-    BigInt b = other;
-    if (b.isNegative) {
-      b = -b;
-    }
-    if (a.isNegative) {
-      a = -a;
-    }
+    BigInt a = (this.isNegative==true?-this:this);
+    BigInt b = (other.isNegative==true?-other:other);
     return (other.isNegative == false ? a - (a ~/ b) * b : -(a - (a ~/ b) * b));
   }
 
