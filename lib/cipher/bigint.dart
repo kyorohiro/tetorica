@@ -8,14 +8,14 @@ class BigInt implements Comparable<BigInt> {
   int get lengthPerByte => binary.length;
 
   int get sizePerByte {
-    int i=0;
-    int len=binary.length;
-    for(;i<len;i++) {
-      if(binary[i] != 0) {
+    int i = 0;
+    int len = binary.length;
+    for (; i < len; i++) {
+      if (binary[i] != 0) {
         break;
       }
     }
-    return len-i;
+    return len - i;
   }
 
   List<int> binary;
@@ -115,16 +115,16 @@ class BigInt implements Comparable<BigInt> {
 
   void innerIncrement() {
     int tmp = 1;
-    for (int i = binary.length - 1,start=binary.length - 1; i >= 0&&tmp!=0; i--) {
-      tmp = binary[i] + (i==start?1:0) + (tmp >> 8);
+    for (int i = binary.length - 1, start = binary.length - 1; i >= 0 && tmp != 0; i--) {
+      tmp = binary[i] + (i == start ? 1 : 0) + (tmp >> 8);
       binary[i] = tmp & 0xff;
     }
   }
 
   void innerDecrement() {
     int tmp = 1;
-    for (int i = binary.length - 1,start=binary.length - 1; i >= 0&&tmp!=0; i--) {
-      tmp = binary[i] + (i==start?-1:0) + (tmp >> 8);
+    for (int i = binary.length - 1, start = binary.length - 1; i >= 0 && tmp != 0; i--) {
+      tmp = binary[i] + (i == start ? -1 : 0) + (tmp >> 8);
       binary[i] = tmp & 0xff;
     }
   }
@@ -140,7 +140,7 @@ class BigInt implements Comparable<BigInt> {
       b = t;
     }
     for (int i = binary.length - 1, ii = 0, tmpValue = 0; i >= 0; i--, ii++, tmpValue = 0) {
-      if(b.binary[i] == 0){
+      if (b.binary[i] == 0) {
         continue;
       }
       tmpBigInt.innerClearZero();
@@ -179,16 +179,15 @@ class BigInt implements Comparable<BigInt> {
     BigInt b = (other.isNegative == false ? new BigInt.fromBytes(other.binary) : -(new BigInt.fromBytes(other.binary)));
     BigInt r = new BigInt.fromLength(lengthPerByte);
 
-
     //
     for (int i = 1, len = binary.length; i < len; i++) {
       r.binary[i] = 0x01;
-      if (a < b*r) {
+      if (a < b * r) {
         r.binary[i] = 0;
         continue;
       }
       r.binary[i] = (i == 0 ? 0x7f : 0xff);
-      if (a >= b*r) {
+      if (a >= b * r) {
         continue;
       }
       r.binary[i] = 0x01;
@@ -202,7 +201,7 @@ class BigInt implements Comparable<BigInt> {
         }
         r.binary[i] = tt;
         //
-        var t = b*r;//
+        var t = b * r; //
         int c = a.compareTo(t);
         if (c < 0) {
           pe = tt;
@@ -261,26 +260,40 @@ class BigInt implements Comparable<BigInt> {
 
 //
 // http://www.amazon.com/Implementing-SSL-TLS-Using-Cryptography/dp/0470920416
-  BigInt exponentiat(BigInt exp){
-    int i= exp.sizePerByte;
-    int n= exp.lengthPerByte;
+  BigInt exponentiate(BigInt exp) {
+    int i = exp.sizePerByte;
+    int n = exp.lengthPerByte;
     int mask = 0;
 
     BigInt tmp1 = new BigInt.fromBigInt(this);
     BigInt ret = new BigInt.fromInt(1, this.lengthPerByte);
 
-    //
+    int j=0;
     do {
-      i--;
-      for(mask=0x01;mask!= 0;mask=(mask<<1)&0xffffffff) {
-        print(">> ${mask}");
-        if(exp.binary[n-i-1]&mask != 0) {
-          ret = ret*tmp1;
+      i--;j++;
+      for (mask = 0x01; mask != 0; mask = ((mask << 1) & 0xff)) {
+        if (exp.binary[n - j] & mask != 0) {
+            //dep++;
+          //print("#A#${i} ${mask} ${deb} ${dep}");
+          ret = ret * tmp1;
+        } else {
+          //print("#B#${i} ${mask} ${deb} ${dep}");
         }
         tmp1 = tmp1 * tmp1;
+        //deb++;
       }
-    } while(i != 0);
+    } while (i != 0);
 
     return ret;
+  }
+
+  BigInt exp(BigInt e) {
+    BigInt c = new BigInt.fromBigInt(this);
+    BigInt counter = new BigInt.fromInt(1, lengthPerByte);
+    while(counter < e) {
+      c = c*this;
+      counter.innerIncrement();
+    }
+    return c;
   }
 }

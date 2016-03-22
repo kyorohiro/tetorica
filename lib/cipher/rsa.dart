@@ -7,6 +7,16 @@ import 'bigint.dart';
 // (m**e)**d %n = m
 //   d private, e n public
 class RSA {
+
+  static BigInt exp(BigInt m, BigInt e) {
+    BigInt c = new BigInt.fromBigInt(m);
+    BigInt counter = new BigInt.fromInt(1, m.lengthPerByte);
+    while(counter < e) {
+      c = c*m;
+      counter.innerIncrement();
+    }
+    return c;
+  }
   //
   // Compute c = m^e mod n
   //
@@ -18,7 +28,7 @@ class RSA {
       counter.innerIncrement();
     }
 //    c = m.exponentiat(e);
-    print("##### ${c} #####");
+//    print("##### ${c} #####");
     c = c % n;
     return c;
   }
