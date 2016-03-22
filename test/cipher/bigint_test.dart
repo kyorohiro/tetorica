@@ -374,5 +374,21 @@ main() {
          b.innerDecrement();
       }
     });
+
+
+    test.test("[size]", () {
+      BigInt b0 = new BigInt.fromInt(0x0,4);
+      BigInt b1a = new BigInt.fromInt(0xf,4);
+      BigInt b1b = new BigInt.fromInt(0xff,4);
+      BigInt b2a = new BigInt.fromInt(0xfff,4);
+      BigInt b2b = new BigInt.fromInt(0xffff,4);
+      BigInt b3a = new BigInt.fromInt(0xfffff,4);
+      test.expect(b0.sizePerByte, 0);
+      test.expect(b1a.sizePerByte, 1);
+      test.expect(b1b.sizePerByte, 1);
+      test.expect(b2a.sizePerByte, 2);
+      test.expect(b2b.sizePerByte, 2);
+      test.expect(b3a.sizePerByte, 3);
+    });
   });
 }

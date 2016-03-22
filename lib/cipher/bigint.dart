@@ -6,6 +6,18 @@ import 'hex.dart';
 // uint
 class BigInt implements Comparable<BigInt> {
   int get lengthPerByte => binary.length;
+
+  int get sizePerByte {
+    int i=0;
+    int len=binary.length;
+    for(;i<len;i++) {
+      if(binary[i] != 0) {
+        break;
+      }
+    }
+    return len-i;
+  }
+
   List<int> binary;
 
   bool get isNegative => (binary[0] & 0x80) != 0;
@@ -247,4 +259,26 @@ class BigInt implements Comparable<BigInt> {
     return Hex.encodeWithNew(binary);
   }
 
+  BigInt exponentiat(BigInt exp){
+    int i= exp.lengthPerByte;
+    int mask = 0;
+
+    BigInt tmp1 = new BigInt.fromBigInt(this);
+    BigInt tmp2 = new BigInt.fromInt(0, this.lengthPerByte);
+    BigInt ret = new BigInt.fromInt(1, this.lengthPerByte);
+
+    //
+    do {
+      i--;
+      for(mask=0x01;mask&0xffffffff != 0;mask<<1) {
+        if(exp.binary[i]&mask != 0) {
+          ret = ret*tmp1;
+        }
+        tmp2 = new BigInt.fromBigInt(tmp1);
+        tmp1 = tmp1 * tmp2;
+      }
+    } while(i != 0);
+
+    return ret;
+  }
 }
