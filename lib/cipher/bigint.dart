@@ -272,7 +272,8 @@ class BigInt implements Comparable<BigInt> {
     //
     do {
       i--;
-      for(mask=0x01;mask&0xffffffff != 0;mask<<=1) {
+      for(mask=0x01;mask!= 0;mask=(mask<<1)&0xffffffff) {
+        print(">> ${mask}");
         if(exp.binary[n-i-1]&mask != 0) {
           ret = ret*tmp1;
         }

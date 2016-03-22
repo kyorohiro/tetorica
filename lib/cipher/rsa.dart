@@ -13,11 +13,12 @@ class RSA {
   static BigInt compute(BigInt m, BigInt e, BigInt n) {
     BigInt c = new BigInt.fromBigInt(m);
     BigInt counter = new BigInt.fromInt(1, m.lengthPerByte);
-
     while(counter < e) {
       c = c*m;
       counter.innerIncrement();
     }
+//    c = m.exponentiat(e);
+    print("##### ${c} #####");
     c = c % n;
     return c;
   }

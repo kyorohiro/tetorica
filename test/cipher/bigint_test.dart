@@ -284,20 +284,20 @@ main() {
         num t2 = new DateTime.now().millisecondsSinceEpoch;
         print("##${t2-t1}");
       }
-        {
-          BigInt v1 = new BigInt.fromInt(0xffffffffffffffff, 9);
-          BigInt v2 = new BigInt.fromInt(0x3, 9);
-          BigInt v3 = new BigInt.fromInt(0x5555555555555555, 9);
-          print("### ${v3} : ${v1~/v2}");
-          test.expect("${v1~/v2}", "${v3}");
-        }
-        {
-          BigInt v1 = new BigInt.fromInt(-0xffffffffffffffff, 9);
-          BigInt v2 = new BigInt.fromInt(0x3, 9);
-          BigInt v3 = new BigInt.fromInt(-0x5555555555555555, 9);
-          print("### ${v3} : ${v1~/v2}");
-          test.expect("${v1~/v2}", "${v3}");
-        }
+      {
+        BigInt v1 = new BigInt.fromInt(0xffffffffffffffff, 9);
+        BigInt v2 = new BigInt.fromInt(0x3, 9);
+        BigInt v3 = new BigInt.fromInt(0x5555555555555555, 9);
+        print("### ${v3} : ${v1~/v2}");
+        test.expect("${v1~/v2}", "${v3}");
+      }
+      {
+        BigInt v1 = new BigInt.fromInt(-0xffffffffffffffff, 9);
+        BigInt v2 = new BigInt.fromInt(0x3, 9);
+        BigInt v3 = new BigInt.fromInt(-0x5555555555555555, 9);
+        print("### ${v3} : ${v1~/v2}");
+        test.expect("${v1~/v2}", "${v3}");
+      }
       {
         // todo
         BigInt v1 = new BigInt.fromInt(256, 4);
@@ -323,7 +323,7 @@ main() {
         BigInt v3 = new BigInt.fromInt(0x55555555555555555555555555555555555555555555555555555555555555555555555555555555, 82);
         num t1 = new DateTime.now().millisecondsSinceEpoch;
         for (int i = 0; i < 0xff; i++) {
-        //  v1~/v2;
+          //  v1~/v2;
           test.expect("${v1~/v2}", "${v3}");
         }
         num t2 = new DateTime.now().millisecondsSinceEpoch;
@@ -356,34 +356,29 @@ main() {
     });
 
     test.test("[increment]", () {
-      BigInt b = new BigInt.fromInt(-0x1ff,4);
-      for(int i=-0x1ff;i<0x1ff;i++) {
-        test.expect(
-          "[${i}]:${b}",
-          "[${i}]:${new BigInt.fromInt(i, 4)}");
-         b.innerIncrement();
+      BigInt b = new BigInt.fromInt(-0x1ff, 4);
+      for (int i = -0x1ff; i < 0x1ff; i++) {
+        test.expect("[${i}]:${b}", "[${i}]:${new BigInt.fromInt(i, 4)}");
+        b.innerIncrement();
       }
     });
 
     test.test("[decrement]", () {
-      BigInt b = new BigInt.fromInt(0x1ff,4);
-      for(int i=0x1ff;i>-0x1ff;i--) {
-        test.expect(
-          "[${i}]:${b}",
-          "[${i}]:${new BigInt.fromInt(i, 4)}");
-         b.innerDecrement();
+      BigInt b = new BigInt.fromInt(0x1ff, 4);
+      for (int i = 0x1ff; i > -0x1ff; i--) {
+        test.expect("[${i}]:${b}", "[${i}]:${new BigInt.fromInt(i, 4)}");
+        b.innerDecrement();
       }
     });
 
-
     test.test("[size]", () {
-      BigInt b0 = new BigInt.fromInt(0x0,4);
-      BigInt b1aa = new BigInt.fromInt(2,4);
-      BigInt b1a = new BigInt.fromInt(0xf,4);
-      BigInt b1b = new BigInt.fromInt(0xff,4);
-      BigInt b2a = new BigInt.fromInt(0xfff,4);
-      BigInt b2b = new BigInt.fromInt(0xffff,4);
-      BigInt b3a = new BigInt.fromInt(0xfffff,4);
+      BigInt b0 = new BigInt.fromInt(0x0, 4);
+      BigInt b1aa = new BigInt.fromInt(2, 4);
+      BigInt b1a = new BigInt.fromInt(0xf, 4);
+      BigInt b1b = new BigInt.fromInt(0xff, 4);
+      BigInt b2a = new BigInt.fromInt(0xfff, 4);
+      BigInt b2b = new BigInt.fromInt(0xffff, 4);
+      BigInt b3a = new BigInt.fromInt(0xfffff, 4);
       test.expect(b0.sizePerByte, 0);
       test.expect(b1aa.sizePerByte, 1);
       test.expect(b1a.sizePerByte, 1);
@@ -394,30 +389,23 @@ main() {
     });
 
     test.test("[exp]", () {
-      test.expect(
-        "${(new BigInt.fromInt(0x2,8)).exponentiat(new BigInt.fromInt(2, 8))}",
-        "${(new BigInt.fromInt(0x2*0x2,8))}"
-      );
-      test.expect(
-        "${(new BigInt.fromInt(0x3,8)).exponentiat(new BigInt.fromInt(3, 8))}",
-        "${(new BigInt.fromInt(0x3*0x3*0x3,8))}"
-      );
-      test.expect(
-        "${(new BigInt.fromInt(0x4,8)).exponentiat(new BigInt.fromInt(4, 8))}",
-        "${(new BigInt.fromInt(0x4*0x4*0x4*0x4,8))}"
-      );
-      test.expect(
-        "${(new BigInt.fromInt(0x5,8)).exponentiat(new BigInt.fromInt(5, 8))}",
-        "${(new BigInt.fromInt(0x5*0x5*0x5*0x5*0x5,8))}"
-      );
-      test.expect(
-        "${(new BigInt.fromInt(0x6,8)).exponentiat(new BigInt.fromInt(6, 8))}",
-        "${(new BigInt.fromInt(0x6*0x6*0x6*0x6*0x6*0x6,8))}"
-      );
+      test.expect("${(new BigInt.fromInt(0x2,8)).exponentiat(new BigInt.fromInt(2, 8))}", "${(new BigInt.fromInt(0x2*0x2,8))}");
+      test.expect("${(new BigInt.fromInt(0x3,8)).exponentiat(new BigInt.fromInt(3, 8))}", "${(new BigInt.fromInt(0x3*0x3*0x3,8))}");
+      test.expect("${(new BigInt.fromInt(0x4,8)).exponentiat(new BigInt.fromInt(4, 8))}", "${(new BigInt.fromInt(0x4*0x4*0x4*0x4,8))}");
+      test.expect("${(new BigInt.fromInt(0x5,8)).exponentiat(new BigInt.fromInt(5, 8))}", "${(new BigInt.fromInt(0x5*0x5*0x5*0x5*0x5,8))}");
+      test.expect("${(new BigInt.fromInt(0x6,8)).exponentiat(new BigInt.fromInt(6, 8))}", "${(new BigInt.fromInt(0x6*0x6*0x6*0x6*0x6*0x6,8))}");
 //      test.expect(
 //        "${(new BigInt.fromInt(0xff,50)).exponentiat(new BigInt.fromInt(0xa, 50))}",
 //        "${(new BigInt.fromInt(0xff*0xff*0xff*0xff*0xff * 0xff*0xff*0xff*0xff*0xff,50))}"
 //      );
+
+      {
+        int bufferSize = 3 * 620;
+        BigInt m1 = new BigInt.fromInt(0x2b0, bufferSize);
+        BigInt e = new BigInt.fromInt(0x4f, bufferSize);
+        test.expect("${m1.exponentiat(e)}",
+            "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000198b472507a8d727bcb930ddfe957a22fce4840d4c5a0ee6b23aef0187899e06067ca39c64d0e9dfc4723a57b40b8d0e54bc3c5449c30000000000000000000000000000000000000000000000000000000000000000000000000000000");
+      }
     });
   });
 }
