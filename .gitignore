@@ -4,6 +4,7 @@
 build/
 packages
 pubspec.lock # (Remove this pattern if you wish to check in your lock file)
+.DS_Store
 
 # Files created by dart2js
 *.dart.js

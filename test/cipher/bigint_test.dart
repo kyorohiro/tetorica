@@ -1,5 +1,6 @@
 import 'package:tetorica/cipher/hex.dart';
 import 'package:tetorica/cipher/bigint.dart';
+//import 'package:tetorica/cipher/biginta.dart' as aaa;
 import 'dart:convert';
 import 'package:test/test.dart' as test;
 import 'dart:typed_data';
@@ -327,6 +328,19 @@ main() {
         num t2 = new DateTime.now().millisecondsSinceEpoch;
         print("##${t2-t1}");
       }
+/*
+      {
+        aaa.BigInt v1 = new aaa.BigInt(Hex.decodeWithNew("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"), true);
+        aaa.BigInt v2 = new aaa.BigInt(Hex.decodeWithNew("0x03"), true);
+        aaa.BigInt v3 = new aaa.BigInt(Hex.decodeWithNew("0x55555555555555555555555555555555555555555555555555555555555555555555555555555555"), true);
+        num t1 = new DateTime.now().millisecondsSinceEpoch;
+        for (int i = 0; i < 0xff; i++) {
+          v1~/v2;
+          //test.expect("${v1~/v2}", "${v3}");
+        }
+        num t2 = new DateTime.now().millisecondsSinceEpoch;
+        print("##AA#${t2-t1}");
+      }*/
     });
     test.test("[%] B", () {
       test.expect("${new BigInt.fromInt(0x5, 4)%new BigInt.fromInt(0x2, 4)}", "${new BigInt.fromInt(0x1, 4)}");

@@ -108,6 +108,9 @@ class BigInt implements Comparable<BigInt> {
       b = t;
     }
     for (int i = binary.length - 1, ii = 0, tmpValue = 0; i >= 0; i--, ii++) {
+      if(b.binary[i] == 0){
+        continue;
+      }
       tmpBigInt.innerClearZero();
       for (int j = binary.length - 1; j >= 0 && j - ii >= 0; j--) {
         tmpValue = a.binary[j] * b.binary[i] + (tmpValue >> 8);
