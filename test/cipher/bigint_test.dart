@@ -131,26 +131,26 @@ main() {
       {
         BigInt v1 = new BigInt.fromInt(-1, 10);
         BigInt v2 = new BigInt.fromInt(1, 10);
-        v1.mutableMinusOne();
+        v1.innerMutableMinusOne();
         test.expect("${v1}", "${v2}");
       }
       {
         BigInt v1 = new BigInt.fromInt(1, 10);
         BigInt v2 = new BigInt.fromInt(-1, 10);
-        v1.mutableMinusOne();
+        v1.innerMutableMinusOne();
         test.expect("${v1}", "${v2}");
       }
 
       {
         BigInt v1 = new BigInt.fromInt(0xfff, 10);
         BigInt v2 = new BigInt.fromInt(-0xfff, 10);
-        v1.mutableMinusOne();
+        v1.innerMutableMinusOne();
         test.expect("${v1}", "${v2}");
       }
       {
         BigInt v1 = new BigInt.fromInt(-0xfff, 10);
         BigInt v2 = new BigInt.fromInt(0xfff, 10);
-        v1.mutableMinusOne();
+        v1.innerMutableMinusOne();
         test.expect("${v1}", "${v2}");
       }
 
