@@ -46,6 +46,10 @@ class BigInt implements Comparable<BigInt> {
     binary = new Uint8List.fromList(value);
   }
 
+  BigInt.fromBigInt(BigInt value) {
+    binary = new Uint8List.fromList(value.binary);
+  }
+
   BigInt innerAdd(BigInt other, BigInt result) {
     int tmp = 0;
     for (int i = binary.length - 1; i >= 0; i--) {
@@ -92,9 +96,25 @@ class BigInt implements Comparable<BigInt> {
   void innerClearZero() {
     // recreate is more fast then sets zero
     binary = new Uint8List(binary.length);
-    //    for (int i = binary.length - 1; i >= 0; i--) {
+    //for (int i = binary.length - 1; i >= 0; i--) {
     //      binary[i] = 0;
-    //    }
+    //}
+  }
+
+  void innerIncrement() {
+    int tmp = 1;
+    for (int i = binary.length - 1,start=binary.length - 1; i >= 0&&tmp!=0; i--) {
+      tmp = binary[i] + (i==start?1:0) + (tmp >> 8);
+      binary[i] = tmp & 0xff;
+    }
+  }
+
+  void innerDecrement() {
+    int tmp = 1;
+    for (int i = binary.length - 1,start=binary.length - 1; i >= 0&&tmp!=0; i--) {
+      tmp = binary[i] + (i==start?-1:0) + (tmp >> 8);
+      binary[i] = tmp & 0xff;
+    }
   }
 
   BigInt innerMultiplication(BigInt other, BigInt result, BigInt tmpBigInt) {

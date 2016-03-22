@@ -318,12 +318,13 @@ main() {
       }
       {
         BigInt v1 = new BigInt.fromInt(0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff, 82);
+        //BigInt v2 = new BigInt.fromInt(0x3, 82);
         BigInt v2 = new BigInt.fromInt(0x3, 82);
         BigInt v3 = new BigInt.fromInt(0x55555555555555555555555555555555555555555555555555555555555555555555555555555555, 82);
         num t1 = new DateTime.now().millisecondsSinceEpoch;
         for (int i = 0; i < 0xff; i++) {
-          v1~/v2;
-          //test.expect("${v1~/v2}", "${v3}");
+        //  v1~/v2;
+          test.expect("${v1~/v2}", "${v3}");
         }
         num t2 = new DateTime.now().millisecondsSinceEpoch;
         print("##${t2-t1}");
@@ -352,6 +353,26 @@ main() {
       test.expect("${new BigInt.fromInt(0x4, 4)%new BigInt.fromInt(-0x2, 4)}", "${new BigInt.fromInt(-0x0, 4)}");
       test.expect("${new BigInt.fromInt(-0x5, 4)%new BigInt.fromInt(-0x2, 4)}", "${new BigInt.fromInt(-0x1, 4)}");
       test.expect("${new BigInt.fromInt(-0x4, 4)%new BigInt.fromInt(-0x2, 4)}", "${new BigInt.fromInt(-0x0, 4)}");
+    });
+
+    test.test("[increment]", () {
+      BigInt b = new BigInt.fromInt(-0x1ff,4);
+      for(int i=-0x1ff;i<0x1ff;i++) {
+        test.expect(
+          "[${i}]:${b}",
+          "[${i}]:${new BigInt.fromInt(i, 4)}");
+         b.innerIncrement();
+      }
+    });
+
+    test.test("[decrement]", () {
+      BigInt b = new BigInt.fromInt(0x1ff,4);
+      for(int i=0x1ff;i>-0x1ff;i--) {
+        test.expect(
+          "[${i}]:${b}",
+          "[${i}]:${new BigInt.fromInt(i, 4)}");
+         b.innerDecrement();
+      }
     });
   });
 }
