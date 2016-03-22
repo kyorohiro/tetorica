@@ -107,7 +107,7 @@ class BigInt implements Comparable<BigInt> {
       a = b;
       b = t;
     }
-    for (int i = binary.length - 1, ii = 0, tmpValue = 0; i >= 0; i--, ii++) {
+    for (int i = binary.length - 1, ii = 0, tmpValue = 0; i >= 0; i--, ii++, tmpValue = 0) {
       if(b.binary[i] == 0){
         continue;
       }
