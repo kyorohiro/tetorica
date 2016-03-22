@@ -197,6 +197,18 @@ main() {
         BigInt v3 = new BigInt.fromInt(0x4, 4);
         test.expect("${v1*v2}", "${v3}");
       }
+
+      {
+        // todo
+        BigInt v1 = new BigInt.fromInt(0x7fffffffffffffff, 8);
+        BigInt v2 = new BigInt.fromInt(0x7fffffffffffffff, 8);
+        BigInt v3 = new BigInt.fromInt(0x01, 8);
+//        BigInt v1 = new BigInt.fromInt(0x7fff, 10);
+//        BigInt v2 = new BigInt.fromInt(0x7fff, 10);
+//        BigInt v3 = new BigInt.fromInt(0x01, 10);
+
+//        test.expect("${v1*v2}", "${v3}");
+      }
     });
 
     test.test("compareTo", () {
@@ -304,18 +316,18 @@ main() {
         }
       }
       {
-        BigInt v1 = new BigInt.fromInt(0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff, 128);
-        BigInt v2 = new BigInt.fromInt(0x3, 128);
-        BigInt v3 = new BigInt.fromInt(0x55555555555555555555555555555555555555555555555555555555555555555555555555555555, 128);
+        BigInt v1 = new BigInt.fromInt(0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff, 82);
+        BigInt v2 = new BigInt.fromInt(0x3, 82);
+        BigInt v3 = new BigInt.fromInt(0x55555555555555555555555555555555555555555555555555555555555555555555555555555555, 82);
         num t1 = new DateTime.now().millisecondsSinceEpoch;
-        for (int i = 0; i < 0xf; i++) {
-          test.expect("${v1~/v2}", "${v3}");
+        for (int i = 0; i < 0xff; i++) {
+          v1~/v2;
+          //test.expect("${v1~/v2}", "${v3}");
         }
         num t2 = new DateTime.now().millisecondsSinceEpoch;
         print("##${t2-t1}");
       }
     });
-
     test.test("[%] B", () {
       test.expect("${new BigInt.fromInt(0x5, 4)%new BigInt.fromInt(0x2, 4)}", "${new BigInt.fromInt(0x1, 4)}");
       test.expect("${new BigInt.fromInt(0x4, 4)%new BigInt.fromInt(0x2, 4)}", "${new BigInt.fromInt(0x0, 4)}");

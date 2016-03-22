@@ -144,29 +144,9 @@ class BigInt implements Comparable<BigInt> {
     BigInt b = (other.isNegative == false ? new BigInt.fromBytes(other.binary) : -(new BigInt.fromBytes(other.binary)));
     BigInt r = new BigInt.fromLength(lengthPerByte);
 
-    //BigInt multipleTmp = new BigInt.fromLength(lengthPerByte);
-    //BigInt multipleTmpResult = new BigInt.fromLength(lengthPerByte);
 
     //
-    // todo i= 2
     for (int i = 1, len = binary.length; i < len; i++) {
-
-      /*
-       *
-       r.binary[i] = 0x01;
-
-       multipleTmpResult.innerClearZero();
-      if (a < b.innerMultiplication(r, multipleTmpResult, multipleTmp)) {
-        r.binary[i] = 0;
-        continue;
-      }
-      multipleTmpResult.innerClearZero();
-      r.binary[i] = (i == 0 ? 0x7f : 0xff);
-      b.innerMultiplication(r, multipleTmpResult, multipleTmp);
-      if (a >= multipleTmpResult) {
-        continue;
-      }
-      */
       r.binary[i] = 0x01;
       if (a < b*r) {
         r.binary[i] = 0;
@@ -187,10 +167,6 @@ class BigInt implements Comparable<BigInt> {
         }
         r.binary[i] = tt;
         //
-/*
-        multipleTmpResult.innerClearZero();
-        var t = b.innerMultiplication(r, multipleTmpResult, multipleTmp);
-*/
         var t = b*r;//
         int c = a.compareTo(t);
         if (c < 0) {
