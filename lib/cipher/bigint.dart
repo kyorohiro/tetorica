@@ -259,23 +259,24 @@ class BigInt implements Comparable<BigInt> {
     return Hex.encodeWithNew(binary);
   }
 
+//
+// http://www.amazon.com/Implementing-SSL-TLS-Using-Cryptography/dp/0470920416
   BigInt exponentiat(BigInt exp){
-    int i= exp.lengthPerByte;
+    int i= exp.sizePerByte;
+    int n= exp.lengthPerByte;
     int mask = 0;
 
     BigInt tmp1 = new BigInt.fromBigInt(this);
-    BigInt tmp2 = new BigInt.fromInt(0, this.lengthPerByte);
     BigInt ret = new BigInt.fromInt(1, this.lengthPerByte);
 
     //
     do {
       i--;
-      for(mask=0x01;mask&0xffffffff != 0;mask<<1) {
-        if(exp.binary[i]&mask != 0) {
+      for(mask=0x01;mask&0xffffffff != 0;mask<<=1) {
+        if(exp.binary[n-i-1]&mask != 0) {
           ret = ret*tmp1;
         }
-        tmp2 = new BigInt.fromBigInt(tmp1);
-        tmp1 = tmp1 * tmp2;
+        tmp1 = tmp1 * tmp1;
       }
     } while(i != 0);
 
