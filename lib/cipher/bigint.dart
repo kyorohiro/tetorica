@@ -105,11 +105,11 @@ class BigInt implements Comparable<BigInt> {
       a = b;
       b = t;
     }
-    for (int i = binary.length - 1, tmpValue = 0; i >= 0; i--) {
+    for (int i = binary.length - 1, ii = 0, tmpValue = 0; i >= 0; i--, ii++) {
       tmpBigInt.innerClearZero();
-      for (int j = i; j >= 0; j--) {
+      for (int j = binary.length - 1; j >= 0 && j - ii >= 0; j--) {
         tmpValue = a.binary[j] * b.binary[i] + (tmpValue >> 8);
-        tmpBigInt.binary[j] = tmpValue & 0xff;
+        tmpBigInt.binary[j - ii] = tmpValue & 0xff;
       }
       result.add(tmpBigInt, result);
     }
@@ -146,7 +146,6 @@ class BigInt implements Comparable<BigInt> {
     BigInt multipleTmpResult = new BigInt.fromLength(lengthPerByte);
     for (int i = 0, len = binary.length; i < len; i++) {
       r.binary[i] = 0x01;
-
       multipleTmpResult.innerClearZero();
       if (a < b.innerMultiplication(r, multipleTmpResult, multipleTmp)) {
         r.binary[i] = 0;
@@ -155,6 +154,7 @@ class BigInt implements Comparable<BigInt> {
       multipleTmpResult.innerClearZero();
       r.binary[i] = (i == 0 ? 0x7f : 0xff);
       if (a >= b.innerMultiplication(r, multipleTmpResult, multipleTmp)) {
+        print("BBB ${a} ${multipleTmpResult}::: ${b} ${r}");
         continue;
       }
 
