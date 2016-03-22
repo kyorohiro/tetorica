@@ -273,20 +273,39 @@ class BigInt implements Comparable<BigInt> {
       i--;j++;
       for (mask = 0x01; mask != 0; mask = ((mask << 1) & 0xff)) {
         if (exp.binary[n - j] & mask != 0) {
-            //dep++;
-          //print("#A#${i} ${mask} ${deb} ${dep}");
           ret = ret * tmp1;
         } else {
-          //print("#B#${i} ${mask} ${deb} ${dep}");
         }
         tmp1 = tmp1 * tmp1;
-        //deb++;
       }
     } while (i != 0);
 
     return ret;
   }
 
+  BigInt exponentiateWithMod(BigInt exp, BigInt m) {
+    int i = exp.sizePerByte;
+    int n = exp.lengthPerByte;
+    int mask = 0;
+
+    BigInt tmp1 = new BigInt.fromBigInt(this);
+    BigInt ret = new BigInt.fromInt(1, this.lengthPerByte);
+
+    int j=0;
+    do {
+      i--;j++;
+      for (mask = 0x01; mask != 0; mask = ((mask << 1) & 0xff)) {
+        if (exp.binary[n - j] & mask != 0) {
+          ret = ret * tmp1;
+          ret = ret % m;
+        }
+        tmp1 = tmp1 * tmp1;
+        tmp1 = tmp1 %m;
+      }
+    } while (i != 0);
+
+    return ret;
+  }
   BigInt exp(BigInt e) {
     BigInt c = new BigInt.fromBigInt(this);
     BigInt counter = new BigInt.fromInt(1, lengthPerByte);
