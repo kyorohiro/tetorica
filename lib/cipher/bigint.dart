@@ -44,7 +44,7 @@ class BigInt implements Comparable<BigInt> {
     binary = new Uint8List.fromList(value);
   }
 
-  BigInt add(BigInt other, BigInt result) {
+  BigInt innerAdd(BigInt other, BigInt result) {
     int tmp = 0;
     for (int i = binary.length - 1; i >= 0; i--) {
       tmp = binary[i] + other.binary[i] + (tmp >> 8);
@@ -58,7 +58,7 @@ class BigInt implements Comparable<BigInt> {
       throw {"message": "need same length ${lengthPerByte} ${other.lengthPerByte}"};
     }
     BigInt result = new BigInt.fromLength(this.lengthPerByte);
-    return add(other, result);
+    return innerAdd(other, result);
   }
 
   BigInt operator -() {
@@ -111,7 +111,7 @@ class BigInt implements Comparable<BigInt> {
         tmpValue = a.binary[j] * b.binary[i] + (tmpValue >> 8);
         tmpBigInt.binary[j - ii] = tmpValue & 0xff;
       }
-      result.add(tmpBigInt, result);
+      result.innerAdd(tmpBigInt, result);
     }
     if (minus == -1) {
       result.innerMutableMinusOne();
