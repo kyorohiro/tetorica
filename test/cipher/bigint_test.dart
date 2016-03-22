@@ -394,11 +394,30 @@ main() {
     });
 
     test.test("[exp]", () {
-      BigInt b0 = new BigInt.fromInt(0x2,4);
-      print("#=> : ${(new BigInt.fromInt(0x2,4)).exponentiat(new BigInt.fromInt(2, 8))}");
-      print("#=> : ${(new BigInt.fromInt(0x4,4)).exponentiat(new BigInt.fromInt(2, 8))}");
-//      print("#=> : ${(new BigInt.fromInt(0x4,4)).exponentiat(new BigInt.fromInt(2, 8))}");
-//      print("#=> : ${(new BigInt.fromInt(0x8,4)).exponentiat(new BigInt.fromInt(2, 8))}");
+      test.expect(
+        "${(new BigInt.fromInt(0x2,8)).exponentiat(new BigInt.fromInt(2, 8))}",
+        "${(new BigInt.fromInt(0x2*0x2,8))}"
+      );
+      test.expect(
+        "${(new BigInt.fromInt(0x3,8)).exponentiat(new BigInt.fromInt(3, 8))}",
+        "${(new BigInt.fromInt(0x3*0x3*0x3,8))}"
+      );
+      test.expect(
+        "${(new BigInt.fromInt(0x4,8)).exponentiat(new BigInt.fromInt(4, 8))}",
+        "${(new BigInt.fromInt(0x4*0x4*0x4*0x4,8))}"
+      );
+      test.expect(
+        "${(new BigInt.fromInt(0x5,8)).exponentiat(new BigInt.fromInt(5, 8))}",
+        "${(new BigInt.fromInt(0x5*0x5*0x5*0x5*0x5,8))}"
+      );
+      test.expect(
+        "${(new BigInt.fromInt(0x6,8)).exponentiat(new BigInt.fromInt(6, 8))}",
+        "${(new BigInt.fromInt(0x6*0x6*0x6*0x6*0x6*0x6,8))}"
+      );
+//      test.expect(
+//        "${(new BigInt.fromInt(0xff,50)).exponentiat(new BigInt.fromInt(0xa, 50))}",
+//        "${(new BigInt.fromInt(0xff*0xff*0xff*0xff*0xff * 0xff*0xff*0xff*0xff*0xff,50))}"
+//      );
     });
   });
 }
