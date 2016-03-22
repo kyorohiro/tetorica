@@ -28,7 +28,6 @@ main() {
       }
     });
 
-
     test.test("[-]", () {
       {
         BigInt v1 = new BigInt.fromInt(-1, 10);
@@ -85,7 +84,6 @@ main() {
       }
     });
 
-
     test.test("[*]", () {
       {
         BigInt v1 = new BigInt.fromInt(0x2, 4);
@@ -122,8 +120,8 @@ main() {
 
       //
       //
-      for (int i = 0x0; i < 0xffffffff; i = 1+i*2) {
-        for (int j = 0x0; j < 0xffffffff; j = 1+j*3) {
+      for (int i = 0x0; i < 0xffffffff; i = 1 + i * 2) {
+        for (int j = 0x0; j < 0xffffffff; j = 1 + j * 3) {
           BigInt v1 = new BigInt.fromInt(i, 32);
           BigInt v2 = new BigInt.fromInt(j, 32);
           BigInt v3 = new BigInt.fromInt(i * j, 32);
@@ -134,8 +132,8 @@ main() {
       {
         BigInt v1 = new BigInt.fromInt(0x1ff, 4);
         BigInt v2 = new BigInt.fromInt(0x1ff, 4);
-        BigInt v3 = new BigInt.fromInt(0x1ff*0x1ff, 4);
-          test.expect("${v1*v2}","${v3}");
+        BigInt v3 = new BigInt.fromInt(0x1ff * 0x1ff, 4);
+        test.expect("${v1*v2}", "${v3}");
       }
     });
 
@@ -172,7 +170,6 @@ main() {
         test.expect("${-v1}", "${v2}");
       }
     });
-
 
     test.test("[*] B", () {
       {
@@ -274,40 +271,51 @@ main() {
         num t2 = new DateTime.now().millisecondsSinceEpoch;
         print("##${t2-t1}");
       }
-
+        {
+          BigInt v1 = new BigInt.fromInt(0xffffffffffffffff, 9);
+          BigInt v2 = new BigInt.fromInt(0x3, 9);
+          BigInt v3 = new BigInt.fromInt(0x5555555555555555, 9);
+          print("### ${v3} : ${v1~/v2}");
+          test.expect("${v1~/v2}", "${v3}");
+        }
+        {
+          BigInt v1 = new BigInt.fromInt(-0xffffffffffffffff, 9);
+          BigInt v2 = new BigInt.fromInt(0x3, 9);
+          BigInt v3 = new BigInt.fromInt(-0x5555555555555555, 9);
+          print("### ${v3} : ${v1~/v2}");
+          test.expect("${v1~/v2}", "${v3}");
+        }
       {
-      BigInt v1 = new BigInt.fromInt(256, 4);
-      BigInt v2 = new BigInt.fromInt(128, 4);
-      BigInt v3 = new BigInt.fromInt(256~/128, 4);
-      test.expect("${v1~/v2}", "${v3}");
+        // todo
+        BigInt v1 = new BigInt.fromInt(256, 4);
+        BigInt v2 = new BigInt.fromInt(128, 4);
+        BigInt v3 = new BigInt.fromInt(256 ~/ 128, 4);
+        test.expect("${v1~/v2}", "${v3}");
       }
 
       {
-        for(int i=0;i<0xfff;i=1+i*3){
-          for(int j=1;j<0xfff;j= 1+ j*2){
-          BigInt v1 = new BigInt.fromInt(i, 4);
-          BigInt v2 = new BigInt.fromInt(j, 4);
-          BigInt v3 = new BigInt.fromInt(i~/j, 4);
-          test.expect("${i}:${j}:${v1~/v2}", "${i}:${j}:${v3}");
-        }
+        for (int i = 0; i < 0xfff; i = 1 + i) {
+          for (int j = 1; j < 0xfff; j = 1 + j * 2) {
+            BigInt v1 = new BigInt.fromInt(i, 4);
+            BigInt v2 = new BigInt.fromInt(j, 4);
+            BigInt v3 = new BigInt.fromInt(i ~/ j, 4);
+            test.expect("${i}:${j}:${v1~/v2}", "${i}:${j}:${v3}");
+          }
         }
       }
-
       {
         BigInt v1 = new BigInt.fromInt(0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff, 128);
         BigInt v2 = new BigInt.fromInt(0x3, 128);
         BigInt v3 = new BigInt.fromInt(0x55555555555555555555555555555555555555555555555555555555555555555555555555555555, 128);
         num t1 = new DateTime.now().millisecondsSinceEpoch;
-        for (int i = 0; i < 0xff; i++) {
+        for (int i = 0; i < 0xf; i++) {
           test.expect("${v1~/v2}", "${v3}");
         }
         num t2 = new DateTime.now().millisecondsSinceEpoch;
         print("##${t2-t1}");
       }
-
     });
 
-/*
     test.test("[%] B", () {
       test.expect("${new BigInt.fromInt(0x5, 4)%new BigInt.fromInt(0x2, 4)}", "${new BigInt.fromInt(0x1, 4)}");
       test.expect("${new BigInt.fromInt(0x4, 4)%new BigInt.fromInt(0x2, 4)}", "${new BigInt.fromInt(0x0, 4)}");
@@ -319,6 +327,5 @@ main() {
       test.expect("${new BigInt.fromInt(-0x5, 4)%new BigInt.fromInt(-0x2, 4)}", "${new BigInt.fromInt(-0x1, 4)}");
       test.expect("${new BigInt.fromInt(-0x4, 4)%new BigInt.fromInt(-0x2, 4)}", "${new BigInt.fromInt(-0x0, 4)}");
     });
-*/
   });
 }

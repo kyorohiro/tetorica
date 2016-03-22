@@ -10,6 +10,8 @@ class BigInt implements Comparable<BigInt> {
 
   bool get isNegative => (binary[0] & 0x80) != 0;
 
+  //
+  // ~/ need (length +1)
   BigInt.fromInt(int value, int length) {
     binary = new Uint8List((length > 8) ? length : 8);
     int _len = binary.length;
@@ -147,17 +149,24 @@ class BigInt implements Comparable<BigInt> {
 
     //
     // todo i= 2
-    for (int i = 2, len = binary.length; i < len; i++) {
+    for (int i = 1, len = binary.length; i < len; i++) {
       r.binary[i] = 0x01;
       multipleTmpResult.innerClearZero();
       if (a < b.innerMultiplication(r, multipleTmpResult, multipleTmp)) {
+        //print("AAA ${a} ${multipleTmpResult}::: ${b} ${r}");
         r.binary[i] = 0;
         continue;
       }
       multipleTmpResult.innerClearZero();
       r.binary[i] = (i == 0 ? 0x7f : 0xff);
-      if (a >= b.innerMultiplication(r, multipleTmpResult, multipleTmp)) {
+      b.innerMultiplication(r, multipleTmpResult, multipleTmp);
+      if (a >= multipleTmpResult) {
+        //if(i==0) {
         //print("BBB ${a} ${multipleTmpResult}::: ${b} ${r}");
+        //}
+        //if(multipleTmpResult.isNegative == true){
+        //  r.binary[i] = 0;
+        //}
         continue;
       }
 
