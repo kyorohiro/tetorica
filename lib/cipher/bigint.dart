@@ -32,7 +32,7 @@ class BigInt implements Comparable<BigInt> {
       binary[_len - 3] = (value >> 16 & 0xff);
       binary[_len - 2] = (value >> 8 & 0xff);
       binary[_len - 1] = (value >> 0 & 0xff);
-      mutableMinusOne();
+      innerMutableMinusOne();
     }
   }
 
@@ -44,12 +44,7 @@ class BigInt implements Comparable<BigInt> {
     binary = new Uint8List.fromList(value);
   }
 
-  BigInt operator +(BigInt other) {
-    if (this.lengthPerByte != other.lengthPerByte) {
-      throw {"message": "need same length ${lengthPerByte} ${other.lengthPerByte}"};
-    }
-
-    BigInt result = new BigInt.fromLength(this.lengthPerByte);
+  BigInt add(BigInt other, BigInt result) {
     int tmp = 0;
     for (int i = binary.length - 1; i >= 0; i--) {
       tmp = binary[i] + other.binary[i] + (tmp >> 8);
@@ -58,8 +53,16 @@ class BigInt implements Comparable<BigInt> {
     return result;
   }
 
+  BigInt operator +(BigInt other) {
+    if (this.lengthPerByte != other.lengthPerByte) {
+      throw {"message": "need same length ${lengthPerByte} ${other.lengthPerByte}"};
+    }
+    BigInt result = new BigInt.fromLength(this.lengthPerByte);
+    return add(other, result);
+  }
+
   BigInt operator -() {
-    return new BigInt.fromBytes(binary)..mutableMinusOne();
+    return new BigInt.fromBytes(binary)..innerMutableMinusOne();
   }
 
   BigInt operator -(BigInt other) {
@@ -76,7 +79,7 @@ class BigInt implements Comparable<BigInt> {
     return result;
   }
 
-  void mutableMinusOne() {
+  void innerMutableMinusOne() {
     int tmp = 0;
     for (int i = binary.length - 1; i >= 0; i--) {
       tmp = 0 - binary[i] + (tmp >> 8);
@@ -84,49 +87,46 @@ class BigInt implements Comparable<BigInt> {
     }
   }
 
-  void clearZero() {
+  void innerClearZero() {
     for (int i = binary.length - 1; i >= 0; i--) {
       binary[i] = 0;
     }
   }
 
-  //  BigInt t = null;
-  BigInt operator *(BigInt other) {
-    if (this.lengthPerByte != other.lengthPerByte) {
-      throw {"message": "need same length ${lengthPerByte} ${other.lengthPerByte}"};
-    }
-    //if(t== null) {
-    //  t = new BigInt.fromLength(this.lengthPerByte);
-    //}
+  BigInt innerMultiplication(BigInt other, BigInt result, BigInt t) {
     int minus = (((this.isNegative == true ? 1 : 0) ^ (other.isNegative == true ? 1 : 0)) == 1 ? -1 : 1);
 
-    BigInt a = (this.isNegative==true?-this:this);
-    BigInt b = (other.isNegative==true?-other:other);
+    BigInt a = (this.isNegative == true ? -this : this);
+    BigInt b = (other.isNegative == true ? -other : other);
     if (a < b) {
       var t = a;
       a = b;
       b = t;
     }
-    BigInt result = new BigInt.fromLength(a.lengthPerByte);
-    BigInt t = new BigInt.fromLength(this.lengthPerByte);
     for (int i = binary.length - 1, tmp = 0; i >= 0; i--) {
-      t.clearZero();
+      t.innerClearZero();
       for (int j = i; j >= 0; j--) {
         tmp = a.binary[j] * b.binary[i] + (tmp >> 8);
         t.binary[j] = tmp & 0xff;
       }
-      //print("#[${i}]# ${t}");
-      result = result + t;
+      result.add(t, result);
     }
     if (minus == -1) {
-      result.mutableMinusOne();
+      result.innerMutableMinusOne();
     }
     return result;
   }
 
+  BigInt operator *(BigInt other) {
+    BigInt result = new BigInt.fromLength(this.lengthPerByte);
+    BigInt t = new BigInt.fromLength(this.lengthPerByte);
+    innerMultiplication(other, result, t);
+    return result;
+  }
+
   BigInt operator %(BigInt other) {
-    BigInt a = (this.isNegative==true?-this:this);
-    BigInt b = (other.isNegative==true?-other:other);
+    BigInt a = (this.isNegative == true ? -this : this);
+    BigInt b = (other.isNegative == true ? -other : other);
     return (other.isNegative == false ? a - (a ~/ b) * b : -(a - (a ~/ b) * b));
   }
 
@@ -157,8 +157,8 @@ class BigInt implements Comparable<BigInt> {
 //      print("##A# ${ps} == ${pe}");
       for (; ps != pe;) {
 //        print("### ${ps} == ${pe}");
-        var tt = (pe-ps)~/2+ps;
-        if(ps+1==pe) {
+        var tt = (pe - ps) ~/ 2 + ps;
+        if (ps + 1 == pe) {
           r.binary[i] = ps;
           break;
         }
@@ -167,12 +167,10 @@ class BigInt implements Comparable<BigInt> {
         if (a < t) {
 //          print("#D# ${a} < ${t}");
           pe = tt;
-        }
-        else if(a == t) {
+        } else if (a == t) {
 //          print("#E# ${a} = ${t}");
           break;
-        }
-        else {
+        } else {
 //          print("#F# ${a} > ${t}");
           ps = tt;
         }
@@ -180,7 +178,7 @@ class BigInt implements Comparable<BigInt> {
     }
 
     if (minus == -1) {
-      r.mutableMinusOne();
+      r.innerMutableMinusOne();
     }
     return r;
   }
@@ -200,8 +198,8 @@ class BigInt implements Comparable<BigInt> {
       return (this.isNegative == false ? 1 : -1);
     }
 
-    BigInt a = (this.isNegative==true?-this:this);
-    BigInt b = (other.isNegative==true?-other:other);
+    BigInt a = (this.isNegative == true ? -this : this);
+    BigInt b = (other.isNegative == true ? -other : other);
 
     for (int i = 0, len = binary.length; i < len; i++) {
       if (a.binary[i] != b.binary[i]) {
