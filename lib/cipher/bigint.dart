@@ -144,16 +144,19 @@ class BigInt implements Comparable<BigInt> {
     BigInt b = (other.isNegative == false ? new BigInt.fromBytes(other.binary) : -(new BigInt.fromBytes(other.binary)));
     BigInt r = new BigInt.fromLength(lengthPerByte);
 
-    BigInt multipleTmp = new BigInt.fromLength(lengthPerByte);
-    BigInt multipleTmpResult = new BigInt.fromLength(lengthPerByte);
+    //BigInt multipleTmp = new BigInt.fromLength(lengthPerByte);
+    //BigInt multipleTmpResult = new BigInt.fromLength(lengthPerByte);
 
     //
     // todo i= 2
     for (int i = 1, len = binary.length; i < len; i++) {
-      r.binary[i] = 0x01;
-      multipleTmpResult.innerClearZero();
+
+      /*
+       *
+       r.binary[i] = 0x01;
+
+       multipleTmpResult.innerClearZero();
       if (a < b.innerMultiplication(r, multipleTmpResult, multipleTmp)) {
-        //print("AAA ${a} ${multipleTmpResult}::: ${b} ${r}");
         r.binary[i] = 0;
         continue;
       }
@@ -161,15 +164,18 @@ class BigInt implements Comparable<BigInt> {
       r.binary[i] = (i == 0 ? 0x7f : 0xff);
       b.innerMultiplication(r, multipleTmpResult, multipleTmp);
       if (a >= multipleTmpResult) {
-        //if(i==0) {
-        //print("BBB ${a} ${multipleTmpResult}::: ${b} ${r}");
-        //}
-        //if(multipleTmpResult.isNegative == true){
-        //  r.binary[i] = 0;
-        //}
         continue;
       }
-
+      */
+      r.binary[i] = 0x01;
+      if (a < b*r) {
+        r.binary[i] = 0;
+        continue;
+      }
+      r.binary[i] = (i == 0 ? 0x7f : 0xff);
+      if (a >= b*r) {
+        continue;
+      }
       r.binary[i] = 0x01;
       int pe = (i == 0 ? 0x7f : 0xff);
       int ps = 1;
@@ -181,8 +187,11 @@ class BigInt implements Comparable<BigInt> {
         }
         r.binary[i] = tt;
         //
+/*
         multipleTmpResult.innerClearZero();
         var t = b.innerMultiplication(r, multipleTmpResult, multipleTmp);
+*/
+        var t = b*r;//
         int c = a.compareTo(t);
         if (c < 0) {
           pe = tt;
@@ -238,6 +247,5 @@ class BigInt implements Comparable<BigInt> {
   String toString() {
     return Hex.encodeWithNew(binary);
   }
-//  BigInt operator -() => new BigInt(value, isNegative);
 
 }
