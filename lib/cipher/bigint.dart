@@ -88,12 +88,14 @@ class BigInt implements Comparable<BigInt> {
   }
 
   void innerClearZero() {
-    for (int i = binary.length - 1; i >= 0; i--) {
-      binary[i] = 0;
-    }
+    // recreate is more fast then sets zero
+    binary = new Uint8List(binary.length);
+    //    for (int i = binary.length - 1; i >= 0; i--) {
+    //      binary[i] = 0;
+    //    }
   }
 
-  BigInt innerMultiplication(BigInt other, BigInt result, BigInt t) {
+  BigInt innerMultiplication(BigInt other, BigInt result, BigInt tmpBigInt) {
     int minus = (((this.isNegative == true ? 1 : 0) ^ (other.isNegative == true ? 1 : 0)) == 1 ? -1 : 1);
 
     BigInt a = (this.isNegative == true ? -this : this);
@@ -103,13 +105,13 @@ class BigInt implements Comparable<BigInt> {
       a = b;
       b = t;
     }
-    for (int i = binary.length - 1, tmp = 0; i >= 0; i--) {
-      t.innerClearZero();
+    for (int i = binary.length - 1, tmpValue = 0; i >= 0; i--) {
+      tmpBigInt.innerClearZero();
       for (int j = i; j >= 0; j--) {
-        tmp = a.binary[j] * b.binary[i] + (tmp >> 8);
-        t.binary[j] = tmp & 0xff;
+        tmpValue = a.binary[j] * b.binary[i] + (tmpValue >> 8);
+        tmpBigInt.binary[j] = tmpValue & 0xff;
       }
-      result.add(t, result);
+      result.add(tmpBigInt, result);
     }
     if (minus == -1) {
       result.innerMutableMinusOne();
@@ -140,38 +142,41 @@ class BigInt implements Comparable<BigInt> {
     BigInt b = (other.isNegative == false ? new BigInt.fromBytes(other.binary) : -(new BigInt.fromBytes(other.binary)));
     BigInt r = new BigInt.fromLength(lengthPerByte);
 
+    BigInt multipleTmp = new BigInt.fromLength(lengthPerByte);
+    BigInt multipleTmpResult = new BigInt.fromLength(lengthPerByte);
     for (int i = 0, len = binary.length; i < len; i++) {
       r.binary[i] = 0x01;
-      if (a < (b * r)) {
+
+      multipleTmpResult.innerClearZero();
+      if (a < b.innerMultiplication(r, multipleTmpResult, multipleTmp)) {
         r.binary[i] = 0;
         continue;
       }
+      multipleTmpResult.innerClearZero();
       r.binary[i] = (i == 0 ? 0x7f : 0xff);
-      if (a >= (b * r)) {
+      if (a >= b.innerMultiplication(r, multipleTmpResult, multipleTmp)) {
         continue;
       }
 
       r.binary[i] = 0x01;
       int pe = (i == 0 ? 0x7f : 0xff);
       int ps = 1;
-//      print("##A# ${ps} == ${pe}");
       for (; ps != pe;) {
-//        print("### ${ps} == ${pe}");
         var tt = (pe - ps) ~/ 2 + ps;
         if (ps + 1 == pe) {
           r.binary[i] = ps;
           break;
         }
         r.binary[i] = tt;
-        var t = (b * r);
-        if (a < t) {
-//          print("#D# ${a} < ${t}");
+        //
+        multipleTmpResult.innerClearZero();
+        var t = b.innerMultiplication(r, multipleTmpResult, multipleTmp);
+        int c = a.compareTo(t);
+        if (c < 0) {
           pe = tt;
-        } else if (a == t) {
-//          print("#E# ${a} = ${t}");
+        } else if (c == 0) {
           break;
         } else {
-//          print("#F# ${a} > ${t}");
           ps = tt;
         }
       }
