@@ -211,14 +211,19 @@ class BigInt implements Comparable<BigInt> {
     bitPosition = 8 - (bitSize % 8) - 1;
     int rSize = (bitSize ~/ 8) + 1;
 
+    int bRightShiftNum = 0;
     do {
-      if (b <= a) {
+
+     if (b <= a) {
+//    print("${bRightShiftNum} ${b} ${a}");
+//  if(b.compareWithRightShift(a, bRightShiftNum)<=0) {
         a -= b;
         r.binary[(lengthPerByte - rSize) + (bitPosition ~/ 8)] |= (0x80 >> (bitPosition % 8));
       }
       //
       // todo
       if (bitSize != 0) {
+//        bRightShiftNum++;
         b.innerRightShift();
       }
       bitPosition++;
@@ -422,8 +427,8 @@ class BigInt implements Comparable<BigInt> {
         mask2 = 0x80;
         break;
     }
-    print("####### ${a} ${b}");
-    print("####### ${mask1} ${mask2} ${moveByte} ${moveBit}");
+  //  print("####### ${a} ${b}");
+  //  print("####### ${mask1} ${mask2} ${moveByte} ${moveBit}");
     int v1a = 0;
     int v1b = 0;
     for (int len = binary.length, i = 0; i < len; i++) {
@@ -439,7 +444,7 @@ class BigInt implements Comparable<BigInt> {
       }
       v1 = (v1a|v1b);
       v2 = b.binary[i];
-      print("${i}:${v1} ${v2}");
+    //  print("${i}:${v1} ${v2}");
       if (v1 != v2) {
         return (v1 > v2 ? (a.isNegative == false ? 1 : -1) : (a.isNegative == false ? -1 : 1));
       }
