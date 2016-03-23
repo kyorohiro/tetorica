@@ -394,38 +394,52 @@ class BigInt implements Comparable<BigInt> {
         mask2 = 0xff;
         break;
       case 1:
-        mask1 = 0x7f;
-        mask2 = 0x80;
+        mask1 = 0x01;
+        mask2 = 0xFE;
         break;
       case 2:
-        mask1 = 0x3f;
-        mask2 = 0xC0;
+        mask1 = 0x03;
+        mask2 = 0xFC;
         break;
       case 3:
-        mask1 = 0x1f;
-        mask2 = 0xE0;
+        mask1 = 0x07;
+        mask2 = 0xF8;
         break;
       case 4:
         mask1 = 0x0F;
         mask2 = 0xF0;
         break;
       case 5:
-        mask1 = 0x07;
-        mask2 = 0xF8;
+        mask1 = 0x1F;
+        mask2 = 0xE0;
         break;
       case 6:
-        mask1 = 0x03;
-        mask2 = 0xFC;
+        mask1 = 0x3F;
+        mask2 = 0xC0;
         break;
       case 7:
-        mask1 = 0x01;
-        mask2 = 0xFE;
+        mask1 = 0x7F;
+        mask2 = 0x80;
         break;
     }
-
-    for (int len = binary.length, i = 1; i < len; i++) {
-      v1 = a.binary[i];
-      v2 = (b.binary[i + moveByte - 1]&mask1) | (b.binary[i + moveByte] &mask2);
+    print("####### ${a} ${b}");
+    print("####### ${mask1} ${mask2} ${moveByte} ${moveBit}");
+    int v1a = 0;
+    int v1b = 0;
+    for (int len = binary.length, i = 0; i < len; i++) {
+      if(i-1-moveByte < 0){
+        v1a = 0;
+      } else {
+        v1a = (a.binary[i-1-moveByte]&mask1)<<(8-moveBit);
+      }
+      if(i-moveByte < 0) {
+        v1b = 0;
+      } else {
+        v1b = ((a.binary[i-moveByte] &mask2)>>moveBit);
+      }
+      v1 = (v1a|v1b);
+      v2 = b.binary[i];
+      print("${i}:${v1} ${v2}");
       if (v1 != v2) {
         return (v1 > v2 ? (a.isNegative == false ? 1 : -1) : (a.isNegative == false ? -1 : 1));
       }

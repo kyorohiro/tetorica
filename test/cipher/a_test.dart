@@ -11,7 +11,40 @@ import 'package:bignum/src/big_integer_v8.dart' as big;
 main() {
   test.group("bigint", () {
 
+    test.test("[left shift]", () {
+      {
+        BigInt v1 = new BigInt.fromBytes([0x01, 0xff,0xff, 0xff], 8);
+        test.expect(v1.compareWithRightShift(new BigInt.fromBytes([0x01, 0xff,0xff, 0xff], 8), 0), 0);
+        test.expect(v1.compareWithRightShift(new BigInt.fromBytes([0x00, 0xff,0xff, 0xff], 8), 1), 0);
+        test.expect(v1.compareWithRightShift(new BigInt.fromBytes([0x00, 0x7f,0xff, 0xff], 8), 2), 0);
+        test.expect(v1.compareWithRightShift(new BigInt.fromBytes([0x00, 0x3f,0xff, 0xff], 8), 3), 0);
+        test.expect(v1.compareWithRightShift(new BigInt.fromBytes([0x00, 0x1f,0xff, 0xff], 8), 4), 0);
+        test.expect(v1.compareWithRightShift(new BigInt.fromBytes([0x00, 0x0f,0xff, 0xff], 8), 5), 0);
+        test.expect(v1.compareWithRightShift(new BigInt.fromBytes([0x00, 0x07,0xff, 0xff], 8), 6), 0);
+        test.expect(v1.compareWithRightShift(new BigInt.fromBytes([0x00, 0x03,0xff, 0xff], 8), 7), 0);
+        test.expect(v1.compareWithRightShift(new BigInt.fromBytes([0x00, 0x01,0xff, 0xff], 8), 8), 0);
+        test.expect(v1.compareWithRightShift(new BigInt.fromBytes([0x00, 0x00,0xff, 0xff], 8), 9), 0);
+        test.expect(v1.compareWithRightShift(new BigInt.fromBytes([0x00, 0x00,0x7f, 0xff], 8), 10), 0);
+        test.expect(v1.compareWithRightShift(new BigInt.fromBytes([0x00, 0x00,0x3f, 0xff], 8), 11), 0);
+        test.expect(v1.compareWithRightShift(new BigInt.fromBytes([0x00, 0x00,0x1f, 0xff], 8), 12), 0);
+        test.expect(v1.compareWithRightShift(new BigInt.fromBytes([0x00, 0x00,0x0f, 0xff], 8), 13), 0);
+      }
+      {
+        BigInt v1 = new BigInt.fromBytes([0x6f, 0xff,0xff, 0xff,0xff,0xff, 0xff, 0xff], 8);
+        BigInt v2 = new BigInt.fromBytes([0x37, 0xff,0xff, 0xff,0xff,0xff, 0xff, 0xff], 8);
 
+        test.expect(v1.compareWithRightShift(v2, 1), 0);
+//        test.expect(v1.compareWithRightShift(new BigInt.fromBytes([0xD7, 0xff,0xff, 0xff,0xff,0xff, 0xff, 0xff], 8), 1), -1);
+
+      }
+//        test.expect(v1.compareWithRightShift(v3, 5), -1);
+//        test.expect(v1.compareWithRightShift(v2, 6), 1);
+//        test.expect(v1.compareWithRightShift(v2, 7), 0);
+//        test.expect(v1.compareWithRightShift(v2, 8), -1);
+//        print("${v1.compareWithRightShift(v2, )}");
+        //print("${v1.compareWithRightShift(v2, 2)}");
+    });
+/*
     test.test("", () {
       String mod = "0xC4F8E9E15DCADF2B96C763D981006A644FFB4415030A16ED1283883340F2AA0E2BE2BE8FA60150B9046965837C3E7D151B7DE237EBB957C20663898250703B3F";
       String pub = "0x8a7e79f3fbfea8ebfd18351cb9979136f705b4d9114a06d4aa2fd1943816677a5374661846a30c45b30a024b4d22b15ab323622b2de47ba29115f06ee42c41";
@@ -90,6 +123,6 @@ main() {
         }
       }
     });
-
+*/
   });
 }
