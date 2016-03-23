@@ -313,6 +313,7 @@ class BigInt implements Comparable<BigInt> {
         }
         tmp1 = tmp1 * tmp1;
         tmp1 = tmp1 % m;
+        print(">${tmp1.sizePerByte} ${ret.sizePerByte}");
       }
     } while (i != 0);
 

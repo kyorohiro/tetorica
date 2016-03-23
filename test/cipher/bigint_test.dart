@@ -4,7 +4,7 @@ import 'package:tetorica/cipher/bigint.dart';
 import 'dart:convert';
 import 'package:test/test.dart' as test;
 import 'dart:typed_data';
-
+import 'dart:math' as m;
 main() {
   test.group("bigint", () {
     test.test("[+]", () {
@@ -413,12 +413,32 @@ main() {
       {
         int bufferSize = 10 * 620;
         for(int i=0xff;i<0xffff;i=2*i+1){
-          print("### ${i}");
           BigInt m1 = new BigInt.fromInt(2, bufferSize);
           BigInt e = new BigInt.fromInt(i, bufferSize);
-          test.expect("${m1.exponentiate(e)}", "${m1.exp(e)}");
+          String expect = "0${(m.pow(2, i)).toInt().toRadixString(16)}";
+          String actual = m1.exponentiate(e).toString();
+          actual.substring(actual.length-expect.length);
+          test.expect(actual.substring(actual.length-expect.length), expect);
         }
       }
     });
+
+    test.test("[mod]", () {
+      {
+        int bufferSize = 10 * 620;
+        for(int i=0xff;i<0xffffffff;i=21*i+1){
+          print("[i== ${i}]");
+          BigInt m1 = new BigInt.fromInt(2, bufferSize);
+          BigInt e = new BigInt.fromInt(i, bufferSize);
+          BigInt mod = new BigInt.fromInt(3, bufferSize);
+          String expect = "0${(m.pow(2, i)%3).toInt().toRadixString(16)}";
+          String actual = m1.exponentiateWithMod(e, mod).toString();
+          actual.substring(actual.length-expect.length);
+          test.expect(actual.substring(actual.length-expect.length), expect);
+          print("${expect}");
+        }
+      }
+    });
+
   });
 }

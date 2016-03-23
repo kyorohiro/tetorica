@@ -9,8 +9,20 @@ String testPublicKey =  "0x010001";
 main() {
   test.group("rsa", () {
     test.test("aa",(){
-      Hex.decodeWithNew(testModulus);
-      Hex.decodeWithNew(testPublicKey);
+      BigInt d = new BigInt.fromBytes(Hex.decodeWithNew(testModulus), 300);
+      BigInt pu = new BigInt.fromBytes(Hex.decodeWithNew(testPublicKey), 300);
+      BigInt pr = new BigInt.fromBytes(Hex.decodeWithNew(testPrivateKey), 300);
+      BigInt m = new BigInt.fromBytes([0xbc], 300);
+      print(":d: ${d}");
+      print(":m: ${m}");
+      print(":pu: ${pu}");
+      //
+      //print(":zz: ${
+      //  m.exponentiateWithMod(new BigInt.fromInt(100,32), new BigInt.fromInt(100,32))}");
+      //
+      BigInt c = RSA.compute(m, pu, d,mode:0);
+      print(">>> ${c}");
+      //print(">>> ${RSA.compute(c, pr, d,mode:0)}");
 
     });
     test.test("compute 001", () {
