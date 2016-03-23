@@ -385,7 +385,7 @@ class BigInt implements Comparable<BigInt> {
     //
   }
 
-  int compareWithRightShift(BigInt other, int move, {BigInt result:null}) {
+  int compareWithRightShift(BigInt other, int move) {
     if (this.isNegative != other.isNegative) {
       return (this.isNegative == false ? 1 : -1);
     }
@@ -438,7 +438,6 @@ class BigInt implements Comparable<BigInt> {
   //  print("####### ${mask1} ${mask2} ${moveByte} ${moveBit}");
     int v1a = 0;
     int v1b = 0;
-    bool isJudge = false;
     int ret = 0;
     for (int len = binary.length, i = 0; i < len; i++) {
       if(i-1-moveByte < 0){
@@ -453,20 +452,13 @@ class BigInt implements Comparable<BigInt> {
       }
       v1 = (v1a|v1b);
       v2 = b.binary[i];
-      if(result != null) {
-        result.binary[i] = v1;
-      }
 
       //  print("${i}:${v1} ${v2}");
-      if (isJudge == false && v1 != v2) {
-        isJudge = true;
+      if (v1 != v2) {
         ret = (v1 > v2 ? (a.isNegative == false ? 1 : -1) : (a.isNegative == false ? -1 : 1));
-        if(result == null || ret >0) {
-          return ret;
-        }
+        return ret;
       }
     }
-    isJudge = true;
     return 0;
   }
 
