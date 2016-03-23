@@ -184,8 +184,7 @@ class BigInt implements Comparable<BigInt> {
     int minus = (((this.isNegative == true ? 1 : 0) ^ (other.isNegative == true ? 1 : 0)) == 1 ? -1 : 1);
 
     BigInt a = (this.isNegative == false ? this : -this);
-    BigInt b = (other.isNegative == false?new BigInt.fromBytes(other.binary, other.lengthPerByte)
-        : -(new BigInt.fromBytes(other.binary, other.lengthPerByte)));
+    BigInt b = (other.isNegative == false ? new BigInt.fromBytes(other.binary, other.lengthPerByte) : -(new BigInt.fromBytes(other.binary, other.lengthPerByte)));
     BigInt r = new BigInt.fromLength(lengthPerByte);
 
     int sizeA = a.sizePerByte;
@@ -202,7 +201,7 @@ class BigInt implements Comparable<BigInt> {
       bitSize = 0;
     }
 
-    b.innerLeftShift(move:bitSize);
+    b.innerLeftShift(move: bitSize);
     while (b < a) {
       b.innerLeftShift();
       bitSize++;
@@ -248,13 +247,6 @@ class BigInt implements Comparable<BigInt> {
 
     BigInt a = (this.isNegative == true ? -this : this);
     BigInt b = (other.isNegative == true ? -other : other);
-
-//    int sizeA = a.sizePerByte;
-//    int sizeB = b.sizePerByte;
-//    if(sizeA != sizeB) {
-//      return (sizeA>sizeB?1:-1);
-//    }
-//for (int len = binary.length, i = (len-(1+sizeA)>0?len-(1+sizeA):0); i < len; i++) {
 
     for (int len = binary.length, i = 0; i < len; i++) {
       if (a.binary[i] != b.binary[i]) {
@@ -334,11 +326,11 @@ class BigInt implements Comparable<BigInt> {
     if (move != 1) {
       int j = 0;
       for (j = 0; j < (lengthPerByte - moveByte); j++) {
-    //    print("-A- ${j} ${j-moveByte}");
+        //    print("-A- ${j} ${j-moveByte}");
         this.binary[j] = this.binary[j + moveByte];
       }
       for (int j = lengthPerByte - 1; j >= (lengthPerByte - moveByte); j--) {
-      //  print("-B- ${j}");
+        //  print("-B- ${j}");
         this.binary[j] = 0;
       }
     }
@@ -362,41 +354,82 @@ class BigInt implements Comparable<BigInt> {
     }
   }
 
-  void innerLeftShiftB({int move: 1}) {
-    {
-      int oldCarry = 0, carry = 0;
-      int end = this.sizePerByte + 1;
-      if (end > this.lengthPerByte) {
-        end--;
-      }
-      for (int i = this.lengthPerByte - 1, j = 0; j < end; i--, j++) {
-        oldCarry = carry;
-        carry = ((this.binary[i] & 0x80) == 0x80 ? 1 : 0);
-        this.binary[i] = (this.binary[i] << 1 | oldCarry);
-      }
-      //
-      //if(carry == 1) {
-      // overflow!!
-      //}
-      //
-    }
-  }
-
   void innerRightShift() {
     int oldCarry = 0, carry = 0;
     int i = lengthPerByte - sizePerByte;
-    for (int end = lengthPerByte; i < end; i++) {
+    for (int end = lengthPerByte, tmp = 0; i < end; i++) {
 //      if(carry == 0 && this.binary[i]==0) {
 //        continue;
 //      }
+      tmp = this.binary[i];
       oldCarry = carry;
-      carry = ((this.binary[i] & 0x01) == 0x01 ? 0x80 : 0);
-      this.binary[i] = (this.binary[i] >> 1 | oldCarry);
+      carry = ((tmp & 0x01) == 0x01 ? 0x80 : 0);
+      this.binary[i] = (tmp >> 1 | oldCarry);
     }
     //
     //if(carry == 1) {
     // overflow!!
     //}
     //
+  }
+
+  int compareWithRightShift(BigInt other, int move) {
+    if (this.isNegative != other.isNegative) {
+      return (this.isNegative == false ? 1 : -1);
+    }
+
+    BigInt a = (this.isNegative == true ? -this : this);
+    BigInt b = (other.isNegative == true ? -other : other);
+
+    int moveByte = move ~/ 8;
+    int moveBit = move % 8;
+
+    int v1 = 0;
+    int v2 = 0;
+    int mask1 = 0x00;
+    int mask2 = 0xff;
+    switch (moveBit) {
+      case 0:
+        mask1 = 0x00;
+        mask2 = 0xff;
+        break;
+      case 1:
+        mask1 = 0x7f;
+        mask2 = 0x80;
+        break;
+      case 2:
+        mask1 = 0x3f;
+        mask2 = 0xC0;
+        break;
+      case 3:
+        mask1 = 0x1f;
+        mask2 = 0xE0;
+        break;
+      case 4:
+        mask1 = 0x0F;
+        mask2 = 0xF0;
+        break;
+      case 5:
+        mask1 = 0x07;
+        mask2 = 0xF8;
+        break;
+      case 6:
+        mask1 = 0x03;
+        mask2 = 0xFC;
+        break;
+      case 7:
+        mask1 = 0x01;
+        mask2 = 0xFE;
+        break;
+    }
+
+    for (int len = binary.length, i = 1; i < len; i++) {
+      v1 = a.binary[i];
+      v2 = (b.binary[i + moveByte - 1]&mask1) | (b.binary[i + moveByte] &mask2);
+      if (v1 != v2) {
+        return (v1 > v2 ? (a.isNegative == false ? 1 : -1) : (a.isNegative == false ? -1 : 1));
+      }
+    }
+    return 0;
   }
 }
