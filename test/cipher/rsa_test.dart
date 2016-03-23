@@ -1,4 +1,6 @@
-import 'package:tetorica/cipher/bigint.dart';
+//import 'package:tetorica/cipher/bigint.dart';
+
+import 'package:bignum/bignum.dart';
 import 'package:tetorica/cipher/rsa.dart';
 import 'package:tetorica/cipher/hex.dart';
 import 'package:test/test.dart' as test;
@@ -9,22 +11,19 @@ String testPublicKey =  "0x010001";
 main() {
   test.group("rsa", () {
     test.test("aa",(){
-      BigInt d = new BigInt.fromBytes(Hex.decodeWithNew(testModulus), 300);
-      BigInt pu = new BigInt.fromBytes(Hex.decodeWithNew(testPublicKey), 300);
-      BigInt pr = new BigInt.fromBytes(Hex.decodeWithNew(testPrivateKey), 300);
-      BigInt m = new BigInt.fromBytes([0xbc], 300);
+      BigInteger d = new BigInteger.fromBytes(1, Hex.decodeWithNew(testModulus));
+      BigInteger pu = new BigInteger.fromBytes(1, Hex.decodeWithNew(testPublicKey));
+      BigInteger pr = new BigInteger.fromBytes(1,Hex.decodeWithNew(testPrivateKey));
+      BigInteger m = new BigInteger.fromBytes(1, [0xbc]);
       print(":d: ${d}");
       print(":m: ${m}");
       print(":pu: ${pu}");
-      //
-      //print(":zz: ${
-      //  m.exponentiateWithMod(new BigInt.fromInt(100,32), new BigInt.fromInt(100,32))}");
-      //
-      BigInt c = RSA.compute(m, pu, d,mode:0);
-      print(">>> ${c}");
-      //print(">>> ${RSA.compute(c, pr, d,mode:0)}");
-
+      BigInteger c = RSA.compute(m, pu, d);
+      print(">>> ${c.toRadix(16)}");
+      print(">>> ${RSA.compute(c, pr, d).toRadix(16)}");
+      test.expect(RSA.compute(c, pr, d).toRadix(16), "bc");
     });
+
     test.test("compute 001", () {
       {
         //
@@ -35,23 +34,23 @@ main() {
         // e := (ex 2**16+1)
         // ed % sigma = 1
         int bufferSize = 3*620;
-        BigInt e = new BigInt.fromInt(0x4f, bufferSize);
-        BigInt d = new BigInt.fromInt(0x3fb, bufferSize);
-        BigInt n = new BigInt.fromInt(0xd09, bufferSize);
-        BigInt m1 = new BigInt.fromInt(0x2b0, bufferSize);
+        BigInteger e = new BigInteger.fromBytes(1, [0x4f]);
+        BigInteger d = new BigInteger.fromBytes(1,[0x03,0xfb]);
+        BigInteger n = new BigInteger.fromBytes(1,[0x0d,0x09]);
+        BigInteger m1 = new BigInteger.fromBytes(1, [0x02,0xb0]);
 
         // encrypt
-        BigInt c = RSA.compute(m1, e, n);
-        test.expect("${c}","${new BigInt.fromInt(1570,bufferSize)}");
+        BigInteger c = RSA.compute(m1, e, n);
+        test.expect("${c}","1570");
 
         // decrypt
-        BigInt m2 = RSA.compute(c, d, n);
-        test.expect("${m2}","${new BigInt.fromInt(688,bufferSize)}");
+        BigInteger m2 = RSA.compute(c, d, n);
+        test.expect("${m2}","688");
       }
 
     });
 
-
+/*
     test.test("compute 002", () {
       {
         // p = 3
@@ -81,6 +80,6 @@ main() {
         test.expect("${m2}","${m1}");
       }
     });
-
+*/
   });
 }

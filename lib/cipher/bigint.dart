@@ -4,6 +4,9 @@ import 'dart:typed_data';
 import 'hex.dart';
 
 // uint
+//
+// bignum
+//
 class BigInt implements Comparable<BigInt> {
   int get lengthPerByte => binary.length;
 
@@ -212,12 +215,16 @@ class BigInt implements Comparable<BigInt> {
     int rSize = (bitSize ~/ 8) + 1;
 
     int bRightShiftNum = 0;
+//    BigInt tmp = new BigInt.fromLength(other.lengthPerByte);
     do {
 
      if (b <= a) {
 //    print("${bRightShiftNum} ${b} ${a}");
-//  if(b.compareWithRightShift(a, bRightShiftNum)<=0) {
-        a -= b;
+
+  //if(b.compareWithRightShift(a, bRightShiftNum, result: tmp)<=0) {
+//        a -= tmp;
+//        tmp =new BigInt.fromLength(other.lengthPerByte);
+        a -=b;
         r.binary[(lengthPerByte - rSize) + (bitPosition ~/ 8)] |= (0x80 >> (bitPosition % 8));
       }
       //
@@ -378,7 +385,7 @@ class BigInt implements Comparable<BigInt> {
     //
   }
 
-  int compareWithRightShift(BigInt other, int move) {
+  int compareWithRightShift(BigInt other, int move, {BigInt result:null}) {
     if (this.isNegative != other.isNegative) {
       return (this.isNegative == false ? 1 : -1);
     }
@@ -431,6 +438,8 @@ class BigInt implements Comparable<BigInt> {
   //  print("####### ${mask1} ${mask2} ${moveByte} ${moveBit}");
     int v1a = 0;
     int v1b = 0;
+    bool isJudge = false;
+    int ret = 0;
     for (int len = binary.length, i = 0; i < len; i++) {
       if(i-1-moveByte < 0){
         v1a = 0;
@@ -444,11 +453,86 @@ class BigInt implements Comparable<BigInt> {
       }
       v1 = (v1a|v1b);
       v2 = b.binary[i];
-    //  print("${i}:${v1} ${v2}");
-      if (v1 != v2) {
-        return (v1 > v2 ? (a.isNegative == false ? 1 : -1) : (a.isNegative == false ? -1 : 1));
+      if(result != null) {
+        result.binary[i] = v1;
+      }
+
+      //  print("${i}:${v1} ${v2}");
+      if (isJudge == false && v1 != v2) {
+        isJudge = true;
+        ret = (v1 > v2 ? (a.isNegative == false ? 1 : -1) : (a.isNegative == false ? -1 : 1));
+        if(result == null || ret >0) {
+          return ret;
+        }
       }
     }
+    isJudge = true;
     return 0;
+  }
+
+  BigInt innerRightShifts(int move) {
+    BigInt a = (this.isNegative == true ? -this : this);
+    BigInt r = new BigInt.fromLength(this.lengthPerByte);
+
+    int moveByte = move ~/ 8;
+    int moveBit = move % 8;
+
+    int v1 = 0;
+    int v2 = 0;
+    int mask1 = 0x00;
+    int mask2 = 0xff;
+    switch (moveBit) {
+      case 0:
+        mask1 = 0x00;
+        mask2 = 0xff;
+        break;
+      case 1:
+        mask1 = 0x01;
+        mask2 = 0xFE;
+        break;
+      case 2:
+        mask1 = 0x03;
+        mask2 = 0xFC;
+        break;
+      case 3:
+        mask1 = 0x07;
+        mask2 = 0xF8;
+        break;
+      case 4:
+        mask1 = 0x0F;
+        mask2 = 0xF0;
+        break;
+      case 5:
+        mask1 = 0x1F;
+        mask2 = 0xE0;
+        break;
+      case 6:
+        mask1 = 0x3F;
+        mask2 = 0xC0;
+        break;
+      case 7:
+        mask1 = 0x7F;
+        mask2 = 0x80;
+        break;
+    }
+  //  print("####### ${a} ${b}");
+  //  print("####### ${mask1} ${mask2} ${moveByte} ${moveBit}");
+    int v1a = 0;
+    int v1b = 0;
+    for (int i = binary.length-1; i >=0; i--) {
+      if(i-1-moveByte < 0){
+        v1a = 0;
+      } else {
+        v1a = (a.binary[i-1-moveByte]&mask1)<<(8-moveBit);
+      }
+      if(i-moveByte < 0) {
+        v1b = 0;
+      } else {
+        v1b = ((a.binary[i-moveByte] &mask2)>>moveBit);
+      }
+      v1 = (v1a|v1b);
+      r.binary[i] = v1;
+    }
+    return r;
   }
 }

@@ -105,7 +105,7 @@ main() {
         print("##${t2-t1}");
       }*/
     });
-    /*
+    
     test.test("[left shift]", () {
       {
         BigInt v1 = new BigInt.fromBytes([0x01, 0xff,0xff, 0xff], 8);
@@ -218,6 +218,6 @@ main() {
         }
       }
     });
-*/
+
   });
 }

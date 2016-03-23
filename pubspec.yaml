@@ -12,9 +12,9 @@ dependencies:
   dart_to_js_script_rewriter: '^0.1.0'
   chrome: any
   xml: any
+  bignum: any
 
 dev_dependencies:
   test: any
-  bignum: any
 transformers:
 - dart_to_js_script_rewriter
