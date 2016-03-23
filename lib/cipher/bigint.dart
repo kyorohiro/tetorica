@@ -184,7 +184,10 @@ class BigInt implements Comparable<BigInt> {
     int minus = (((this.isNegative == true ? 1 : 0) ^ (other.isNegative == true ? 1 : 0)) == 1 ? -1 : 1);
 
     BigInt a = (this.isNegative == false ? this : -this);
-    BigInt b = (other.isNegative == false ? new BigInt.fromBytes(other.binary, other.lengthPerByte) : -(new BigInt.fromBytes(other.binary, other.lengthPerByte)));
+    BigInt b = (other.isNegative == false ?
+//      other:
+      new BigInt.fromBytes(other.binary, other.lengthPerByte) :
+     -(new BigInt.fromBytes(other.binary, other.lengthPerByte)));
     BigInt r = new BigInt.fromLength(lengthPerByte);
 
     int sizeA = a.sizePerByte;
@@ -200,9 +203,11 @@ class BigInt implements Comparable<BigInt> {
     if (bitSize < 0) {
       bitSize = 0;
     }
+
     for (int i = 0; i < bitSize; i++) {
       b.innerLeftShift();
     }
+    ///*
     while (b < a) {
       b.innerLeftShift();
       bitSize++;
@@ -222,14 +227,14 @@ class BigInt implements Comparable<BigInt> {
       }
       bitPosition++;
     } while (bitSize-- != 0);
-
+//*/
     if (minus == -1) {
       r.innerMutableMinusOne();
     }
     return r;
   }
 
-  
+
 
   bool operator <(BigInt other) => this.compareTo(other) < 0;
 
@@ -255,6 +260,7 @@ class BigInt implements Comparable<BigInt> {
 //      return (sizeA>sizeB?1:-1);
 //    }
 //for (int len = binary.length, i = (len-(1+sizeA)>0?len-(1+sizeA):0); i < len; i++) {
+
 
     for (int len = binary.length, i = 0; i < len; i++) {
       if (a.binary[i] != b.binary[i]) {
