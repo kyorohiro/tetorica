@@ -54,8 +54,19 @@ class BigInt implements Comparable<BigInt> {
     binary = new Uint8List(length);
   }
 
-  BigInt.fromBytes(List<int> value) {
-    binary = new Uint8List.fromList(value);
+  BigInt.fromBytes(List<int> value, int length) {
+    if (value.length == length) {
+      binary = new Uint8List.fromList(value);
+    } else {
+      binary = new Uint8List(length);
+      for (int i = 0, s = value.length - length; i < length; i++, s++) {
+        if (s >= 0) {
+          binary[i] = value[s];
+        } else {
+          binary[i] = 0;
+        }
+      }
+    }
   }
 
   BigInt.fromBigInt(BigInt value) {
@@ -80,7 +91,7 @@ class BigInt implements Comparable<BigInt> {
   }
 
   BigInt operator -() {
-    return new BigInt.fromBytes(binary)..innerMutableMinusOne();
+    return new BigInt.fromBytes(binary, binary.length)..innerMutableMinusOne();
   }
 
   BigInt operator -(BigInt other) {
@@ -176,7 +187,7 @@ class BigInt implements Comparable<BigInt> {
     int minus = (((this.isNegative == true ? 1 : 0) ^ (other.isNegative == true ? 1 : 0)) == 1 ? -1 : 1);
 
     BigInt a = (this.isNegative == false ? this : -this);
-    BigInt b = (other.isNegative == false ? new BigInt.fromBytes(other.binary) : -(new BigInt.fromBytes(other.binary)));
+    BigInt b = (other.isNegative == false ? new BigInt.fromBytes(other.binary, other.lengthPerByte) : -(new BigInt.fromBytes(other.binary, other.lengthPerByte)));
     BigInt r = new BigInt.fromLength(lengthPerByte);
 
     //
@@ -268,14 +279,14 @@ class BigInt implements Comparable<BigInt> {
     BigInt tmp1 = new BigInt.fromBigInt(this);
     BigInt ret = new BigInt.fromInt(1, this.lengthPerByte);
 
-    int j=0;
+    int j = 0;
     do {
-      i--;j++;
+      i--;
+      j++;
       for (mask = 0x01; mask != 0; mask = ((mask << 1) & 0xff)) {
         if (exp.binary[n - j] & mask != 0) {
           ret = ret * tmp1;
-        } else {
-        }
+        } else {}
         tmp1 = tmp1 * tmp1;
       }
     } while (i != 0);
@@ -291,26 +302,28 @@ class BigInt implements Comparable<BigInt> {
     BigInt tmp1 = new BigInt.fromBigInt(this);
     BigInt ret = new BigInt.fromInt(1, this.lengthPerByte);
 
-    int j=0;
+    int j = 0;
     do {
-      i--;j++;
+      i--;
+      j++;
       for (mask = 0x01; mask != 0; mask = ((mask << 1) & 0xff)) {
         if (exp.binary[n - j] & mask != 0) {
           ret = ret * tmp1;
           ret = ret % m;
         }
         tmp1 = tmp1 * tmp1;
-        tmp1 = tmp1 %m;
+        tmp1 = tmp1 % m;
       }
     } while (i != 0);
 
     return ret;
   }
+
   BigInt exp(BigInt e) {
     BigInt c = new BigInt.fromBigInt(this);
     BigInt counter = new BigInt.fromInt(1, lengthPerByte);
-    while(counter < e) {
-      c = c*this;
+    while (counter < e) {
+      c = c * this;
       counter.innerIncrement();
     }
     return c;

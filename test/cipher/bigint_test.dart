@@ -371,6 +371,15 @@ main() {
       }
     });
 
+    test.test("[document]", () {
+      BigInt a = new BigInt.fromInt(0xffffffffffffffffff, 9);
+      BigInt b = new BigInt.fromBytes(a.binary, 10);
+      BigInt c = new BigInt.fromBytes(a.binary, 8);
+      test.expect("${a}","0x00ffffffffffffffff");
+      test.expect("${b}","0x0000ffffffffffffffff");
+      test.expect("${c}","0xffffffffffffffff");
+    });
+
     test.test("[size]", () {
       BigInt b0 = new BigInt.fromInt(0x0, 4);
       BigInt b1aa = new BigInt.fromInt(2, 4);
@@ -394,11 +403,6 @@ main() {
       test.expect("${(new BigInt.fromInt(0x4,8)).exponentiate(new BigInt.fromInt(4, 8))}", "${(new BigInt.fromInt(0x4*0x4*0x4*0x4,8))}");
       test.expect("${(new BigInt.fromInt(0x5,8)).exponentiate(new BigInt.fromInt(5, 8))}", "${(new BigInt.fromInt(0x5*0x5*0x5*0x5*0x5,8))}");
       test.expect("${(new BigInt.fromInt(0x6,8)).exponentiate(new BigInt.fromInt(6, 8))}", "${(new BigInt.fromInt(0x6*0x6*0x6*0x6*0x6*0x6,8))}");
-//      test.expect(
-//        "${(new BigInt.fromInt(0xff,50)).exponentiat(new BigInt.fromInt(0xa, 50))}",
-//        "${(new BigInt.fromInt(0xff*0xff*0xff*0xff*0xff * 0xff*0xff*0xff*0xff*0xff,50))}"
-//      );
-
       {
         int bufferSize = 3 * 620;
         BigInt m1 = new BigInt.fromInt(0x2b0, bufferSize);

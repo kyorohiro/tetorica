@@ -1,11 +1,18 @@
 import 'package:tetorica/cipher/bigint.dart';
 import 'package:tetorica/cipher/rsa.dart';
+import 'package:tetorica/cipher/hex.dart';
 import 'package:test/test.dart' as test;
+String testModulus = "0xC4F8E9E15DCADF2B96C763D981006A644FFB4415030A16ED1283883340F2AA0E2BE2BE8FA60150B9046965837C3E7D151B7DE237EBB957C20663898250703B3F";
+String testPrivateKey = "0x8a7e79f3fbfea8ebfd18351cb9979136f705b4d9114a06d4aa2fd1943816677a5374661846a30c45b30a024b4d22b15ab323622b2de47ba29115f06ee42c41";
+String testPublicKey =  "0x010001";
 
 main() {
   test.group("rsa", () {
+    test.test("aa",(){
+      Hex.decodeWithNew(testModulus);
+      Hex.decodeWithNew(testPublicKey);
 
-
+    });
     test.test("compute 001", () {
       {
         //
