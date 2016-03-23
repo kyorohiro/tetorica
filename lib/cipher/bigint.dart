@@ -190,8 +190,15 @@ class BigInt implements Comparable<BigInt> {
     BigInt b = (other.isNegative == false ? new BigInt.fromBytes(other.binary, other.lengthPerByte) : -(new BigInt.fromBytes(other.binary, other.lengthPerByte)));
     BigInt r = new BigInt.fromLength(lengthPerByte);
 
+    int sizeA = a.sizePerByte;
+    int sizeB = b.sizePerByte;
+    if(sizeA < sizeB) {
+      // return 0
+      return r;
+    }
+
     //
-    for (int i = 1, len = binary.length; i < len; i++) {
+    for (int len = binary.length, i = (len-sizeA<1?1:len-sizeA); i < len; i++) {
       r.binary[i] = 0x01;
       if (a < b * r) {
         r.binary[i] = 0;
