@@ -462,6 +462,7 @@ class BigInt implements Comparable<BigInt> {
     return 0;
   }
 
+/*
   BigInt innerRightShifts(int move) {
     BigInt a = (this.isNegative == true ? -this : this);
     BigInt r = new BigInt.fromLength(this.lengthPerByte);
@@ -527,4 +528,5 @@ class BigInt implements Comparable<BigInt> {
     }
     return r;
   }
+  */
 }
