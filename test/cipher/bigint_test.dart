@@ -423,7 +423,7 @@ main() {
       }
     });
 
-    test.test("[mod]", () {
+    test.test("[mod A]", () {
       {
         int bufferSize = 10 * 620;
         for(int i=0xff;i<0xffffffff;i=21*i+1){
@@ -438,6 +438,8 @@ main() {
           print("${expect}");
         }
       }
+    });
+    test.test("[mod B]", () {
       {
         int mod = 0xC4F8E9E15DCADF2B96C763D981006A644FFB4415030A16ED1283883340F2AA0E2BE2BE8FA60150B9046965837C3E7D151B7DE237EBB957C20663898250703B3F;
         int public = 0x010001;
@@ -447,8 +449,12 @@ main() {
         //BigInt pr = new BigInt.fromBytes(Hex.decodeWithNew(testPrivateKey), 300);
         BigInt m1 = new BigInt.fromBytes(Hex.decodeWithNew("0xBC"), 300);
         //
+        int a = (new DateTime.now().millisecondsSinceEpoch);
         String expect = "0${(m.pow(message, public) % mod).toInt().toRadixString(16)}";
+        int b = (new DateTime.now().millisecondsSinceEpoch);
         String actual = m1.exponentiateWithMod(pu,d).toString();
+        int c = (new DateTime.now().millisecondsSinceEpoch);
+        print("e:${b-a} a:${c-b}");
         test.expect("${expect}","${actual.substring(actual.length-expect.length)}");
       }
     });
