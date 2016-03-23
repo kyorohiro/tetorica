@@ -184,10 +184,7 @@ class BigInt implements Comparable<BigInt> {
     int minus = (((this.isNegative == true ? 1 : 0) ^ (other.isNegative == true ? 1 : 0)) == 1 ? -1 : 1);
 
     BigInt a = (this.isNegative == false ? this : -this);
-    BigInt b = (other.isNegative == false
-        ?
-//      other:
-        new BigInt.fromBytes(other.binary, other.lengthPerByte)
+    BigInt b = (other.isNegative == false?new BigInt.fromBytes(other.binary, other.lengthPerByte)
         : -(new BigInt.fromBytes(other.binary, other.lengthPerByte)));
     BigInt r = new BigInt.fromLength(lengthPerByte);
 
@@ -206,11 +203,6 @@ class BigInt implements Comparable<BigInt> {
     }
 
     b.innerLeftShift(move:bitSize);
-    //for (int i = 0; i < bitSize; i++) {
-    //  b.innerLeftShift();
-    //}
-
-
     while (b < a) {
       b.innerLeftShift();
       bitSize++;
@@ -394,6 +386,9 @@ class BigInt implements Comparable<BigInt> {
     int oldCarry = 0, carry = 0;
     int i = lengthPerByte - sizePerByte;
     for (int end = lengthPerByte; i < end; i++) {
+      if(carry == 0 && this.binary[i]==0) {
+        continue;
+      }
       oldCarry = carry;
       carry = ((this.binary[i] & 0x01) == 0x01 ? 0x80 : 0);
       this.binary[i] = (this.binary[i] >> 1 | oldCarry);
