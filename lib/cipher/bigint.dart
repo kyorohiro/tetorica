@@ -225,6 +225,8 @@ class BigInt implements Comparable<BigInt> {
         a -= b;
         r.binary[(lengthPerByte - rSize) + (bitPosition ~/ 8)] |= (0x80 >> (bitPosition % 8));
       }
+      //
+      // todo
       if (bitSize != 0) {
         b.innerRightShift();
       }
