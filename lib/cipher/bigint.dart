@@ -184,10 +184,11 @@ class BigInt implements Comparable<BigInt> {
     int minus = (((this.isNegative == true ? 1 : 0) ^ (other.isNegative == true ? 1 : 0)) == 1 ? -1 : 1);
 
     BigInt a = (this.isNegative == false ? this : -this);
-    BigInt b = (other.isNegative == false ?
+    BigInt b = (other.isNegative == false
+        ?
 //      other:
-      new BigInt.fromBytes(other.binary, other.lengthPerByte) :
-     -(new BigInt.fromBytes(other.binary, other.lengthPerByte)));
+        new BigInt.fromBytes(other.binary, other.lengthPerByte)
+        : -(new BigInt.fromBytes(other.binary, other.lengthPerByte)));
     BigInt r = new BigInt.fromLength(lengthPerByte);
 
     int sizeA = a.sizePerByte;
@@ -204,10 +205,12 @@ class BigInt implements Comparable<BigInt> {
       bitSize = 0;
     }
 
-    for (int i = 0; i < bitSize; i++) {
-      b.innerLeftShift();
-    }
-    ///*
+    b.innerLeftShift(move:bitSize);
+    //for (int i = 0; i < bitSize; i++) {
+    //  b.innerLeftShift();
+    //}
+
+
     while (b < a) {
       b.innerLeftShift();
       bitSize++;
@@ -227,14 +230,12 @@ class BigInt implements Comparable<BigInt> {
       }
       bitPosition++;
     } while (bitSize-- != 0);
-//*/
+
     if (minus == -1) {
       r.innerMutableMinusOne();
     }
     return r;
   }
-
-
 
   bool operator <(BigInt other) => this.compareTo(other) < 0;
 
@@ -260,7 +261,6 @@ class BigInt implements Comparable<BigInt> {
 //      return (sizeA>sizeB?1:-1);
 //    }
 //for (int len = binary.length, i = (len-(1+sizeA)>0?len-(1+sizeA):0); i < len; i++) {
-
 
     for (int len = binary.length, i = 0; i < len; i++) {
       if (a.binary[i] != b.binary[i]) {
@@ -333,22 +333,59 @@ class BigInt implements Comparable<BigInt> {
     return ret;
   }
 
-  void innerLeftShift() {
-    int oldCarry = 0, carry = 0;
-    int end = this.sizePerByte + 1;
-    if (end > this.lengthPerByte) {
-      end--;
+  void innerLeftShift({int move: 1}) {
+    int moveByte = move ~/ 8;
+    int moveBit = move % 8;
+    //print("${moveBit} ${moveByte} ${this}");
+    if (move != 1) {
+      int j = 0;
+      for (j = 0; j < (lengthPerByte - moveByte); j++) {
+    //    print("-A- ${j} ${j-moveByte}");
+        this.binary[j] = this.binary[j + moveByte];
+      }
+      for (int j = lengthPerByte - 1; j >= (lengthPerByte - moveByte); j--) {
+      //  print("-B- ${j}");
+        this.binary[j] = 0;
+      }
     }
-    for (int i = this.lengthPerByte - 1, j = 0; j < end; i--, j++) {
-      oldCarry = carry;
-      carry = ((this.binary[i] & 0x80) == 0x80 ? 1 : 0);
-      this.binary[i] = (this.binary[i] << 1 | oldCarry);
+
+    for (int j = 0; j < moveBit; j++) {
+      int oldCarry = 0, carry = 0;
+      int end = this.sizePerByte + 1;
+      if (end > this.lengthPerByte) {
+        end--;
+      }
+      for (int i = this.lengthPerByte - 1, j = 0; j < end; i--, j++) {
+        oldCarry = carry;
+        carry = ((this.binary[i] & 0x80) == 0x80 ? 1 : 0);
+        this.binary[i] = (this.binary[i] << 1 | oldCarry);
+      }
+      //
+      //if(carry == 1) {
+      // overflow!!
+      //}
+      //
     }
-    //
-    //if(carry == 1) {
-    // overflow!!
-    //}
-    //
+  }
+
+  void innerLeftShiftB({int move: 1}) {
+    {
+      int oldCarry = 0, carry = 0;
+      int end = this.sizePerByte + 1;
+      if (end > this.lengthPerByte) {
+        end--;
+      }
+      for (int i = this.lengthPerByte - 1, j = 0; j < end; i--, j++) {
+        oldCarry = carry;
+        carry = ((this.binary[i] & 0x80) == 0x80 ? 1 : 0);
+        this.binary[i] = (this.binary[i] << 1 | oldCarry);
+      }
+      //
+      //if(carry == 1) {
+      // overflow!!
+      //}
+      //
+    }
   }
 
   void innerRightShift() {

@@ -474,6 +474,9 @@ main() {
       test.expect("${v1}", "${v2}");
     });
 
+
+
+
     test.test("[right shift]", () {
       {
         BigInt v1 = new BigInt.fromBytes([0xff, 0xff, 0xff, 0x00], 8);
@@ -588,6 +591,18 @@ main() {
           int f = (new DateTime.now().millisecondsSinceEpoch);
           print("TIME3C: ${f-e} ");
         }
+      }
+    });
+
+    test.test("[left shift]", () {
+      for (int j = 0; j < 32; j++) {
+        BigInt v1 = new BigInt.fromBytes([0xff, 0xff, 0xff], 8);
+        BigInt v2 = new BigInt.fromBytes([0xff, 0xff, 0xff], 8);
+        v1.innerLeftShift(move: j);
+        for (int i = 0; i < j; i++) {
+          v2.innerLeftShift();
+        }
+        test.expect("${v1}", "${v2}");
       }
     });
   });
