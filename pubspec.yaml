@@ -15,6 +15,6 @@ dependencies:
 
 dev_dependencies:
   test: any
-
+  bignum: any
 transformers:
 - dart_to_js_script_rewriter

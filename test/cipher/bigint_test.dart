@@ -5,8 +5,12 @@ import 'dart:convert';
 import 'package:test/test.dart' as test;
 import 'dart:typed_data';
 import 'dart:math' as m;
+import 'package:bignum/bignum.dart' as big;
+import 'package:bignum/src/big_integer_v8.dart' as big;
+
 main() {
   test.group("bigint", () {
+
     test.test("[+]", () {
       {
         BigInt v1 = new BigInt.fromInt(0xf, 4);
@@ -238,6 +242,7 @@ main() {
     });
 
     test.test("[~/] B", () {
+
       {
         BigInt v1 = new BigInt.fromInt(0x8, 4);
         BigInt v2 = new BigInt.fromInt(0x2, 4);
@@ -282,15 +287,36 @@ main() {
           test.expect("${v1~/v2}", "${v3}");
         }
         num t2 = new DateTime.now().millisecondsSinceEpoch;
-        print("##${t2-t1}");
+        print("#time1# = ${t2-t1}");
       }
+      {
+        BigInt v1 = new BigInt.fromInt(0xfffff, 8);
+        BigInt v2 = new BigInt.fromInt(0x3, 8);
+        BigInt v3 = new BigInt.fromInt(0x55555, 8);
+        num t1 = new DateTime.now().millisecondsSinceEpoch;
+        for (int i = 0; i < 0x40; i++) {
+          test.expect("${v1.oldDiv(v2)}", "${v3}");
+        }
+        num t2 = new DateTime.now().millisecondsSinceEpoch;
+        print("#time2#= ${t2-t1}");
+      }
+
+      {
+        BigInt i = new BigInt.fromBytes(
+          Hex.decodeWithNew("0x00000000000000018000000000000000"),16);
+          i.innerRightShift();
+          print(">>${i}");
+          i.innerRightShift();
+          print(">>${i}");
+      }
+/*
       {
         BigInt v1 = new BigInt.fromInt(0xffffffffffffffff, 9);
         BigInt v2 = new BigInt.fromInt(0x3, 9);
         BigInt v3 = new BigInt.fromInt(0x5555555555555555, 9);
-        print("### ${v3} : ${v1~/v2}");
-        test.expect("${v1~/v2}", "${v3}");
-      }
+        print("#Z1## ${v3} : ${v1.oldDiv(v2)}");
+        test.expect("${v1.oldDiv(v2)}", "${v3}");
+      }*/
       {
         BigInt v1 = new BigInt.fromInt(-0xffffffffffffffff, 9);
         BigInt v2 = new BigInt.fromInt(0x3, 9);
@@ -298,6 +324,7 @@ main() {
         print("### ${v3} : ${v1~/v2}");
         test.expect("${v1~/v2}", "${v3}");
       }
+
       {
         // todo
         BigInt v1 = new BigInt.fromInt(256, 4);
@@ -329,19 +356,6 @@ main() {
         num t2 = new DateTime.now().millisecondsSinceEpoch;
         print("##${t2-t1}");
       }
-/*
-      {
-        aaa.BigInt v1 = new aaa.BigInt(Hex.decodeWithNew("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"), true);
-        aaa.BigInt v2 = new aaa.BigInt(Hex.decodeWithNew("0x03"), true);
-        aaa.BigInt v3 = new aaa.BigInt(Hex.decodeWithNew("0x55555555555555555555555555555555555555555555555555555555555555555555555555555555"), true);
-        num t1 = new DateTime.now().millisecondsSinceEpoch;
-        for (int i = 0; i < 0xff; i++) {
-          v1~/v2;
-          //test.expect("${v1~/v2}", "${v3}");
-        }
-        num t2 = new DateTime.now().millisecondsSinceEpoch;
-        print("##AA#${t2-t1}");
-      }*/
     });
     test.test("[%] B", () {
       test.expect("${new BigInt.fromInt(0x5, 4)%new BigInt.fromInt(0x2, 4)}", "${new BigInt.fromInt(0x1, 4)}");
@@ -375,9 +389,9 @@ main() {
       BigInt a = new BigInt.fromInt(0xffffffffffffffffff, 9);
       BigInt b = new BigInt.fromBytes(a.binary, 10);
       BigInt c = new BigInt.fromBytes(a.binary, 8);
-      test.expect("${a}","0x00ffffffffffffffff");
-      test.expect("${b}","0x0000ffffffffffffffff");
-      test.expect("${c}","0xffffffffffffffff");
+      test.expect("${a}", "0x00ffffffffffffffff");
+      test.expect("${b}", "0x0000ffffffffffffffff");
+      test.expect("${c}", "0xffffffffffffffff");
     });
 
     test.test("[size]", () {
@@ -412,13 +426,13 @@ main() {
       }
       {
         int bufferSize = 10 * 620;
-        for(int i=0xff;i<0xffff;i=2*i+1){
+        for (int i = 0xff; i < 0xffff; i = 2 * i + 1) {
           BigInt m1 = new BigInt.fromInt(2, bufferSize);
           BigInt e = new BigInt.fromInt(i, bufferSize);
           String expect = "0${(m.pow(2, i)).toInt().toRadixString(16)}";
           String actual = m1.exponentiate(e).toString();
-          actual.substring(actual.length-expect.length);
-          test.expect(actual.substring(actual.length-expect.length), expect);
+          actual.substring(actual.length - expect.length);
+          test.expect(actual.substring(actual.length - expect.length), expect);
         }
       }
     });
@@ -426,15 +440,15 @@ main() {
     test.test("[mod A]", () {
       {
         int bufferSize = 10 * 620;
-        for(int i=0xff;i<0xffffffff;i=21*i+1){
+        for (int i = 0xff; i < 0xffffffff; i = 21 * i + 1) {
           print("[i== ${i}]");
           BigInt m1 = new BigInt.fromInt(2, bufferSize);
           BigInt e = new BigInt.fromInt(i, bufferSize);
           BigInt mod = new BigInt.fromInt(3, bufferSize);
           String expect = "0${(m.pow(2, i)%3).toInt().toRadixString(16)}";
           String actual = m1.exponentiateWithMod(e, mod).toString();
-          actual.substring(actual.length-expect.length);
-          test.expect(actual.substring(actual.length-expect.length), expect);
+          actual.substring(actual.length - expect.length);
+          test.expect(actual.substring(actual.length - expect.length), expect);
           print("${expect}");
         }
       }
@@ -452,10 +466,92 @@ main() {
         int a = (new DateTime.now().millisecondsSinceEpoch);
         String expect = "0${(m.pow(message, public) % mod).toInt().toRadixString(16)}";
         int b = (new DateTime.now().millisecondsSinceEpoch);
-        String actual = m1.exponentiateWithMod(pu,d).toString();
+        String actual = m1.exponentiateWithMod(pu, d).toString();
         int c = (new DateTime.now().millisecondsSinceEpoch);
         print("e:${b-a} a:${c-b}");
-        test.expect("${expect}","${actual.substring(actual.length-expect.length)}");
+        test.expect("${expect}", "${actual.substring(actual.length-expect.length)}");
+      }
+    });
+
+
+    test.test("[mod C]", () {
+      {
+        int mod = 0xC4F8E9E15DCADF2B96C763D981006A644FFB4415030A16ED1283883340F2AA0E2BE2BE8FA60150B9046965837C3E7D151B7DE237EBB957C20663898250703B3F;
+        int public = 0x8a7e79f3fbfea8ebfd18351cb9979136f705b4d9114a06d4aa2fd1943816677a5374661846a30c45b30a024b4d22b15ab323622b2de47ba29115f06ee42c41;
+        int message = 0xbc;
+        BigInt d = new BigInt.fromBytes(Hex.decodeWithNew("0xC4F8E9E15DCADF2B96C763D981006A644FFB4415030A16ED1283883340F2AA0E2BE2BE8FA60150B9046965837C3E7D151B7DE237EBB957C20663898250703B3F"), 300);
+        BigInt pu = new BigInt.fromBytes(Hex.decodeWithNew("0x8a7e79f3fbfea8ebfd18351cb9979136f705b4d9114a06d4aa2fd1943816677a5374661846a30c45b30a024b4d22b15ab323622b2de47ba29115f06ee42c41"), 300);
+        //BigInt pr = new BigInt.fromBytes(Hex.decodeWithNew(testPrivateKey), 300);
+        BigInt m1 = new BigInt.fromBytes(Hex.decodeWithNew("0xBC"), 300);
+        //
+//        int a = (new DateTime.now().millisecondsSinceEpoch);
+//        String expect = "0${(m.pow(message, public) % mod).toInt().toRadixString(16)}";
+
+        int b = (new DateTime.now().millisecondsSinceEpoch);
+        String actual = m1.exponentiateWithMod(pu,d).toString();
+        int c = (new DateTime.now().millisecondsSinceEpoch);
+        print("e:${c-b} ${actual}");
+//        test.expect("${expect}","${actual.substring(actual.length-expect.length)}");
+      }
+    });
+
+    test.test("[mod F bignum]", () {
+      {
+        String mod = "0xC4F8E9E15DCADF2B96C763D981006A644FFB4415030A16ED1283883340F2AA0E2BE2BE8FA60150B9046965837C3E7D151B7DE237EBB957C20663898250703B3F";
+        String pub = "0x8a7e79f3fbfea8ebfd18351cb9979136f705b4d9114a06d4aa2fd1943816677a5374661846a30c45b30a024b4d22b15ab323622b2de47ba29115f06ee42c41";
+        big.BigInteger d = new big.BigIntegerV8.fromBytes(1, Hex.decodeWithNew(mod));
+        big.BigInteger pu = new big.BigIntegerV8.fromBytes(1, Hex.decodeWithNew(pub));
+        big.BigInteger m1 = new big.BigIntegerV8.fromBytes(1, [0xbc]);
+
+        int b = (new DateTime.now().millisecondsSinceEpoch);
+        big.BigInteger r = m1.modPow(m1, d);
+        int c = (new DateTime.now().millisecondsSinceEpoch);
+        print("e:${c-b} ${r}");
+//        test.expect("${expect}","${actual.substring(actual.length-expect.length)}");
+      }
+    });
+
+    test.test("[left shift]", () {
+      BigInt v1 = new BigInt.fromBytes([0xff, 0xff, 0xff], 8);
+      BigInt v2 = new BigInt.fromBytes([0x01, 0xff, 0xff, 0xfe], 8);
+      v1.innerLeftShift();
+      test.expect("${v1}", "${v2}");
+    });
+
+    test.test("[right shift]", () {
+      {
+        BigInt v1 = new BigInt.fromBytes([0xff, 0xff, 0xff, 0x00], 8);
+        BigInt v2 = new BigInt.fromBytes([0x7f, 0xff, 0xff, 0x80], 8);
+        v1.innerRightShift();
+        test.expect("${v1}", "${v2}");
+      }
+      {
+        BigInt v1 = new BigInt.fromBytes([0x01, 0x00], 8);
+        BigInt v2 = new BigInt.fromBytes([0x80], 8);
+        BigInt v3 = new BigInt.fromBytes([0x40], 8);
+        BigInt v4 = new BigInt.fromBytes([0x20], 8);
+        BigInt v5 = new BigInt.fromBytes([0x10], 8);
+
+        v1.innerRightShift();
+        test.expect("${v1}", "${v2}");
+        v1.innerRightShift();
+        test.expect("${v1}", "${v3}");
+        v1.innerRightShift();
+        test.expect("${v1}", "${v4}");
+        v1.innerRightShift();
+        test.expect("${v1}", "${v5}");
+      }
+    });
+
+    test.test("[/]", () {
+      print("----");
+      for (int i = 1; i < 0xffff; i = i * 5 + 3) {
+        for (int j = 1; j < 0xffff; j = j * 3 + 1) {
+          int i = 0x1001;
+          BigInt v1 = new BigInt.fromInt(i, 8);
+          BigInt v2 = new BigInt.fromInt(j, 8);
+          test.expect("${v1~/v2}", "${new BigInt.fromInt(i~/j, 8)}");
+        }
       }
     });
 

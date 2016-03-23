@@ -179,8 +179,65 @@ class BigInt implements Comparable<BigInt> {
     BigInt b = (other.isNegative == true ? -other : other);
     return (other.isNegative == false ? a - (a ~/ b) * b : -(a - (a ~/ b) * b));
   }
-
   BigInt operator ~/(BigInt other) {
+//  BigInt newDiv(BigInt other) {
+    int minus = (((this.isNegative == true ? 1 : 0) ^ (other.isNegative == true ? 1 : 0)) == 1 ? -1 : 1);
+
+    BigInt a = (this.isNegative == false ? this : -this);
+    BigInt b = (other.isNegative == false ? new BigInt.fromBytes(other.binary, other.lengthPerByte) : -(new BigInt.fromBytes(other.binary, other.lengthPerByte)));
+    BigInt r = new BigInt.fromLength(lengthPerByte);
+
+    int sizeA = a.sizePerByte;
+    int sizeB = b.sizePerByte;
+    if(sizeA < sizeB) {
+      // return 0
+      return r;
+    }
+//
+//    print("A:${a} ${b}");
+    // a dividend, b divisor
+    int bitSize = 0;
+    int bitPosition = 0;
+    while(b < a) {
+      b.innerLeftShift();
+      bitSize++;
+//      print("ams:${bitSize} ${a} ${b}");
+//      if(bitSize > 100) {
+//        throw {};
+//      }
+    }
+//    print("B:${a} ${b}");
+//    bitSize--;
+    bitPosition = 8-(bitSize%8) -1;
+    int rSize = ( bitSize ~/ 8 ) + 1;
+//    bitSize--;
+    //print("#[bitSize]#${bitSize} ${bitPosition} ${rSize}");
+    //for(;bitSize>=0;bitSize--){
+    do{
+    // print("a:${a} ${b} ${b.compareTo(a)}");
+
+      if( b<= a) {
+//        print("#a-=b# ${a-b} ${a} ${b}");
+        a -=b;
+//        print("-===${bitPosition}==${(0x80 >> (bitPosition%8))}");
+        //print("index --> ${(lengthPerByte-rSize)+(bitPosition~/8)}");
+        r.binary[(lengthPerByte-rSize)+(bitPosition~/8)] |=(0x80 >> (bitPosition%8));
+      }
+      if(bitSize != 0) {
+    //    print("#right[bef] ${b}");
+        b.innerRightShift();
+    //    print("#right[aft] ${b}");
+      }
+      bitPosition++;
+
+  } while(bitSize-- != 0);
+    if (minus == -1) {
+      r.innerMutableMinusOne();
+    }
+    return r;
+  }
+  BigInt oldDiv(BigInt other) {
+//  BigInt operator ~/(BigInt other) {
     if (this.lengthPerByte != other.lengthPerByte) {
       throw {"message": "need same length ${lengthPerByte} ${other.lengthPerByte}"};
     }
@@ -320,20 +377,45 @@ class BigInt implements Comparable<BigInt> {
         }
         tmp1 = tmp1 * tmp1;
         tmp1 = tmp1 % m;
-        print(">${tmp1.sizePerByte} ${ret.sizePerByte}");
+        ////print(">${tmp1.sizePerByte} ${ret.sizePerByte}");
       }
     } while (i != 0);
 
     return ret;
   }
 
-  BigInt exp(BigInt e) {
-    BigInt c = new BigInt.fromBigInt(this);
-    BigInt counter = new BigInt.fromInt(1, lengthPerByte);
-    while (counter < e) {
-      c = c * this;
-      counter.innerIncrement();
+  void innerLeftShift() {
+    int oldCarry=0,carry=0;
+    int end = this.sizePerByte+1;
+    if(end > this.lengthPerByte) {
+      end--;
     }
-    return c;
+    for(int i=this.lengthPerByte-1,j=0;j<end;i--,j++) {
+      oldCarry = carry;
+      carry = ((this.binary[i] & 0x80) == 0x80?1:0);
+      this.binary[i] = (this.binary[i] <<1 | oldCarry);
+    }
+    //
+    //if(carry == 1) {
+    // overflow!!
+    //}
+    //
+  }
+
+  void innerRightShift() {
+    int oldCarry=0,carry=0;
+    int i=lengthPerByte-sizePerByte; //(sizePerByte-2>=0?sizePerByte-2:0);
+    //print("${sizePerByte}");
+    for(int end=lengthPerByte;i<end;i++) {
+//      print("${i}");
+      oldCarry = carry;
+      carry = ((this.binary[i] & 0x01) == 0x01?0x80:0);
+      this.binary[i] = (this.binary[i] >>1 | oldCarry);
+    }
+    //
+    //if(carry == 1) {
+    // overflow!!
+    //}
+    //
   }
 }

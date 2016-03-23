@@ -17,6 +17,12 @@ packages:
     description: barback
     source: hosted
     version: "0.15.2+7"
+  bignum:
+    description:
+      name: bignum
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   boolean_selector:
     description: boolean_selector
     source: hosted
@@ -49,6 +55,12 @@ packages:
     description: dart_to_js_script_rewriter
     source: hosted
     version: "0.1.0+4"
+  fixnum:
+    description:
+      name: fixnum
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.2"
   glob:
     description: glob
     source: hosted
