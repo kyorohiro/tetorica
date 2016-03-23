@@ -295,14 +295,6 @@ main() {
         i.innerRightShift();
         print(">>${i}");
       }
-/*
-      {
-        BigInt v1 = new BigInt.fromInt(0xffffffffffffffff, 9);
-        BigInt v2 = new BigInt.fromInt(0x3, 9);
-        BigInt v3 = new BigInt.fromInt(0x5555555555555555, 9);
-        print("#Z1## ${v3} : ${v1.oldDiv(v2)}");
-        test.expect("${v1.oldDiv(v2)}", "${v3}");
-      }*/
       {
         BigInt v1 = new BigInt.fromInt(-0xffffffffffffffff, 9);
         BigInt v2 = new BigInt.fromInt(0x3, 9);
@@ -549,6 +541,14 @@ main() {
         num t7 = new DateTime.now().millisecondsSinceEpoch;
         print("TIME2B: ${t7-t6}");
       }
+      {
+        num t6 = new DateTime.now().millisecondsSinceEpoch;
+        for (int i = 0; i < 0xfff; i++) {
+          v1 + v2;
+        }
+        num t7 = new DateTime.now().millisecondsSinceEpoch;
+        print("TIME2C: ${t7-t6}");
+      }
     });
     test.test("", () {
       {
@@ -578,6 +578,15 @@ main() {
           }
           int f = (new DateTime.now().millisecondsSinceEpoch);
           print("TIME3B: ${f-e} ");
+        }
+
+        {
+          int e = (new DateTime.now().millisecondsSinceEpoch);
+          for (int i = 0; i < 0xfff; i++) {
+            d.add(pu);
+          }
+          int f = (new DateTime.now().millisecondsSinceEpoch);
+          print("TIME3C: ${f-e} ");
         }
       }
     });
