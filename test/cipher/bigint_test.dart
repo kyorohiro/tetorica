@@ -438,6 +438,19 @@ main() {
           print("${expect}");
         }
       }
+      {
+        int mod = 0xC4F8E9E15DCADF2B96C763D981006A644FFB4415030A16ED1283883340F2AA0E2BE2BE8FA60150B9046965837C3E7D151B7DE237EBB957C20663898250703B3F;
+        int public = 0x010001;
+        int message = 0xbc;
+        BigInt d = new BigInt.fromBytes(Hex.decodeWithNew("0xC4F8E9E15DCADF2B96C763D981006A644FFB4415030A16ED1283883340F2AA0E2BE2BE8FA60150B9046965837C3E7D151B7DE237EBB957C20663898250703B3F"), 300);
+        BigInt pu = new BigInt.fromBytes(Hex.decodeWithNew("0x010001"), 300);
+        //BigInt pr = new BigInt.fromBytes(Hex.decodeWithNew(testPrivateKey), 300);
+        BigInt m1 = new BigInt.fromBytes(Hex.decodeWithNew("0xBC"), 300);
+        //
+        String expect = "0${(m.pow(message, public) % mod).toInt().toRadixString(16)}";
+        String actual = m1.exponentiateWithMod(pu,d).toString();
+        test.expect("${expect}","${actual.substring(actual.length-expect.length)}");
+      }
     });
 
   });
