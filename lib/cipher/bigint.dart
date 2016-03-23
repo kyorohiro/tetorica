@@ -386,9 +386,9 @@ class BigInt implements Comparable<BigInt> {
     int oldCarry = 0, carry = 0;
     int i = lengthPerByte - sizePerByte;
     for (int end = lengthPerByte; i < end; i++) {
-      if(carry == 0 && this.binary[i]==0) {
-        continue;
-      }
+//      if(carry == 0 && this.binary[i]==0) {
+//        continue;
+//      }
       oldCarry = carry;
       carry = ((this.binary[i] & 0x01) == 0x01 ? 0x80 : 0);
       this.binary[i] = (this.binary[i] >> 1 | oldCarry);
