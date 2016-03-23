@@ -477,17 +477,12 @@ main() {
         int message = 0xbc;
         BigInt d = new BigInt.fromBytes(Hex.decodeWithNew("0xC4F8E9E15DCADF2B96C763D981006A644FFB4415030A16ED1283883340F2AA0E2BE2BE8FA60150B9046965837C3E7D151B7DE237EBB957C20663898250703B3F"), 300);
         BigInt pu = new BigInt.fromBytes(Hex.decodeWithNew("0x8a7e79f3fbfea8ebfd18351cb9979136f705b4d9114a06d4aa2fd1943816677a5374661846a30c45b30a024b4d22b15ab323622b2de47ba29115f06ee42c41"), 300);
-        //BigInt pr = new BigInt.fromBytes(Hex.decodeWithNew(testPrivateKey), 300);
         BigInt m1 = new BigInt.fromBytes(Hex.decodeWithNew("0xBC"), 300);
-        //
-//        int a = (new DateTime.now().millisecondsSinceEpoch);
-//        String expect = "0${(m.pow(message, public) % mod).toInt().toRadixString(16)}";
 
         int b = (new DateTime.now().millisecondsSinceEpoch);
         String actual = m1.exponentiateWithMod(pu, d).toString();
         int c = (new DateTime.now().millisecondsSinceEpoch);
         print("e:${c-b} ${actual}");
-//        test.expect("${expect}","${actual.substring(actual.length-expect.length)}");
       }
     });
 
@@ -543,7 +538,7 @@ main() {
         BigInt v1 = new BigInt.fromInt(0xffffffffffffffff, 9);
         BigInt v2 = new BigInt.fromInt(0x3, 9);
         BigInt v3 = new BigInt.fromInt(0x5555555555555555, 9);
-        print("#Z1## ${v3} : ${v1.oldDiv(v2)}");
+        //print("#Z1## ${v3} : ${v1.oldDiv(v2)}");
         test.expect("${v1.oldDiv(v2)}", "${v3}");
       }
       num t2 = new DateTime.now().millisecondsSinceEpoch;
@@ -551,7 +546,7 @@ main() {
         BigInt v1 = new BigInt.fromInt(-0xffffffffffffffff, 9);
         BigInt v2 = new BigInt.fromInt(0x3, 9);
         BigInt v3 = new BigInt.fromInt(-0x5555555555555555, 9);
-        print("### ${v3} : ${v1~/v2}");
+        //print("### ${v3} : ${v1~/v2}");
         test.expect("${v1~/v2}", "${v3}");
       }
       num t3 = new DateTime.now().millisecondsSinceEpoch;
