@@ -229,62 +229,7 @@ class BigInt implements Comparable<BigInt> {
     return r;
   }
 
-  BigInt oldDiv(BigInt other) {
-    if (this.lengthPerByte != other.lengthPerByte) {
-      throw {"message": "need same length ${lengthPerByte} ${other.lengthPerByte}"};
-    }
-    int minus = (((this.isNegative == true ? 1 : 0) ^ (other.isNegative == true ? 1 : 0)) == 1 ? -1 : 1);
-
-    BigInt a = (this.isNegative == false ? this : -this);
-    BigInt b = (other.isNegative == false ? new BigInt.fromBytes(other.binary, other.lengthPerByte) : -(new BigInt.fromBytes(other.binary, other.lengthPerByte)));
-    BigInt r = new BigInt.fromLength(lengthPerByte);
-
-    int sizeA = a.sizePerByte;
-    int sizeB = b.sizePerByte;
-    if (sizeA < sizeB) {
-      // return 0
-      return r;
-    }
-
-    //
-    for (int len = binary.length, i = (len - sizeA < 1 ? 1 : len - sizeA); i < len; i++) {
-      r.binary[i] = 0x01;
-      if (a < b * r) {
-        r.binary[i] = 0;
-        continue;
-      }
-      r.binary[i] = (i == 0 ? 0x7f : 0xff);
-      if (a >= b * r) {
-        continue;
-      }
-      r.binary[i] = 0x01;
-      int pe = (i == 0 ? 0x7f : 0xff);
-      int ps = 1;
-      for (; ps != pe;) {
-        var tt = (pe - ps) ~/ 2 + ps;
-        if (ps + 1 == pe) {
-          r.binary[i] = ps;
-          break;
-        }
-        r.binary[i] = tt;
-        //
-        var t = b * r; //
-        int c = a.compareTo(t);
-        if (c < 0) {
-          pe = tt;
-        } else if (c == 0) {
-          break;
-        } else {
-          ps = tt;
-        }
-      }
-    }
-
-    if (minus == -1) {
-      r.innerMutableMinusOne();
-    }
-    return r;
-  }
+  
 
   bool operator <(BigInt other) => this.compareTo(other) < 0;
 

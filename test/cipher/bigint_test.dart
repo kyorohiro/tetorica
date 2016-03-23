@@ -287,17 +287,6 @@ main() {
         num t2 = new DateTime.now().millisecondsSinceEpoch;
         print("#time1# = ${t2-t1}");
       }
-      {
-        BigInt v1 = new BigInt.fromInt(0xfffff, 8);
-        BigInt v2 = new BigInt.fromInt(0x3, 8);
-        BigInt v3 = new BigInt.fromInt(0x55555, 8);
-        num t1 = new DateTime.now().millisecondsSinceEpoch;
-        for (int i = 0; i < 0x40; i++) {
-          test.expect("${v1.oldDiv(v2)}", "${v3}");
-        }
-        num t2 = new DateTime.now().millisecondsSinceEpoch;
-        print("#time2#= ${t2-t1}");
-      }
 
       {
         BigInt i = new BigInt.fromBytes(Hex.decodeWithNew("0x00000000000000018000000000000000"), 16);
@@ -486,8 +475,6 @@ main() {
       }
     });
 
-
-
     test.test("[left shift]", () {
       BigInt v1 = new BigInt.fromBytes([0xff, 0xff, 0xff], 8);
       BigInt v2 = new BigInt.fromBytes([0x01, 0xff, 0xff, 0xfe], 8);
@@ -532,52 +519,67 @@ main() {
       }
     });
 
+
     test.test("", () {
-      num t1 = new DateTime.now().millisecondsSinceEpoch;
-      for (int i = 0; i < 100; i++) {
-        BigInt v1 = new BigInt.fromInt(0xffffffffffffffff, 9);
-        BigInt v2 = new BigInt.fromInt(0x3, 9);
-        BigInt v3 = new BigInt.fromInt(0x5555555555555555, 9);
-        //print("#Z1## ${v3} : ${v1.oldDiv(v2)}");
-        test.expect("${v1.oldDiv(v2)}", "${v3}");
-      }
-      num t2 = new DateTime.now().millisecondsSinceEpoch;
-      for (int i = 0; i < 100; i++) {
-        BigInt v1 = new BigInt.fromInt(-0xffffffffffffffff, 9);
-        BigInt v2 = new BigInt.fromInt(0x3, 9);
-        BigInt v3 = new BigInt.fromInt(-0x5555555555555555, 9);
-        //print("### ${v3} : ${v1~/v2}");
-        test.expect("${v1~/v2}", "${v3}");
-      }
-      num t3 = new DateTime.now().millisecondsSinceEpoch;
-      print("TIME: ${t2-t1} ${t3-t2}");
-
-
-
       String mod = "0xC4F8E9E15DCADF2B96C763D981006A644FFB4415030A16ED1283883340F2AA0E2BE2BE8FA60150B9046965837C3E7D151B7DE237EBB957C20663898250703B3F";
       String pub = "0x8a7e79f3fbfea8ebfd18351cb9979136f705b4d9114a06d4aa2fd1943816677a5374661846a30c45b30a024b4d22b15ab323622b2de47ba29115f06ee42c41";
       BigInt v1 = new BigInt.fromBytes(Hex.decodeWithNew(mod), 260);
       BigInt v2 = new BigInt.fromBytes(Hex.decodeWithNew(pub), 260);
       BigInt m2 = new BigInt.fromInt(0xbc, 260);
+
       num t4 = new DateTime.now().millisecondsSinceEpoch;
       m2.exponentiateWithMod(v2, v1);
       num t5 = new DateTime.now().millisecondsSinceEpoch;
       print("TIME2: ${t5-t4}");
 
+      {
+        num t6 = new DateTime.now().millisecondsSinceEpoch;
+        for (int i = 0; i < 0xfff; i++) {
+          v1 ~/ m2;
+        }
+        num t7 = new DateTime.now().millisecondsSinceEpoch;
+        print("TIME2A: ${t7-t6}");
+      }
+
+      {
+        num t6 = new DateTime.now().millisecondsSinceEpoch;
+        for (int i = 0; i < 0xfff; i++) {
+          v1 * m2;
+        }
+        num t7 = new DateTime.now().millisecondsSinceEpoch;
+        print("TIME2B: ${t7-t6}");
+      }
     });
     test.test("", () {
-    {
-      String mod = "0xC4F8E9E15DCADF2B96C763D981006A644FFB4415030A16ED1283883340F2AA0E2BE2BE8FA60150B9046965837C3E7D151B7DE237EBB957C20663898250703B3F";
-      String pub = "0x8a7e79f3fbfea8ebfd18351cb9979136f705b4d9114a06d4aa2fd1943816677a5374661846a30c45b30a024b4d22b15ab323622b2de47ba29115f06ee42c41";
-      big.BigInteger d = new big.BigIntegerV8.fromBytes(1, Hex.decodeWithNew(mod));
-      big.BigInteger pu = new big.BigIntegerV8.fromBytes(1, Hex.decodeWithNew(pub));
-      big.BigInteger m1 = new big.BigIntegerV8.fromBytes(1, [0xbc]);
+      {
+        String mod = "0xC4F8E9E15DCADF2B96C763D981006A644FFB4415030A16ED1283883340F2AA0E2BE2BE8FA60150B9046965837C3E7D151B7DE237EBB957C20663898250703B3F";
+        String pub = "0x8a7e79f3fbfea8ebfd18351cb9979136f705b4d9114a06d4aa2fd1943816677a5374661846a30c45b30a024b4d22b15ab323622b2de47ba29115f06ee42c41";
+        big.BigInteger d = new big.BigIntegerV8.fromBytes(1, Hex.decodeWithNew(mod));
+        big.BigInteger pu = new big.BigIntegerV8.fromBytes(1, Hex.decodeWithNew(pub));
+        big.BigInteger m1 = new big.BigIntegerV8.fromBytes(1, [0xbc]);
 
-      int b = (new DateTime.now().millisecondsSinceEpoch);
-      big.BigInteger r = m1.modPow(m1, d);
-      int c = (new DateTime.now().millisecondsSinceEpoch);
-      print("TIME3: ${c-b} ");
-//        test.expect("${expect}","${actual.substring(actual.length-expect.length)}");
-    }});
+        int b = (new DateTime.now().millisecondsSinceEpoch);
+        m1.modPow(m1, d);
+        int c = (new DateTime.now().millisecondsSinceEpoch);
+        print("TIME3: ${c-b} ");
+        {
+          int e = (new DateTime.now().millisecondsSinceEpoch);
+          for (int i = 0; i < 0xfff; i++) {
+            d.divide(m1);
+          }
+          int f = (new DateTime.now().millisecondsSinceEpoch);
+          print("TIME3A: ${f-e} ");
+        }
+
+        {
+          int e = (new DateTime.now().millisecondsSinceEpoch);
+          for (int i = 0; i < 0xfff; i++) {
+            d.multiply(m1);
+          }
+          int f = (new DateTime.now().millisecondsSinceEpoch);
+          print("TIME3B: ${f-e} ");
+        }
+      }
+    });
   });
 }
