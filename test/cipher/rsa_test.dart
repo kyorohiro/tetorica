@@ -22,6 +22,11 @@ main() {
       print(">>> ${c.toRadix(16)}");
       print(">>> ${RSA.compute(c, pr, d).toRadix(16)}");
       test.expect(RSA.compute(c, pr, d).toRadix(16), "bc");
+
+      print("==> ${m.bitCount()} ${m.bitLength()}");
+      print("==> ${pu.bitCount()} ${pu.bitLength()}");
+      print("==> ${d.bitCount()} ${d.bitLength()}");
+      print("==> ${d.toByteArray()}");
     });
 
     test.test("compute 001", () {
@@ -50,36 +55,31 @@ main() {
 
     });
 
-/*
-    test.test("compute 002", () {
-      {
-        // p = 3
-        // q = 5
-        // n = 15
-        // sigma = 8
-        // e = 13 : 1<e<n
-        // ed = 3 % sigma
-        // c = m**e % n
-        // m = c**d % n
-        int bufferSize = 20;
-        BigInt e = new BigInt.fromInt(11, bufferSize);
-        BigInt d = new BigInt.fromInt(3, bufferSize);
-        BigInt n = new BigInt.fromInt(15, bufferSize);
-        BigInt m1 = new BigInt.fromInt(9, bufferSize);
-
-        // 33 8
-        // encrypt
-        BigInt c = RSA.compute(m1, e, n);
-      //  int cc = RSA.computeA(0x2, 11, 15);
-      //  test.expect("${c}","${new BigInt.fromInt(1570,bufferSize)}");
-
-        // decrypt
-        BigInt m2 = RSA.compute(c, d, n);
-      //  int mm2 = RSA.computeA(cc, 3, 15);
-      //  print("${m2} A=${mm2} ");
-        test.expect("${m2}","${m1}");
-      }
+    test.test("co", () {
+        BigInteger d = new BigInteger.fromBytes(1, Hex.decodeWithNew(testModulus));
+        BigInteger pu = new BigInteger.fromBytes(1, Hex.decodeWithNew(testPublicKey));
+        var v = RSA.encrypt([0xbc], 1, d, pu);
+        test.expect("${Hex.encodeWithNew(v)}","0x0dcd1cd87361a8554b3ae0c4001be26308ff34a8a9b7d11585c90ea02dd02f85e34f6b72078dad9c5eae37030584167a6de31320488c757a68f5e2f3ab6a286d");
     });
-*/
+
+    test.test("de", () {
+        BigInteger d = new BigInteger.fromBytes(1, Hex.decodeWithNew(testModulus));
+        BigInteger pu = new BigInteger.fromBytes(1, Hex.decodeWithNew(testPrivateKey));
+        List<int> input = Hex.decodeWithNew("0x0dcd1cd87361a8554b3ae0c4001be26308ff34a8a9b7d11585c90ea02dd02f85e34f6b72078dad9c5eae37030584167a6de31320488c757a68f5e2f3ab6a286d");
+        var v = RSA.decrypt(input, input.length, d, pu);
+        print("${Hex.encodeWithNew(v)}");
+        //test.expect("${Hex.encodeWithNew(v)}","0x0dcd1cd87361a8554b3ae0c4001be26308ff34a8a9b7d11585c90ea02dd02f85e34f6b72078dad9c5eae37030584167a6de31320488c757a68f5e2f3ab6a286d");
+    });
+
   });
 }
+
+
+// p = 3
+// q = 5
+// n = 15
+// sigma = 8
+// e = 13 : 1<e<n
+// ed = 3 % sigma
+// c = m**e % n
+// m = c**d % n
