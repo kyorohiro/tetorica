@@ -62,15 +62,28 @@ main() {
         test.expect("${Hex.encodeWithNew(v)}","0x0dcd1cd87361a8554b3ae0c4001be26308ff34a8a9b7d11585c90ea02dd02f85e34f6b72078dad9c5eae37030584167a6de31320488c757a68f5e2f3ab6a286d");
     });
 
-    test.test("de", () {
+    test.test("en", () {
         BigInteger d = new BigInteger.fromBytes(1, Hex.decodeWithNew(testModulus));
         BigInteger pu = new BigInteger.fromBytes(1, Hex.decodeWithNew(testPrivateKey));
         List<int> input = Hex.decodeWithNew("0x0dcd1cd87361a8554b3ae0c4001be26308ff34a8a9b7d11585c90ea02dd02f85e34f6b72078dad9c5eae37030584167a6de31320488c757a68f5e2f3ab6a286d");
         var v = RSA.decrypt(input, input.length, d, pu);
-        print("${Hex.encodeWithNew(v)}");
-        //test.expect("${Hex.encodeWithNew(v)}","0x0dcd1cd87361a8554b3ae0c4001be26308ff34a8a9b7d11585c90ea02dd02f85e34f6b72078dad9c5eae37030584167a6de31320488c757a68f5e2f3ab6a286d");
+        test.expect("${Hex.encodeWithNew(v)}","0xbc");
     });
 
+    test.test("co", () {
+        String message =
+        "0x40f73315d3f74703904e51e1c72686801de06a55417110e56280f1f8471a3802406d2110011e1f387f7b4c43258b0a1eedc558a3aac5aa2d20cf5e0d65d80db340f73315d3f74703904e51e1c72686801de06a55417110e56280f1f8471a3802406d2110011e1f387f7b4c43258b0a1eedc558a3aac5aa2d20cf5e0d65d80db3";
+        BigInteger d = new BigInteger.fromBytes(1, Hex.decodeWithNew(testModulus));
+        BigInteger pu = new BigInteger.fromBytes(1, Hex.decodeWithNew(testPublicKey));
+        BigInteger pr = new BigInteger.fromBytes(1,Hex.decodeWithNew(testPrivateKey));
+        List<int> intput = Hex.decodeWithNew(message);
+        var c = RSA.encrypt(intput, intput.length, d, pu);
+        //print("#>#># ${Hex.encodeWithNew(c)}");
+        var v = RSA.decrypt(c, c.length, d, pr);
+        //print("#>#># ${Hex.encodeWithNew(v)}");
+        test.expect("${Hex.encodeWithNew(v)}",message);
+        //"0x0dcd1cd87361a8554b3ae0c4001be26308ff34a8a9b7d11585c90ea02dd02f85e34f6b72078dad9c5eae37030584167a6de31320488c757a68f5e2f3ab6a286d");
+    });
   });
 }
 

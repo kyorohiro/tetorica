@@ -4,6 +4,7 @@ library rsa;
 import 'package:bignum/bignum.dart';
 import 'dart:typed_data';
 import 'hex.dart';
+
 // https://tools.ietf.org/html/rfc3447
 // https://tools.ietf.org/html/rfc2313
 // (m**e)**d %n = m
@@ -24,31 +25,29 @@ class RSA {
     List<int> paddedBlock = new Uint8List(modulusByteLength);
     List<int> output = [];
 
-    if(len%modulusByteLength != 0 ) {
-      throw {"message":" len % modulusByteLength != 0"};
+    if (len % modulusByteLength != 0) {
+      throw {"message": " len % modulusByteLength != 0"};
     }
     for (int inputed = 0; inputed < len; inputed += modulusByteLength) {
-      BigInteger cipherText = new BigInteger.fromBytes(1, input.sublist(inputed,inputed+modulusByteLength));
+      BigInteger cipherText = new BigInteger.fromBytes(1, input.sublist(inputed, inputed + modulusByteLength));
       BigInteger message = cipherText.modPow(exponent, modulus);
       var v = message.toByteArray();
-      for(int i=v.length-1, j=paddedBlock.length-1;j>=0;i--,j--) {
-        paddedBlock[j] = (i>=0?v[i]:0);
+      for (int i = v.length - 1, j = paddedBlock.length - 1; j >= 0; i--, j--) {
+        paddedBlock[j] = (i >= 0 ? v[i] : 0);
       }
-      if(paddedBlock[1] != 0x02) {
-        throw {"message":" paddedBlock[1] != 0x02 "};
+      if (paddedBlock[1] != 0x02) {
+        throw {"message": " paddedBlock[1] != 0x02 "};
       }
 //      print(">> ${paddedBlock[1]} : ${Hex.encodeWithNew(paddedBlock)}");
       //
-      int actualDataStart=2;
-      for(;paddedBlock[actualDataStart]!=0;actualDataStart++) {
-      }
+      int actualDataStart = 2;
+      for (; paddedBlock[actualDataStart] != 0; actualDataStart++) {}
       actualDataStart++;
 //      print("${actualDataStart} ${paddedBlock[actualDataStart]}");
 
       //
 //      print("# output: ${output}");
       output.addAll(paddedBlock.sublist(actualDataStart));
-
     }
 
     return output;
@@ -58,15 +57,19 @@ class RSA {
     int modulusByteLength = modulus.bitLength() ~/ 8 + (modulus.bitLength() % 8 == 0 ? 0 : 1);
 
     int encryptedSize = 0;
-    int blockSize = (len < modulusByteLength - 11 ? len : modulusByteLength - 11);
-    int dummyDataLength = (modulusByteLength - blockSize - 1);
-    int contentPoint = modulusByteLength - blockSize;
+
 
     List<int> output = [];
     List<int> paddedBlock = new Uint8List(modulusByteLength);
 
+    int blockSize = 0;
     for (int inputed = 0; inputed < len; inputed += blockSize, encryptedSize += blockSize) {
       print("${inputed}");
+      //
+      blockSize = ((len-inputed) < modulusByteLength - 11 ? (len-inputed): modulusByteLength - 11);
+      int dummyDataLength = (modulusByteLength - blockSize - 1);
+      int contentPoint = modulusByteLength - blockSize;
+
       // zero clear
       for (int j = 0; j < paddedBlock.length; j++) {
         paddedBlock[j] = 0;
@@ -84,16 +87,24 @@ class RSA {
       paddedBlock[1] = 0x02;
 
       // actual payload
+      print(">>${contentPoint} ${blockSize} ${len} ${inputed}");
       for (int j = 0; j < blockSize; j++) {
-        paddedBlock[contentPoint + j] = input[j + inputed];
+        try {
+        //  print(">>>>s [${j}] = ${input[j]}");
+          paddedBlock[contentPoint + j] = input[j + inputed];
+        } catch (e) {
+          print("${paddedBlock.length} ${contentPoint} ${j} ${inputed} ${input.length}");
+          throw e;
+        }
       }
 
       BigInteger message = new BigInteger.fromBytes(1, paddedBlock);
       BigInteger c = message.modPow(exponent, modulus);
       //
-      var v = c.toByteArray();
-      for (int j = 0; j < modulusByteLength; j++) {
-        output.add(v[j]);
+      List<int> v = c.toByteArray();
+      //print("output >> ${v.length} ${v[0]} ${v}");
+      for (int j = 0, l=v.length-modulusByteLength; j < modulusByteLength; j++,l++) {
+        output.add(v[l]);
       }
     }
     return output;

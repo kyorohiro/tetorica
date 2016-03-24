@@ -6,6 +6,7 @@ import 'hex.dart';
 // uint
 //
 // bignum
+// todo divide fun is slow now.
 //
 class BigInt implements Comparable<BigInt> {
   int get lengthPerByte => binary.length;
