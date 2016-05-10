@@ -13,6 +13,7 @@ dependencies:
   chrome: any
   xml: any
   bignum: any
+  crypto: any
 
 dev_dependencies:
   test: any
