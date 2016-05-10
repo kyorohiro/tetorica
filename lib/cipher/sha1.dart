@@ -104,6 +104,7 @@ class SHA1 {
   }
 
   void sha1ProccessMessageBlock() {
+    //W.fillRange(0, 80,0);
     for (int t = 0; t < 16; t++) {
       W[t] = this.messageBlock[t * 4] << 24;
       W[t] |= this.messageBlock[t * 4 + 1] << 16;
@@ -120,9 +121,6 @@ class SHA1 {
     int E = this.intermediateHash[4];
     //
     for (int t = 0, temp = 0; t < 20; t++) {
-      //
-      //      C = (((B << 30)) | (B >> 2));//
-      //    int temp = (((A << 5)) | (A >> (27))) + ((B & C) | ((~B) & D)) + E + W[t] + K0;
       temp = sha1CirclularShift(A, 5) + ((B & C) | ((~B) & D)) + E + W[t] + K0;
       E = D;
       D = C;
