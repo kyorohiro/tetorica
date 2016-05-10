@@ -24,12 +24,14 @@ class SHA1 {
   SHA1State corrupted = SHA1State.shaSuccess;
   Uint32List intermediateHash = new Uint32List(5);
 
+  SHA1() {
+    //  messageBlock32 = messageBlock.buffer.asUint32List();
+  }
+
   Uint8List calcSha1(Uint8List input) {
-    Uint8List messageDigest = new Uint8List(20);
     sha1Reset();
     sha1Input(input, input.length);
-    sha1Result(messageDigest);
-    return messageDigest;
+    return sha1Result();
   }
 
   void sha1Reset() {
@@ -45,12 +47,12 @@ class SHA1 {
     this.corrupted = SHA1State.shaSuccess;
   }
 
-  SHA1State sha1Result(Uint8List messageDigest) {
-    if (messageDigest == null) {
-      return SHA1State.shaNull;
+  Uint8List sha1Result({Uint8List output}) {
+    if(output == null) {
+      output = new Uint8List(20);
     }
     if (this.corrupted != SHA1State.shaSuccess) {
-      return this.corrupted;
+      throw this.corrupted;
     }
     if (this.computed == SHA1State.shaSuccess) {
       sha1PadMessage();
@@ -61,10 +63,10 @@ class SHA1 {
     }
 
     for (int i = 0; i < 20; i++) {
-      messageDigest[i] = this.intermediateHash[i >> 2] >> (8 * (3 - (i & 0x03)));
+      output[i] = this.intermediateHash[i >> 2] >> (8 * (3 - (i & 0x03)));
     }
 
-    return SHA1State.shaSuccess;
+    return output;
   }
 
   SHA1State sha1Input(Uint8List messageArray, int length) {
@@ -85,7 +87,7 @@ class SHA1 {
     }
     //
     for (int i = 0; length != 0 && corrupted == SHA1State.shaSuccess; length--, i++) {
-      this.messageBlock[this.messageBlockIndex++] = messageArray[i] & 0xFF;
+      this.messageBlock[this.messageBlockIndex++] = messageArray[i];// & 0xFF;
       this.lengthLow += 8;
       if (this.lengthLow == 0) {
         this.lengthHigh++;
@@ -102,7 +104,6 @@ class SHA1 {
   }
 
   void sha1ProccessMessageBlock() {
-    W.fillRange(0, 80, 0);
     for (int t = 0; t < 16; t++) {
       W[t] = this.messageBlock[t * 4] << 24;
       W[t] |= this.messageBlock[t * 4 + 1] << 16;
@@ -110,7 +111,7 @@ class SHA1 {
       W[t] |= this.messageBlock[t * 4 + 3];
     }
     for (int t = 16; t < 80; t++) {
-      W[t] = this.sha1CirclularShift(W[t - 3] ^ W[t - 8] ^ W[t - 14] ^ W[t - 16], 1);
+      W[t] = sha1CirclularShift(W[t - 3] ^ W[t - 8] ^ W[t - 14] ^ W[t - 16], 1);
     }
     int A = this.intermediateHash[0];
     int B = this.intermediateHash[1];
@@ -118,44 +119,43 @@ class SHA1 {
     int D = this.intermediateHash[3];
     int E = this.intermediateHash[4];
     //
-    for (int t = 0; t < 20; t++) {
-      int temp = this.sha1CirclularShift(A, 5) + ((B & C) | ((~B) & D)) + E + W[t] + K0;
-      temp &= 0xFFFFFFFF;
+    for (int t = 0, temp = 0; t < 20; t++) {
+      //
+      //      C = (((B << 30)) | (B >> 2));//
+      //    int temp = (((A << 5)) | (A >> (27))) + ((B & C) | ((~B) & D)) + E + W[t] + K0;
+      temp = sha1CirclularShift(A, 5) + ((B & C) | ((~B) & D)) + E + W[t] + K0;
       E = D;
       D = C;
-      C = this.sha1CirclularShift(B, 30);
+      C = sha1CirclularShift(B, 30);
       B = A;
-      A = temp;
+      A = temp & 0xFFFFFFFF;
     }
 
-    for (int t = 20; t < 40; t++) {
-      int temp = this.sha1CirclularShift(A, 5) + (B ^ C ^ D) + E + W[t] + K1;
-      temp &= 0xFFFFFFFF;
+    for (int t = 20, temp = 0; t < 40; t++) {
+      temp = sha1CirclularShift(A, 5) + (B ^ C ^ D) + E + W[t] + K1;
       E = D;
       D = C;
-      C = this.sha1CirclularShift(B, 30);
+      C = sha1CirclularShift(B, 30);
       B = A;
-      A = temp;
+      A = temp & 0xFFFFFFFF;
     }
     //
-    for (int t = 40; t < 60; t++) {
-      int temp = this.sha1CirclularShift(A, 5) + ((B & C) | (B & D) | (C & D)) + E + W[t] + K2;
-      temp &= 0xFFFFFFFF;
+    for (int t = 40, temp = 0; t < 60; t++) {
+      temp = sha1CirclularShift(A, 5) + ((B & C) | (B & D) | (C & D)) + E + W[t] + K2;
       E = D;
       D = C;
-      C = this.sha1CirclularShift(B, 30);
+      C = sha1CirclularShift(B, 30);
       B = A;
-      A = temp;
+      A = temp & 0xFFFFFFFF;
     }
     //
-    for (int t = 60; t < 80; t++) {
-      int temp = this.sha1CirclularShift(A, 5) + (B ^ C ^ D) + E + W[t] + K3;
-      temp &= 0xFFFFFFFF;
+    for (int t = 60, temp = 0; t < 80; t++) {
+      temp = sha1CirclularShift(A, 5) + (B ^ C ^ D) + E + W[t] + K3;
       E = D;
       D = C;
-      C = this.sha1CirclularShift(B, 30);
+      C = sha1CirclularShift(B, 30);
       B = A;
-      A = temp;
+      A = temp & 0xFFFFFFFF;
     }
     //
     this.intermediateHash[0] = (this.intermediateHash[0] + A) & 0xffffffff;
@@ -166,7 +166,7 @@ class SHA1 {
     this.messageBlockIndex = 0;
   }
 
-  sha1PadMessage() {
+  void sha1PadMessage() {
     if (this.messageBlockIndex > 55) {
       this.messageBlock[this.messageBlockIndex++] = 0x80;
       while (this.messageBlockIndex < 64) {
@@ -195,5 +195,5 @@ class SHA1 {
     sha1ProccessMessageBlock();
   }
 
-  int sha1CirclularShift(int x, int n) => ((x << n) & 0xFFFFFFFF) | (x >> (32 - n));
+  static int sha1CirclularShift(int x, int n) => ((x << n) & 0xFFFFFFFF) | (x >> (32 - n));
 }
