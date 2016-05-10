@@ -4,23 +4,27 @@ import 'package:crypto/crypto.dart' as cry;
 import 'dart:math' as math;
 
 void main() {
-  int size = 10000;
+  int size = 1000000;
   List<int> data = new Uint8List(size);
 
   math.Random r = new math.Random();
-  for(int i=0;i<size;i++) {
+  for (int i = 0; i < size; i++) {
     data[i] = r.nextInt(0xff) & 0xff;
   }
 
-  cry.SHA1 sha1 = new cry.SHA1();
-  SHA1 sha = new SHA1();
-
-  sha1.add(data);
   {
+    int d1 = new DateTime.now().millisecondsSinceEpoch;
+    cry.SHA1 sha1 = new cry.SHA1();
+    sha1.add(data);
     var v = sha1.close();
-    print(" ${v} ${v.length}");
+    int d2 = new DateTime.now().millisecondsSinceEpoch;
+    print(" ${v}  ${d2-d1}");
   }
   {
-    print(sha.calcSha1(new Uint8List.fromList(data)));
+    int d1 = new DateTime.now().millisecondsSinceEpoch;
+    SHA1 sha = new SHA1();
+    var v = sha.calcSha1(new Uint8List.fromList(data));
+    int d2 = new DateTime.now().millisecondsSinceEpoch;
+    print(" ${v}  ${d2-d1}");
   }
 }

@@ -47,15 +47,12 @@ class SHA1 {
 
   SHA1State sha1Result(Uint8List messageDigest) {
     if (messageDigest == null) {
-      print("---->");
       return SHA1State.shaNull;
     }
     if (this.corrupted != SHA1State.shaSuccess) {
-      print("---->");
       return this.corrupted;
     }
     if (this.computed == SHA1State.shaSuccess) {
-        print("---->");
       sha1PadMessage();
       this.messageBlock.fillRange(0, 64, 0);
       this.lengthLow = 0;
@@ -87,9 +84,7 @@ class SHA1 {
       return this.corrupted;
     }
     //
-    for (int i = 0;
-       length != 0 && corrupted == SHA1State.shaSuccess;
-       length--, i++) {
+    for (int i = 0; length != 0 && corrupted == SHA1State.shaSuccess; length--, i++) {
       this.messageBlock[this.messageBlockIndex++] = messageArray[i] & 0xFF;
       this.lengthLow += 8;
       if (this.lengthLow == 0) {
@@ -107,16 +102,12 @@ class SHA1 {
   }
 
   void sha1ProccessMessageBlock() {
-
     W.fillRange(0, 80, 0);
-//    print("##SZERO #  ${W}");
-//    Uint32List messageBlock32 = this.messageBlock.buffer.asUint32List();
     for (int t = 0; t < 16; t++) {
-      //W[t] = messageBlock32[t];
-      W[t] = this.messageBlock[t*4] << 24;
-      W[t] |= this.messageBlock[t*4 + 1] << 16;
-      W[t] |= this.messageBlock[t*4 + 2] << 8;
-      W[t] |= this.messageBlock[t*4 + 3] ;
+      W[t] = this.messageBlock[t * 4] << 24;
+      W[t] |= this.messageBlock[t * 4 + 1] << 16;
+      W[t] |= this.messageBlock[t * 4 + 2] << 8;
+      W[t] |= this.messageBlock[t * 4 + 3];
     }
     for (int t = 16; t < 80; t++) {
       W[t] = this.sha1CirclularShift(W[t - 3] ^ W[t - 8] ^ W[t - 14] ^ W[t - 16], 1);
@@ -128,14 +119,7 @@ class SHA1 {
     int E = this.intermediateHash[4];
     //
     for (int t = 0; t < 20; t++) {
-      int temp = this.sha1CirclularShift(A, 5);
-      temp += ((B & C) | ((~B) & D));
-      temp &= 0xFFFFFFFF;
-      temp += E;
-      temp &= 0xFFFFFFFF;
-      temp += W[t];
-      temp &= 0xFFFFFFFF;
-      temp += K0;
+      int temp = this.sha1CirclularShift(A, 5) + ((B & C) | ((~B) & D)) + E + W[t] + K0;
       temp &= 0xFFFFFFFF;
       E = D;
       D = C;
@@ -212,5 +196,4 @@ class SHA1 {
   }
 
   int sha1CirclularShift(int x, int n) => ((x << n) & 0xFFFFFFFF) | (x >> (32 - n));
-
 }
