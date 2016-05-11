@@ -5,7 +5,7 @@ import 'package:test_plus/stun.dart' as stun;
 
 main() async {
   TetSocketBuilderDartIO builder = new TetSocketBuilderDartIO();
-//  http.doTest(builder);
+  http.doTest(builder);
 //  networkinterface.doTest(builder);
-  stun.doTest(builder);
+//  stun.doTest(builder);
 }

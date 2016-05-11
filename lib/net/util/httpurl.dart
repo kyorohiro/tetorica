@@ -23,7 +23,7 @@ class HttpUrlDecoder {
 
   static HttpUrlDecoder _sDecoder = new HttpUrlDecoder();
 
-  static HttpUrl decodeUrl(String _url,[String baseAddr=null]) {
+  static HttpUrl decodeUrl(String _url, [String baseAddr = null]) {
     _sDecoder.clear();
     return _sDecoder.innerDecodeUrl(_url, baseAddr);
   }
@@ -49,7 +49,7 @@ class HttpUrlDecoder {
     url = null;
   }
 
-  HttpUrl innerDecodeUrl(String _url, [String baseAddr=null]) {
+  HttpUrl innerDecodeUrl(String _url, [String baseAddr = null]) {
     url = convert.UTF8.encode(_url);
     index = 0;
     HttpUrl ret = new HttpUrl();
@@ -178,12 +178,15 @@ class HttpUrlDecoder {
   void push() {
     stack.add(index);
   }
+
   void pop() {
     stack.removeLast();
   }
+
   void back() {
     index = stack.last;
   }
+
   List<int> last() {
     int end = index;
     int start = stack.last;
@@ -208,6 +211,7 @@ class HttpUrlDecoder {
     }
     return true;
   }
+
   bool matchChar(List<int> v) {
     if (url.length <= index) {
       return false;
