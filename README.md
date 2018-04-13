@@ -2,6 +2,10 @@ Tetorica
 
 P2P framework now creating!!
 
+move repository
+
+https://github.com/kyorohiro/dart.tetorica3/tree/master/lib
+
 # Support
 
 # Plan
